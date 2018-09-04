@@ -41,12 +41,9 @@ type Node {
 type Call {
     source: ID!
     target: ID!
-    isAlert: Boolean
     # The protocol and tech stack used in this distributed call
     callType: String!
     cpm: Long!
-    # Unit: millisecond
-    avgResponseTime: Long!
 }
 
 enum NodeType {
