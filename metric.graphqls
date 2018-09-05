@@ -25,7 +25,18 @@ input MetricCondition {
     id: ID
 }
 
-type LinearIntValues {
+input BatchMetricConditions {
+    # Metric name, which should be defined in OAL script
+    # Such as:
+    # Endpoint_avg = from(Endpoint.latency).avg()
+    # Then, `Endpoint_avg`
+    name: String!
+    # Id in this metric type.
+    # In the above case, the id should be endpoint id.
+    ids: [ID!]!
+}
+
+type IntValues {
     values: [KVInt!]!
 }
 
@@ -56,6 +67,7 @@ type Thermodynamic {
 
 
 extend type Query {
-    getLinearIntValues(metric: MetricCondition!, duration: Duration!): LinearIntValues
+    getValues(metric: BatchMetricConditions!, duration: Duration!): IntValues
+    getLinearIntValues(metric: MetricCondition!, duration: Duration!): IntValues
     getThermodynamic(metric: MetricCondition!, duration: Duration!): Thermodynamic
 }

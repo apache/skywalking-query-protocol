@@ -32,8 +32,8 @@ type BasicTrace {
 
 # Represent the conditions used for query TraceBrief
 input TraceQueryCondition {
-    # The value of 0 means all application.
-    applicationId: Int
+    # The value of 0 means all service.
+    serviceId: Int
     traceId: String
     operationName: String
     # The time range of traces started
@@ -69,7 +69,7 @@ type Span {
     spanId: Int!
     parentSpanId: Int!
     refs: [Ref!]!
-    applicationCode: String!
+    serviceCode: String!
     startTime: Long!
     endTime: Long!
     operationName: String
