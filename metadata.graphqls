@@ -51,6 +51,7 @@ extend type Query {
     # Service related meta info.
     getAllServices(duration: Duration!): [Service!]!
     searchServices(duration: Duration!, keyword: String!): [Service!]!
+    searchServices(duration: Duration!, serviceCode: String!): Service
 
     # Service intance query
     getServiceInstances(duration: Duration!, id: ID!): [ServiceInstance!]!
