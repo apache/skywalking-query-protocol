@@ -28,7 +28,7 @@ input TopNCondition {
     #
     # Defintely, it is not required by default.
     filterScope: Scope
-    filterId: Int
+    filterId: ID
 }
 
 type TopNEntity {
