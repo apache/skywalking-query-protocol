@@ -23,7 +23,7 @@ type TraceBrief {
 # Trace basic info
 type BasicTrace {
     segmentId: String!
-    operationNames: [String!]!
+    endpointNames: [String!]!
     duration: Int!
     start: String!
     isError: Boolean
@@ -35,7 +35,7 @@ input TraceQueryCondition {
     # The value of 0 means all services.
     serviceId: Int
     traceId: String
-    operationName: String
+    endpointName: String
     # The time range of traces started
     queryDuration: Duration
     # The mix time of trace
@@ -72,7 +72,7 @@ type Span {
     serviceCode: String!
     startTime: Long!
     endTime: Long!
-    operationName: String
+    endpointName: String
     # There are three span types: Local, Entry and Exit
     type: String!
     # Peer network id, e.g. host+port, ip+port
