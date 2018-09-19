@@ -32,8 +32,8 @@ type BasicTrace {
 
 # Represent the conditions used for query TraceBrief
 input TraceQueryCondition {
-    # The value of 0 means all endpoints.
-    endpointId: Int
+    # The value of 0 means all services.
+    serviceId: Int
     traceId: String
     operationName: String
     # The time range of traces started
