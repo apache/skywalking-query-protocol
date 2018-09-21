@@ -91,3 +91,9 @@ enum Scope {
     SERVICE_INSTANCE_RELATION
     ENDPOINT_RELATION
 }
+
+enum CallDetectPoint {
+    CLIENT
+    SERVER
+    PROXY
+}
