@@ -54,7 +54,7 @@ extend type Query {
     searchService(serviceCode: String!): Service
 
     # Service intance query
-    getServiceInstances(duration: Duration!, id: ID!): [ServiceInstance!]!
+    getServiceInstances(duration: Duration!, serviceId: ID!): [ServiceInstance!]!
 
     # Endpoint query
     # Consider there are huge numbers of endpoint,
