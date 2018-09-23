@@ -92,7 +92,7 @@ enum Scope {
     ENDPOINT_RELATION
 }
 
-enum CallDetectPoint {
+enum DetectPoint {
     CLIENT
     SERVER
     PROXY
