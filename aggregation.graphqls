@@ -24,7 +24,9 @@ type TopNEntity {
 # All aggregation queries require backend or/and storage do aggregation in query time.
 extend type Query {
     # TopN is an aggregation query.
-    getServiceTopN(name: String!, topN: Int!, duration: Duration!): [TopNEntity!]!
-    getServiceInstanceTopN(serviceId Int!, name: String!, topN: Int!, duration: Duration!): [TopNEntity!]!
-    getEndpointTopN(serviceId Int!, name: String!, topN: Int!, duration: Duration!): [TopNEntity!]!
+    getServiceTopN(name: String!, topN: Int!, duration: Duration!, order: Order!): [TopNEntity!]!
+    getAllServiceInstanceTopN(name: String!, topN: Int!, duration: Duration!, order: Order!): [TopNEntity!]!
+    getServiceInstanceTopN(serviceId Int!, name: String!, topN: Int!, duration: Duration!, order: Order!): [TopNEntity!]!
+    getAllEndpointTopN(name: String!, topN: Int!, duration: Duration!, order: Order!): [TopNEntity!]!
+    getEndpointTopN(serviceId Int!, name: String!, topN: Int!, duration: Duration!, order: Order!): [TopNEntity!]!
 }
