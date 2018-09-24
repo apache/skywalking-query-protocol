@@ -14,23 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Match the metric by name, order by metric value(such as: avg, percent)
-input TopNCondition {
-    name: String!
-    topN: Int!
-    order: Order!
-    # When the scope is ServiceInstance or Endpoint,
-    # most likely you need a secondary filter.
-    # Such as:
-    # 1. Get topN service instance in a given service id
-    # 2. Get topN endpoint in a given serivce id.
-    # Backend will decide the filter id meaning by Scope.
-    #
-    # Defintely, it is not required by default.
-    filterScope: Scope
-    filterId: ID
-}
-
 type TopNEntity {
     name: String!
     id: ID!
@@ -41,5 +24,7 @@ type TopNEntity {
 # All aggregation queries require backend or/and storage do aggregation in query time.
 extend type Query {
     # TopN is an aggregation query.
-    getTopN(condition: TopNCondition!, duration: Duration!): [TopNEntity!]!
+    getServiceTopN(name: String!, topN: Int!, duration: Duration!): [TopNEntity!]!
+    getServiceInstanceTopN(serviceId Int!, name: String!, topN: Int!, duration: Duration!): [TopNEntity!]!
+    getEndpointTopN(serviceId Int!, name: String!, topN: Int!, duration: Duration!): [TopNEntity!]!
 }
