@@ -84,12 +84,12 @@ enum Language {
 }
 
 enum Scope {
-    SERVICE
-    SERVICE_INSTANCE
-    ENDPOINT
-    SERVICE_RELATION
-    SERVICE_INSTANCE_RELATION
-    ENDPOINT_RELATION
+    Service
+    ServiceInstance
+    Endpoint
+    ServiceRelation
+    ServiceInstanceRelation
+    EndpointRelation
 }
 
 enum DetectPoint {
