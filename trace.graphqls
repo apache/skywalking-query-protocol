@@ -35,6 +35,7 @@ input TraceQueryCondition {
     # The value of 0 means all services.
     serviceId: Int
     traceId: String
+    endpointId: ID
     endpointName: String
     # The time range of traces started
     queryDuration: Duration
