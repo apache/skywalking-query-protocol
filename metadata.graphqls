@@ -45,6 +45,13 @@ type Endpoint {
     name: String!
 }
 
+type EndpointInfo {
+    id: ID!
+    name: String!
+    serviceId: ID!
+    serviceName: String!
+}
+
 extend type Query {
     getGlobalBrief(duration: Duration!): ClusterBrief
 
@@ -60,4 +67,5 @@ extend type Query {
     # Consider there are huge numbers of endpoint,
     # must use endpoint owner's service id, keyword and limit filter to do query.
     searchEndpoint(keyword: String!, serviceId: ID!, limit: Int!): [Endpoint!]!
+    getEndpointInfo(endpointId: ID!): EndpointInfo
 }
