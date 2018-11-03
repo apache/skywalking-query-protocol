@@ -46,7 +46,7 @@ type KVInt {
     # Such as:
     # 1. If ask for cpm metric, the unit and result should be count.
     # 2. If ask for response time (p99 or avg), the unit should be millisecond.
-    value: Int!
+    value: Long!
 }
 
 type Thermodynamic {
