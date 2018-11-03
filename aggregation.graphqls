@@ -17,7 +17,7 @@
 type TopNEntity {
     name: String!
     id: ID!
-    value: Int!
+    value: Long!
 }
 
 # The aggregation query is different with the metric query.
