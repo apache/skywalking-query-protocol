@@ -34,6 +34,7 @@ type BasicTrace {
 input TraceQueryCondition {
     # The value of 0 means all services.
     serviceId: ID
+    serviceInstanceId: ID
     traceId: String
     endpointId: ID
     endpointName: String
