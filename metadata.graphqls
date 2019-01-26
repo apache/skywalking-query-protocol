@@ -52,6 +52,12 @@ type EndpointInfo {
     serviceName: String!
 }
 
+type Database {
+    id: ID!
+    name: String!
+    type: String!
+}
+
 extend type Query {
     getGlobalBrief(duration: Duration!): ClusterBrief
 
@@ -68,4 +74,7 @@ extend type Query {
     # must use endpoint owner's service id, keyword and limit filter to do query.
     searchEndpoint(keyword: String!, serviceId: ID!, limit: Int!): [Endpoint!]!
     getEndpointInfo(endpointId: ID!): EndpointInfo
+
+    # Database related meta info.
+    getAllDatabases(duration: Duration!): [Database!]!
 }
