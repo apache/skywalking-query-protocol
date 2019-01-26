@@ -52,10 +52,10 @@ type EndpointInfo {
     serviceName: String!
 }
 
-type ClientDatabase {
+type Database {
     id: ID!
     name: String!
-    dbType: String!
+    type: String!
 }
 
 extend type Query {
@@ -76,5 +76,5 @@ extend type Query {
     getEndpointInfo(endpointId: ID!): EndpointInfo
 
     # Database related meta info.
-    getAllClientDatabases(duration: Duration!): [ClientDatabase!]!
+    getAllDatabases(duration: Duration!): [Database!]!
 }
