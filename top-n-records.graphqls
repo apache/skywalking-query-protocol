@@ -27,7 +27,7 @@ input TopNRecordsCondition {
     order: Order!
 }
 
-type TopNRecords {
+type TopNRecord {
     statement: String
     latency: Long!
     # Have value, Only if the record has the trace id.
@@ -36,5 +36,5 @@ type TopNRecords {
 }
 
 extend type Query {
-    getTopNRecords(condition: TopNRecordsCondition!): [TopNRecords!]!
+    getTopNRecords(condition: TopNRecordsCondition!): [TopNRecord!]!
 }
