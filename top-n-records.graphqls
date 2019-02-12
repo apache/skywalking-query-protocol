@@ -35,6 +35,10 @@ type TopNRecord {
     traceId: String
 }
 
+type TopNRecords {
+    records: [TopNRecord!]!
+}
+
 extend type Query {
-    getTopNRecords(condition: TopNRecordsCondition!): [TopNRecord!]!
+    getTopNRecords(condition: TopNRecordsCondition!): TopNRecords
 }
