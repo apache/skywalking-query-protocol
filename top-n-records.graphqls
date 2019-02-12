@@ -25,6 +25,7 @@ input TopNRecordsCondition {
     topN: Int!
     # Top N order, ASC or DES.
     order: Order!
+    duration: Duration!
 }
 
 type TopNRecord {
