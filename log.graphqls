@@ -37,6 +37,8 @@ type Log {
 
 # Represent the conditions used for query logs
 input LogQueryCondition {
+    # Metric name of the log records
+    metricName: ID
     # The value of 0 means all services.
     serviceId: ID
     serviceInstanceId: ID
