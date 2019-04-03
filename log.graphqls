@@ -31,6 +31,8 @@ type Log {
     timestamp: String!
     isError: Boolean
     statusCode: String
+    contentType: ContentType!
+    content: String
 }
 
 # Represent the conditions used for query logs
@@ -50,6 +52,12 @@ enum LogState {
     ALL
     SUCCESS
     ERROR
+}
+
+enum ContentType {
+    TEXT
+    JSON
+    NONE
 }
 
 extend type Query {
