@@ -16,7 +16,7 @@
 
 # The list of logs
 type Logs {
-    traces: [BasicTrace!]!
+    logs: [Log!]!
     total: Int!
 }
 
