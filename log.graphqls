@@ -28,6 +28,7 @@ type Log {
     serviceInstanceId: ID
     endpointName: String
     endpointId: ID
+    traceId: String
     timestamp: String!
     isError: Boolean
     statusCode: String
@@ -43,6 +44,7 @@ input LogQueryCondition {
     serviceId: ID
     serviceInstanceId: ID
     endpointId: ID
+    traceId: String
     # The time range of log happened
     queryDuration: Duration
     state: LogState!
