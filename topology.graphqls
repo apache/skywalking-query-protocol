@@ -28,12 +28,15 @@ type Node {
     id: ID!
     # The literal name of the #id.
     name: String!
+    userDefName: String
     # The type name may be
     # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
     # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
     type: String
+    userDefNodeType: String
     # It is a conjuecture node or real node, to represent a service or endpoint.
     isReal: Boolean!
+    host: String
 }
 
 # The Call represents a directed distributed call,
@@ -56,7 +59,7 @@ enum NodeType {
 
 extend type Query {
     # Query the global topolgoy
-    getGlobalTopology(duration: Duration!): Topology
+    getGlobalTopology(bsIds: String, duration: Duration!): Topology
     # Query the topology, based on the given service
     getServiceTopology(serviceId: ID!, duration: Duration!): Topology
     # Query the topology, based on the given endpoint
