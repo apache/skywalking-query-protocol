@@ -40,11 +40,14 @@ type Node {
 # from the `source` to the `target`.
 type Call {
     source: ID!
+    # The protocol and tech stack used at source side in this distributed call
+    sourceComponents: [ID!]!
     target: ID!
-    # The protocol and tech stack used in this distributed call
-    callType: String!
+    # The protocol and tech stack used at target side in this distributed call
+    targetComponents: [ID!]!
     id: ID!
-    detectPoint: DetectPoint!
+    # The detect Points of this distributed call.
+    detectPoints: [DetectPoint!]!
 }
 
 enum NodeType {
