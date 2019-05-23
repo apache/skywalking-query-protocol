@@ -36,7 +36,14 @@ type Node {
     userDefNodeType: String
     # It is a conjuecture node or real node, to represent a service or endpoint.
     isReal: Boolean!
+
+    tenantId: String
+    applicationSystemId: String
+    bsId: String
+    tsId: String
+    nodeId: String
     host: String
+    ciId: String
 }
 
 # The Call represents a directed distributed call,
@@ -59,9 +66,11 @@ enum NodeType {
 
 extend type Query {
     # Query the global topolgoy
-    getGlobalTopology(bsIds: String, duration: Duration!): Topology
+    getGlobalTopology(tenantId: String, bsIds: String, duration: Duration!): Topology
     # Query the topology, based on the given service
     getServiceTopology(serviceId: ID!, duration: Duration!): Topology
     # Query the topology, based on the given endpoint
     getEndpointTopology(endpointId: ID!, duration: Duration!): Topology
+    # get ciTopology
+    getCiTopology(ciId: ID!, duration: Duration!): Topology
 }

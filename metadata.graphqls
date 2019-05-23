@@ -26,6 +26,7 @@ type ClusterBrief {
 type Service {
     id: ID!
     name: String!
+    userDefName: String
 }
 
 type ServiceInstance {
@@ -62,8 +63,10 @@ extend type Query {
     getGlobalBrief(duration: Duration!): ClusterBrief
 
     # Service related meta info.
-    getAllServices(duration: Duration!): [Service!]!
+    getAllServices(isAddress: String, tenantId: String, bsIds: String, duration: Duration!): [Service!]!
     searchServices(duration: Duration!, keyword: String!): [Service!]!
+    searchServicesByCi(duration: Duration!, ciId: ID!): [Service]!
+
     searchService(serviceCode: String!): Service
 
     # Service intance query

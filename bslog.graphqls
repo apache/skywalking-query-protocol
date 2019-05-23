@@ -1,0 +1,24 @@
+# The list of logs
+# Log info
+type BsLog {
+    kiLabel: String!
+    logs: [String]!
+    total: Int!
+}
+
+type BsKiLabel {
+    kiLabel: String!
+    kiName: String!
+    valueColumn: String!
+    kiColumns: [String!]!
+}
+
+type BsKiLabels {
+    ciCode: String!
+    bsKiLabels: [BsKiLabel]!
+}
+
+extend type Query {
+    queryBsLogs(ciCode: String!, kiLabel: String!, valueColumnLabel: String!, queryDuration: BsDuration!, paging: Pagination!): BsLog!
+    queryBsLogKiLabels(serviceId: String!): BsKiLabels!
+}
