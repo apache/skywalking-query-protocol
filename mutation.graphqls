@@ -26,4 +26,7 @@ extend type Mutation {
     setUserDefineNodeType(serviceSequence: String!, userDefineNodeType: String!): StatusCode!
     #Set resetNodeCiValue
     resetNodeCiValue(sequence: Int!, isAddress: Int!): StatusCode!
+    resetNodesCiValue(sequences: [Int!]!, isAddress: Int!): StatusCode!
+    #delete duplicate node;  removeServiceById
+    removeServiceById(sequence: Int!): StatusCode!
 }
