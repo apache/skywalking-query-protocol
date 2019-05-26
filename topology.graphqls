@@ -72,5 +72,5 @@ extend type Query {
     # Query the topology, based on the given endpoint
     getEndpointTopology(endpointId: ID!, duration: Duration!): Topology
     # get ciTopology
-    getCiTopology(ciId: ID!, duration: Duration!): Topology
+    getServicesTopology(serviceIds: [Int!]! , duration: Duration!): Topology
 }
