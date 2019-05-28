@@ -15,9 +15,20 @@
 # limitations under the License.
 
 # The overview topology of the whole application cluster or services,
+type MetricResult {
+    sla: IntValues
+    nodeCpm: IntValues
+    nodeLatency: IntValues
+    cpmS: IntValues
+    latencyS: IntValues
+    cpmC: IntValues
+    latencyC: IntValues
+}
+
 type Topology {
     nodes: [Node!]!
     calls: [Call!]!
+    metricResult: MetricResult
 }
 
 # Node in Topology
@@ -34,7 +45,7 @@ type Node {
     # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
     type: String
     userDefNodeType: String
-    # It is a conjuecture node or real node, to represent a service or endpoint.
+    # It is a conjuncture node or real node, to represent a service or endpoint.
     isReal: Boolean!
 
     tenantId: String
@@ -65,8 +76,9 @@ enum NodeType {
 
 
 extend type Query {
-    # Query the global topolgoy
+    # Query the global topology
     getGlobalTopology(tenantId: String, bsIds: String, duration: Duration!): Topology
+    getTopologyWrappedByBs(tenantId: String, duration: Duration!): Topology
     # Query the topology, based on the given service
     getServiceTopology(serviceId: ID!, duration: Duration!): Topology
     # Query the topology, based on the given endpoint

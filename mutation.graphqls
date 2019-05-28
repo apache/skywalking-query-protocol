@@ -22,14 +22,15 @@ type StatusCode {
 extend type Mutation {
     #Set userDefNodeName
     setUserDefineNodeName(serviceSequence: String!, userDefineNodeName: String!): StatusCode!
+
     #Set userDefNodeType
     setUserDefineNodeType(serviceSequence: String!, userDefineNodeType: String!): StatusCode!
+
     #Set resetNodeCiValue
     resetNodeCiValue(sequence: Int!, isAddress: Int!): StatusCode!
     resetNodesCiValue(sequences: [Int!]!, isAddress: Int!): StatusCode!
 
-    resetAllNodesCiValue(): StatusCode!
-
-    #delete duplicate node;  removeServiceById
+    #delete duplicate node removeServiceById
     removeServiceById(sequence: Int!): StatusCode!
+    resetNodesCache(resetAllFlag: Int!): StatusCode!
 }
