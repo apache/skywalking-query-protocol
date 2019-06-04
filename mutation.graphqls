@@ -33,4 +33,14 @@ extend type Mutation {
     #delete duplicate node removeServiceById
     removeServiceById(sequence: Int!): StatusCode!
     resetNodesCache(resetAllFlag: Int!): StatusCode!
+
+     #Set userDefBsNodeName
+     setUserDefineBsNodeName(bsId: String!, userDefineBsNodeName: String!): StatusCode!
+     #Set userDefBsNodeType
+     setUserDefineBsNodeType(bsId: String!, userDefineBsNodeType: String!): StatusCode!
+
+     #Set userDefTsNodeName
+     setUserDefineTsNodeName(tsId: String!, userDefineTsNodeName: String!): StatusCode!
+     #Set userDefTsNodeType
+     setUserDefineTsNodeType(tsId: String!, userDefineTsNodeType: String!): StatusCode!
 }
