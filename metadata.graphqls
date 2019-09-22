@@ -59,8 +59,10 @@ type Database {
 }
 
 type TimeInfo {
+  # server current timezone
   timezone: String
-  timestamp: Long
+  # server current timestamp
+  currentTimestamp: Long
 }
 
 extend type Query {
