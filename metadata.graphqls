@@ -58,6 +58,13 @@ type Database {
     type: String!
 }
 
+type TimeInfo {
+  # server current timezone
+  timezone: String
+  # server current timestamp
+  currentTimestamp: Long
+}
+
 extend type Query {
     getGlobalBrief(duration: Duration!): ClusterBrief
 
@@ -77,4 +84,5 @@ extend type Query {
 
     # Database related meta info.
     getAllDatabases(duration: Duration!): [Database!]!
+    getTimeInfo: TimeInfo
 }
