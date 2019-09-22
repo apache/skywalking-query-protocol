@@ -59,9 +59,9 @@ type Database {
 }
 
 type TimeInfo {
-  # server current timezone
+  # server current timezone, format: +0800
   timezone: String
-  # server current timestamp
+  # server current timestamp, format: 1569124528392
   currentTimestamp: Long
 }
 
