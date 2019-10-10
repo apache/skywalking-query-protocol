@@ -33,6 +33,7 @@ type ServiceInstance {
     name: String!
     attributes: [Attribute!]!
     language: Language!
+    instanceUUID: String!
 }
 
 type Attribute {
