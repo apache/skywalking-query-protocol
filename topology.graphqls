@@ -58,10 +58,12 @@ enum NodeType {
 
 
 extend type Query {
-    # Query the global topolgoy
+    # Query the global topology
     getGlobalTopology(duration: Duration!): Topology
     # Query the topology, based on the given service
     getServiceTopology(serviceId: ID!, duration: Duration!): Topology
+    # Query the instance topology, based on the given clientServiceId and serverServiceId
+    getServiceInstanceTopology(clientServiceId: ID!, serverServiceId: ID!, duration: Duration!): Topology
     # Query the topology, based on the given endpoint
     getEndpointTopology(endpointId: ID!, duration: Duration!): Topology
 }
