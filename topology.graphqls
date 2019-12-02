@@ -44,16 +44,16 @@ type Node {
 
 # Node in ServiceInstanceTopology
 type ServiceInstanceNode {
-    # The global id of each node,
+    # The global service id of each node,
     # 1. Service id
     serviceId: ID!
     # The literal name of the #serviceId.
     serviceName: String!
     # The global id of each node,
     # 1. Instance id
-    instanceId: ID!
+    id: ID!
     # The literal name of the #instanceId.
-    instanceName: String!
+    name: String!
     # The type name may be
     # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
     # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
