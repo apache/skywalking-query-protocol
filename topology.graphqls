@@ -20,7 +20,7 @@ type Topology {
     calls: [Call!]!
 }
 
-# The instance topology for a given serviceId
+# The instance topology based on the given serviceId
 type ServiceInstanceTopology {
     nodes: [ServiceInstanceNode!]!
     calls: [Call!]!
