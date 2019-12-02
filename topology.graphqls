@@ -58,7 +58,7 @@ type ServiceInstanceNode {
     # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
     # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
     type: String
-    # It is a conjuecture node or real node, to represent a service or endpoint.
+    # It is a conjuecture node or real node, to represent a instance.
     isReal: Boolean!
 }
 
