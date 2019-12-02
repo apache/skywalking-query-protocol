@@ -20,7 +20,7 @@ type Topology {
     calls: [Call!]!
 }
 
-# The instance topology based on the given serviceId
+# The instance topology based on the given serviceIds
 type ServiceInstanceTopology {
     nodes: [ServiceInstanceNode!]!
     calls: [Call!]!
@@ -44,21 +44,19 @@ type Node {
 
 # Node in ServiceInstanceTopology
 type ServiceInstanceNode {
-    # The global service id of each node,
-    # 1. Service id
+    # The instance id of each node,
+    id: ID!
+    # The literal name of the #id.
+    name: String!
+    # Service id
     serviceId: ID!
     # The literal name of the #serviceId.
     serviceName: String!
-    # The global id of each node,
-    # 1. Instance id
-    id: ID!
-    # The literal name of the #instanceId.
-    name: String!
     # The type name may be
     # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
     # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
     type: String
-    # It is a conjuecture node or real node, to represent a instance.
+    # It is a conjuecture node or real node, to represent an instance.
     isReal: Boolean!
 }
 
