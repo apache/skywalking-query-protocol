@@ -41,7 +41,29 @@ input ThreadMonitorTaskCreationResult {
     id: String
 }
 
+type ThreadMonitorTask {
+    id: String!
+    # monitor service
+    serviceId: ID!
+    serviceName: String!
+    # endpoint name to monitored under the special service.
+    endpointName: String!
+    # task start time (timestamp)
+    startTime: Long!
+    # thread monitor duration of this task (second)
+    duration: Int!
+    # when the segment starts to execute, how long must it take before the monitor can be enbaled
+    minDurationThreshold: Int!
+    # when start monitor, time interval for each thread dumping the stack
+    dumpPeriod: Int!
+}
+
 extend type Mutation {
     # crate new thread monitor task
     createTask(creationRequest: ThreadMonitorTaskCreationRequest): ThreadMonitorTaskCreationResult!
+}
+
+extend type Query {
+    # query task list
+    getTaskList(serviceId: ID, endpointName: String, duration: Duration!): [ThreadMonitorTask!]!
 }
