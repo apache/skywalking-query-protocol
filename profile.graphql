@@ -16,14 +16,16 @@
 
 # Thread monitor task create need data
 input ThreadMonitorTaskCreator {
-    # need to monitor service name
+    # need to monitor service id
     serviceId: ID!
     # endpoint name to monitored under the special service.
     endpointName: String!
-    # if null means task start now, or not means appoint task start time(timestamp)
+    # if null means the task starts ASAP, otherwise the task begin after the startTime(based on agent side time)
     startTime: Long
-    # thread monitor duration of this task(minute)
+    # thread monitor duration of this task
     duration: Int!
+    # thread monitor duration unit
+    durationUnit: Step!
     # when the segment starts to execute, how long must it take before the monitor can be enbaled
     minDurationThreshold: Int!
     # when start monitor, time interval for each thread dumping the stack
@@ -31,7 +33,7 @@ input ThreadMonitorTaskCreator {
 }
 
 # Thread monitor task create result
-input ThreadMonitorTaskCreateResult {
+input ThreadMonitorTaskCreationResult {
     # task create is success
     success: Boolean!
 
@@ -42,7 +44,7 @@ input ThreadMonitorTaskCreateResult {
     id: String
 }
 
-extend type Query {
+extend type Mutation {
     # crate new thread monitor task
-    createTask(creator: ThreadMonitorTaskCreator): ThreadMonitorTaskCreateResult!
+    createTask(creator: ThreadMonitorTaskCreator): ThreadMonitorTaskCreationResult!
 }
