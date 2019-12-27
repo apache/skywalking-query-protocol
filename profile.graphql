@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # Thread monitor task create need data
-input ThreadMonitorTaskCreator {
+input ThreadMonitorTaskCreationRequest {
     # need to monitor service id
     serviceId: ID!
     # endpoint name to monitored under the special service.
@@ -34,10 +34,7 @@ input ThreadMonitorTaskCreator {
 
 # Thread monitor task create result
 input ThreadMonitorTaskCreationResult {
-    # task create is success
-    success: Boolean!
-
-    # get create error reason when not success
+    # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
 
     # get data id when create success
@@ -46,5 +43,5 @@ input ThreadMonitorTaskCreationResult {
 
 extend type Mutation {
     # crate new thread monitor task
-    createTask(creator: ThreadMonitorTaskCreator): ThreadMonitorTaskCreationResult!
+    createTask(creator: ThreadMonitorTaskCreationRequest): ThreadMonitorTaskCreationResult!
 }
