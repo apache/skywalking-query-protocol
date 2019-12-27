@@ -43,5 +43,5 @@ input ThreadMonitorTaskCreationResult {
 
 extend type Mutation {
     # crate new thread monitor task
-    createTask(creator: ThreadMonitorTaskCreationRequest): ThreadMonitorTaskCreationResult!
+    createTask(creationRequest: ThreadMonitorTaskCreationRequest): ThreadMonitorTaskCreationResult!
 }
