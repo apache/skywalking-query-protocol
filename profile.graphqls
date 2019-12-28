@@ -33,7 +33,7 @@ input ThreadMonitorTaskCreationRequest {
 }
 
 # Thread monitor task create result
-input ThreadMonitorTaskCreationResult {
+type ThreadMonitorTaskCreationResult {
     # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
 
@@ -60,10 +60,10 @@ type ThreadMonitorTask {
 
 extend type Mutation {
     # crate new thread monitor task
-    createTask(creationRequest: ThreadMonitorTaskCreationRequest): ThreadMonitorTaskCreationResult!
+    createThreadMonitorTask(creationRequest: ThreadMonitorTaskCreationRequest): ThreadMonitorTaskCreationResult!
 }
 
 extend type Query {
     # query task list
-    getTaskList(serviceId: ID, endpointName: String, duration: Duration!): [ThreadMonitorTask!]!
+    getThreadMonitorTaskList(serviceId: ID, endpointName: String, duration: Duration!): [ThreadMonitorTask!]!
 }
