@@ -14,26 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Thread monitor task create need data
-input ThreadMonitorTaskCreationRequest {
+# Profile task create need data
+input ProfileTaskCreationRequest {
     # need to monitor service id
     serviceId: ID!
     # endpoint name to monitored under the special service.
     endpointName: String!
     # if null means the task starts ASAP, otherwise the task begin after the startTime(based on agent side time)
     startTime: Long
-    # thread monitor duration of this task
+    # duration of this task
     duration: Int!
-    # thread monitor duration unit
+    # duration unit
     durationUnit: Step!
     # when the segment starts to execute, how long must it take before the monitor can be enbaled
     minDurationThreshold: Int!
-    # when start monitor, time interval for each thread dumping the stack
+    # when start monitor, time interval for each dumping the stack
     dumpPeriod: Int!
 }
 
-# Thread monitor task create result
-type ThreadMonitorTaskCreationResult {
+# Profile task create result
+type ProfileTaskCreationResult {
     # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
 
@@ -41,7 +41,7 @@ type ThreadMonitorTaskCreationResult {
     id: String
 }
 
-type ThreadMonitorTask {
+type ProfileTask {
     id: String!
     # monitor service
     serviceId: ID!
@@ -50,20 +50,20 @@ type ThreadMonitorTask {
     endpointName: String!
     # task start time (timestamp)
     startTime: Long!
-    # thread monitor duration of this task (second)
+    # duration of this task (second)
     duration: Int!
     # when the segment starts to execute, how long must it take before the monitor can be enbaled
     minDurationThreshold: Int!
-    # when start monitor, time interval for each thread dumping the stack
+    # when start monitor, time interval for each dumping the stack
     dumpPeriod: Int!
 }
 
 extend type Mutation {
-    # crate new thread monitor task
-    createThreadMonitorTask(creationRequest: ThreadMonitorTaskCreationRequest): ThreadMonitorTaskCreationResult!
+    # crate new profile task
+    createProfileTask(creationRequest: ProfileTaskCreationRequest): ProfileTaskCreationResult!
 }
 
 extend type Query {
     # query task list
-    getThreadMonitorTaskList(serviceId: ID, endpointName: String, duration: Duration!): [ThreadMonitorTask!]!
+    getProfileTaskList(serviceId: ID, endpointName: String, duration: Duration!): [ProfileTask!]!
 }
