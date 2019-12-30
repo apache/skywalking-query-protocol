@@ -22,10 +22,8 @@ input ProfileTaskCreationRequest {
     endpointName: String!
     # if null means the task starts ASAP, otherwise the task begin after the startTime(based on agent side time)
     startTime: Long
-    # duration of this task
+    # duration of this task (minute)
     duration: Int!
-    # duration unit
-    durationUnit: Step!
     # when the segment starts to execute, how long must it take before the monitor can be enbaled
     minDurationThreshold: Int!
     # when start monitor, time interval for each dumping the stack
@@ -50,7 +48,7 @@ type ProfileTask {
     endpointName: String!
     # task start time (timestamp)
     startTime: Long!
-    # duration of this task (second)
+    # duration of this task (minute)
     duration: Int!
     # when the segment starts to execute, how long must it take before the monitor can be enbaled
     minDurationThreshold: Int!
@@ -64,6 +62,6 @@ extend type Mutation {
 }
 
 extend type Query {
-    # query task list
-    getProfileTaskList(serviceId: ID, endpointName: String, duration: Duration!): [ProfileTask!]!
+    # query all task list, order by ProfileTask#startTime descending
+    getProfileTaskList(serviceId: ID, endpointName: String): [ProfileTask!]!
 }
