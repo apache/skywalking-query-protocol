@@ -69,10 +69,13 @@ type TimeInfo {
 extend type Query {
     getGlobalBrief(duration: Duration!): ClusterBrief
 
-    # Service related meta info.
+    # Normal service related metainfo 
     getAllServices(duration: Duration!): [Service!]!
     searchServices(duration: Duration!, keyword: String!): [Service!]!
     searchService(serviceCode: String!): Service
+    
+    # Fetch all services of Browser type
+    getAllBrowserServices(duration: Duration!): [Service!]!
 
     # Service intance query
     getServiceInstances(duration: Duration!, serviceId: ID!): [ServiceInstance!]!
