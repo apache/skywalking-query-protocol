@@ -39,6 +39,27 @@ type ProfileTaskCreationResult {
     id: String
 }
 
+# Profile task log operation type
+enum ProfileTaskLogOperationType {
+    # when sniffer has notified
+    NOTIFIED,
+    # when sniffer has execution finished to report
+    EXECUTION_FINISHED
+}
+
+# Profile task execute log
+type ProfileTaskLog {
+    id: String!
+    # execute instance
+    instanceId: ID!
+    instanceName: String!
+    # operation type
+    operationType: ProfileTaskLogOperationType!
+    # operation time
+    operationTime: Long!
+}
+
+# Profile
 type ProfileTask {
     id: String!
     # monitor service
@@ -54,6 +75,9 @@ type ProfileTask {
     minDurationThreshold: Int!
     # when start monitor, time interval for each dumping the stack
     dumpPeriod: Int!
+
+    # instance operation logs
+    logs: [ProfileTaskLog!]!
 }
 
 extend type Mutation {
