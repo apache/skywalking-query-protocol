@@ -42,10 +42,9 @@ type ProfileTaskCreationResult {
 # Profile task execute log
 type ProfileTaskLog {
     id: String!
-    # profile task id
-    taskId: String!
-    # execute instance id
+    # execute instance
     instanceId: ID!
+    instanceName: String!
     # operation type
     # 1: when sniffer has notified
     # 2: when sniffer has execute finish to report
@@ -72,7 +71,7 @@ type ProfileTask {
     dumpPeriod: Int!
 
     # instance operation logs
-    logs: [ProfileTaskLog]
+    logs: [ProfileTaskLog!]!
 }
 
 extend type Mutation {
