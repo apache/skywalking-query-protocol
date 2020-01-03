@@ -39,6 +39,14 @@ type ProfileTaskCreationResult {
     id: String
 }
 
+# Profile task log operation type
+enum ProfileTaskLogOperationType {
+    # when sniffer has notified
+    NOTIFIED,
+    # when sniffer has execute finish to report
+    EXECUTE_FINISH
+}
+
 # Profile task execute log
 type ProfileTaskLog {
     id: String!
@@ -46,9 +54,7 @@ type ProfileTaskLog {
     instanceId: ID!
     instanceName: String!
     # operation type
-    # 1: when sniffer has notified
-    # 2: when sniffer has execute finish to report
-    operationType: Int!
+    operationType: ProfileTaskLogOperationType!
     # operation time
     operationTime: Long!
 }
