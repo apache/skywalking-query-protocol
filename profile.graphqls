@@ -43,8 +43,8 @@ type ProfileTaskCreationResult {
 enum ProfileTaskLogOperationType {
     # when sniffer has notified
     NOTIFIED,
-    # when sniffer has execute finish to report
-    EXECUTE_FINISH
+    # when sniffer has execution finished to report
+    EXECUTION_FINISHED
 }
 
 # Profile task execute log
