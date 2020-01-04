@@ -28,6 +28,8 @@ input ProfileTaskCreationRequest {
     minDurationThreshold: Int!
     # when start monitor, time interval for each dumping the stack
     dumpPeriod: Int!
+    # max number of traces will monitor on the sniffer
+    maxSamplingCount: Int!
 }
 
 # Profile task create result
@@ -75,6 +77,8 @@ type ProfileTask {
     minDurationThreshold: Int!
     # when start monitor, time interval for each dumping the stack
     dumpPeriod: Int!
+    # max number of traces will monitor on the sniffer
+    maxSamplingCount: Int!
 
     # instance operation logs
     logs: [ProfileTaskLog!]!
