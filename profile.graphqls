@@ -84,7 +84,6 @@ type ProfileTask {
     logs: [ProfileTaskLog!]!
 }
 
-
 extend type Mutation {
     # crate new profile task
     createProfileTask(creationRequest: ProfileTaskCreationRequest): ProfileTaskCreationResult!
