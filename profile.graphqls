@@ -88,11 +88,11 @@ type ProfileTask {
 type ProfileStackElement {
     # stack code signature
     codeSignature: String!
-    # self include children duration(millisecond)
+    # Include the execution time of children(millisecond)
     duration: Int!
-    # self exclude children duration(millisecond)
+    # Exclude  the execution time of children(millisecond)
     durationChildExcluded: Int!
-    # total dump count
+    # continuous dump count
     count: Int!
     # children of this stack code sign
     childs: [ProfileStackElement!]
