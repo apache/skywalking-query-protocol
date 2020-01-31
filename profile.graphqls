@@ -85,7 +85,7 @@ type ProfileTask {
 }
 
 # Profile thread stack anayze tree
-type ThreadStackAnalyzation {
+type ProfileStackElement {
     # stack code signature
     codeSignature: String!
     # self include children duration(millisecond)
@@ -94,16 +94,14 @@ type ThreadStackAnalyzation {
     durationChildExcluded: Int!
     # total dump count
     count: Int!
-    # max recursion invoke count
-    maxRecursionCount: Int!
     # children of this stack code sign
-    childs: [ThreadStackAnalyzation!]
+    childs: [ProfileStackElement!]
 }
 
 # Profile analyze result
 type ProfileAnalyzation {
     # thread stack dump analyze tree
-    stack: [ThreadStackAnalyzation!]!
+    stack: [ProfileStackElement!]!
 }
 
 extend type Mutation {
