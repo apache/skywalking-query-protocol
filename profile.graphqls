@@ -87,11 +87,11 @@ type ProfileTask {
 # Profile thread stack anayze tree
 type ThreadStackAnalyzation {
     # stack code signature
-    codeSign: String!
+    codeSignature: String!
     # self include children duration(millisecond)
     duration: Int!
     # self exclude children duration(millisecond)
-    excludeChildDuration: Int!
+    durationChildExcluded: Int!
     # total dump count
     count: Int!
     # children of this stack code sign
@@ -114,6 +114,6 @@ extend type Query {
     getProfileTaskList(serviceId: ID, endpointName: String): [ProfileTask!]!
     # query all task profiled segment list
     getProfileTaskSegmentList(taskID: String): [BasicTrace!]!
-    # analyze profiled segment
-    getProfileAnalyze(segmentId: String!, duration: Duration!): ProfileAnalyzation!
+    # analyze profiled segment, start and end time use timestamp(millisecond)
+    getProfileAnalyze(segmentId: String!, start: Long!, end: Long!): ProfileAnalyzation!
 }
