@@ -84,6 +84,26 @@ type ProfileTask {
     logs: [ProfileTaskLog!]!
 }
 
+# Profile thread stack anayze tree
+type ProfileStackElement {
+    # stack code signature
+    codeSignature: String!
+    # self include children duration(millisecond)
+    duration: Int!
+    # self exclude children duration(millisecond)
+    durationChildExcluded: Int!
+    # total dump count
+    count: Int!
+    # children of this stack code sign
+    childs: [ProfileStackElement!]
+}
+
+# Profile analyze result
+type ProfileAnalyzation {
+    # thread stack dump analyze tree
+    stack: [ProfileStackElement!]!
+}
+
 extend type Mutation {
     # crate new profile task
     createProfileTask(creationRequest: ProfileTaskCreationRequest): ProfileTaskCreationResult!
@@ -92,4 +112,8 @@ extend type Mutation {
 extend type Query {
     # query all task list, order by ProfileTask#startTime descending
     getProfileTaskList(serviceId: ID, endpointName: String): [ProfileTask!]!
+    # query all task profiled segment list
+    getProfileTaskSegmentList(taskID: String): [BasicTrace!]!
+    # analyze profiled segment, start and end time use timestamp(millisecond)
+    getProfileAnalyze(segmentId: String!, start: Long!, end: Long!): ProfileAnalyzation!
 }
