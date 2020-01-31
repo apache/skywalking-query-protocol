@@ -94,6 +94,8 @@ type ThreadStackAnalyzation {
     durationChildExcluded: Int!
     # total dump count
     count: Int!
+    # max recursion invoke count
+    maxRecursionCount: Int!
     # children of this stack code sign
     childs: [ThreadStackAnalyzation!]
 }
