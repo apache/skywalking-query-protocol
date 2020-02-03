@@ -95,7 +95,7 @@ type ProfileStackElement {
     # continuous dump count
     count: Int!
     # children of this stack code sign
-    childs: [ProfileStackElement!]
+    children: [ProfileStackElement!]
 }
 
 # Profile analyze result
