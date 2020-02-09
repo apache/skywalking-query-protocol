@@ -84,8 +84,11 @@ type ProfileTask {
     logs: [ProfileTaskLog!]!
 }
 
-# Profile thread stack anayze tree
+# Profile thread stack anayze tree element
 type ProfileStackElement {
+    # work for tree building, id matches multiple parentId
+    id: ID!
+    parentId: ID!
     # stack code signature
     codeSignature: String!
     # Include the execution time of children(millisecond)
@@ -94,14 +97,20 @@ type ProfileStackElement {
     durationChildExcluded: Int!
     # continuous dump count
     count: Int!
-    # children of this stack code sign
-    children: [ProfileStackElement!]
+}
+
+# Profile thread stack anayze tree
+type ProfileStackTree {
+    elements: [ProfileStackElement!]!
 }
 
 # Profile analyze result
 type ProfileAnalyzation {
-    # thread stack dump analyze tree
-    stack: [ProfileStackElement!]!
+    # if not empty means backend has information gave to the user
+    # such as: a large number of snapshots, only analyze part of the data
+    tip: String
+    # thread stack dump analyze trees
+    trees: [ProfileStackTree!]!
 }
 
 extend type Mutation {
