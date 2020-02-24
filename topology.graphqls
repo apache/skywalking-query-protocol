@@ -86,6 +86,9 @@ extend type Query {
     getGlobalTopology(duration: Duration!): Topology
     # Query the topology, based on the given service
     getServiceTopology(serviceId: ID!, duration: Duration!): Topology
+    # Query the topology, based on the given services.
+    # `#getServiceTopology` could be replaced by this.
+    getServiceTopologys(serviceIds: [ID!]!, duration: Duration!): Topology
     # Query the instance topology, based on the given clientServiceId and serverServiceId
     getServiceInstanceTopology(clientServiceId: ID!, serverServiceId: ID!, duration: Duration!): ServiceInstanceTopology
     # Query the topology, based on the given endpoint
