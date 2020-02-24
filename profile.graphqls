@@ -113,6 +113,29 @@ type ProfileAnalyzation {
     trees: [ProfileStackTree!]!
 }
 
+type ProfiledSpan {
+    spanId: Int!
+    parentSpanId: Int!
+    serviceCode: String!
+    startTime: Long!
+    endTime: Long!
+    endpointName: String
+    # There are three span types: Local, Entry and Exit
+    type: String!
+    # Peer network id, e.g. host+port, ip+port
+    peer: String
+    component: String
+    isError: Boolean
+    # There are 5 layers: Unknown, Database, RPCFramework, Http, MQ and Cache
+    layer: String
+    tags: [KeyValue!]!
+    logs: [LogEntity!]!
+}
+
+type ProfiledSegment {
+    spans: [ProfiledSpan!]!
+}
+
 extend type Mutation {
     # crate new profile task
     createProfileTask(creationRequest: ProfileTaskCreationRequest): ProfileTaskCreationResult!
@@ -123,6 +146,8 @@ extend type Query {
     getProfileTaskList(serviceId: ID, endpointName: String): [ProfileTask!]!
     # query all task profiled segment list
     getProfileTaskSegmentList(taskID: String): [BasicTrace!]!
+    # query profiled segemnt
+    getProfiledSegment(segmentId: String): ProfiledSegment
     # analyze profiled segment, start and end time use timestamp(millisecond)
     getProfileAnalyze(segmentId: String!, start: Long!, end: Long!): ProfileAnalyzation!
 }
