@@ -136,7 +136,7 @@ type ProfiledSegment {
     spans: [ProfiledSpan!]!
 }
 
-type ProfileAnalyzeTimeRange {
+input ProfileAnalyzeTimeRange {
     start: Long!
     end: Long!
 }
