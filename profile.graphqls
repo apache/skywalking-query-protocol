@@ -136,6 +136,11 @@ type ProfiledSegment {
     spans: [ProfiledSpan!]!
 }
 
+type ProfileAnalyzeTimeRange {
+    start: Long!
+    end: Long!
+}
+
 extend type Mutation {
     # crate new profile task
     createProfileTask(creationRequest: ProfileTaskCreationRequest): ProfileTaskCreationResult!
@@ -149,5 +154,5 @@ extend type Query {
     # query profiled segemnt
     getProfiledSegment(segmentId: String): ProfiledSegment
     # analyze profiled segment, start and end time use timestamp(millisecond)
-    getProfileAnalyze(segmentId: String!, start: Long!, end: Long!): ProfileAnalyzation!
+    getProfileAnalyze(segmentId: String!, timeRanges: [ProfileAnalyzeTimeRange!]!): ProfileAnalyzation!
 }
