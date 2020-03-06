@@ -81,6 +81,8 @@ enum Language {
     NODEJS
     PYTHON
     RUBY
+    GO
+    LUA
 }
 
 enum Scope {
