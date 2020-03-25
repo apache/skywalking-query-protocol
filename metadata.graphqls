@@ -84,9 +84,12 @@ extend type Query {
     # Consider there are huge numbers of endpoint,
     # must use endpoint owner's service id, keyword and limit filter to do query.
     searchEndpoint(keyword: String!, serviceId: ID!, limit: Int!): [Endpoint!]!
-    getEndpointInfo(endpointId: ID!): EndpointInfo
 
     # Database related meta info.
     getAllDatabases(duration: Duration!): [Database!]!
     getTimeInfo: TimeInfo
+    
+    # Deprecated
+    # Since 7.1.0
+    getEndpointInfo(endpointId: ID!): EndpointInfo
 }
