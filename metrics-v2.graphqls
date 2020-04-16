@@ -28,6 +28,7 @@ enum MetricsType {
     # Regular value type is suitable for readMetricsValue, readMetricsValues and sortMetrics
     REGULAR_VALUE
     # Metrics value includes multiple labels, is suitable for readLabeledMetricsValues
+    # Label should be assigned before the query happens, such as at the setting stage
     LABELED_VALUE
     # Heatmap value suitable for readHeatMap
     HEATMAP
