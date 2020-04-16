@@ -19,7 +19,7 @@
 # the top N record query is just do order and get the list.
 
 # Legacy metrics query protocol
-# Replyced by the metrics-v2 in the future
+# Replaced by the metrics-v2 in the future
 
 # Top N query is based on latency order by given service and metric name.
 input TopNRecordsCondition {

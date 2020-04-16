@@ -111,7 +111,7 @@ type TopNRecords {
 }
 
 extend type Query {
-    # Metrics definition metadata query. Respont the metrics type which determines the suitable query methods.
+    # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
     typeOfMetrics(names: String!): [MetricsDefintion!]!
 
     # Read metrics single value in the duration of required metrics for
