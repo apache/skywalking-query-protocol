@@ -52,28 +52,6 @@ input Duration {
     step: Step!
 }
 
-input Entity {
-    # 1. scope=All, no name is required.
-    # 2. scope=Service, ServiceInstance and Endpoint, set neccessary serviceName/serviceInstanceName/endpointName
-    # 3. Scope=ServiceRelation, ServiceInstanceRelation and EndpointRelation
-    #    serviceName/serviceInstanceName/endpointName is/are the source(s)
-    #    destServiceName/destServiceInstanceName/destEndpointName is/are destination(s)
-    #    set necessary names of sources and destinations.
-    scope: Scope!
-    serviceName: String
-    # Normal service is the service having installed agent or metrics reported directly.
-    # Unnormal service is conjectural service, usually detected by the agent.
-    isNormal: Boolean
-    serviceInstanceName: String
-    endpointName: String
-    destServiceName: String
-    # Normal service is the service having installed agent or metrics reported directly.
-    # Unnormal service is conjectural service, usually detected by the agent.
-    destIsNormal: Boolean
-    destServiceInstanceName: String
-    destEndpointName: String
-}
-
 enum Step {
     DAY
     HOUR

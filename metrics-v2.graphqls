@@ -14,8 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Metrics v2 query protocol is an alternative metrics query(s) of original v1, defined in the metric.graphql and aggregation.graphqls.
+# Metrics v2 query protocol is an alternative metrics query(s) of original v1,
+# defined in the metric.graphql, top-n-records.graphqls, and aggregation.graphqls.
 # By leveraging the new ID rule(no register) in the v8, we could query metrics based on name(s) directly.
+
+input Entity {
+    # 1. scope=All, no name is required.
+    # 2. scope=Service, ServiceInstance and Endpoint, set neccessary serviceName/serviceInstanceName/endpointName
+    # 3. Scope=ServiceRelation, ServiceInstanceRelation and EndpointRelation
+    #    serviceName/serviceInstanceName/endpointName is/are the source(s)
+    #    destServiceName/destServiceInstanceName/destEndpointName is/are destination(s)
+    #    set necessary names of sources and destinations.
+    scope: Scope!
+    serviceName: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    isNormal: Boolean
+    serviceInstanceName: String
+    endpointName: String
+    destServiceName: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    destIsNormal: Boolean
+    destServiceInstanceName: String
+    destEndpointName: String
+}
 
 input MetricsCondition {
     # Metrics name, which should be defined in OAL script
@@ -46,6 +69,17 @@ input TopNCondition {
     order: Order!
 }
 
+type MetricsDefintion {
+    valueType: MetricsType
+}
+
+# Metrics type is a new concept since v8.
+enum MetricsType {
+    # Regular value type is suitable for getValuesByEntity, getLinearIntValuesByEntity
+    REGULAR_VALUE
+    HEATMAP
+}
+
 type HeatMap {
     # Each element in nodes represents a point in Thermodynamic Diagram
     # And the element includes three values:
@@ -62,10 +96,18 @@ type HeatMap {
     axisYStep: Int!
 }
 
-type TopN {
+type TopNMetrics {
     name: String!
     id: ID!
     value: Long!
+}
+
+type TopNStatement {
+    statement: String
+    latency: Long!
+    # Have value, Only if the record has the trace id.
+    # Slow record
+    traceId: String
 }
 
 extend type Query {
@@ -77,7 +119,10 @@ extend type Query {
     # then five lines will be responsed, p50 is the first element of return value.
     getMultipleLinearIntValuesByEntity(metrics: MetricsCondition!, linearIndex: [Int!]!, duration: Duration!): [IntValues!]!
     getHeatmapByEntity(metrics: MetricsCondition!, duration: Duration!): HeatMap
-    # Get TopN from the given entity and parameters.
+    # Get TopN metrics values from the given entity and parameters.
     # The alternative query of get* in aggregation.graphqls
-    getTopN(metrics: TopNCondition!, order: Order!): [TopN!]!
+    getTopN(metrics: TopNCondition!, order: Order!): [TopNMetrics!]!
+    # Get TopN statements from the given entity and parameters.
+    # The alternative query of get* in top-n-records.graphqls
+    getTopNStatements(metrics: TopNCondition!, order: Order!): [TopNStatement!]!
 }
