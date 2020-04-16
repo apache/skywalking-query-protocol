@@ -88,7 +88,7 @@ type HeatMap {
     # Each element of values matches the time point of the query duration.
     # The element in the IntValues represents the value of the same index bucket
     values: [IntValues!]!
-    # Bucket describes the values represents.
+    # Bucket describes the ranges of #values represent.
     buckets: [Bucket!]!
 }
 
