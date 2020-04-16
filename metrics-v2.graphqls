@@ -18,6 +18,23 @@
 # defined in the metric.graphql, top-n-records.graphqls, and aggregation.graphqls.
 # By leveraging the new ID rule(no register) in the v8, we could query metrics based on name(s) directly.
 
+type MetricsDefintion {
+    name: String!
+    valueType: MetricsType!
+}
+
+# Metrics type is a new concept since v8.
+enum MetricsType {
+    # Regular value type is suitable for readMetricsValue, readMetricsValues and sortMetrics
+    REGULAR_VALUE
+    # Metrics value includes multiple labels, is suitable for readLabeledMetricsValues
+    LABELED_VALUE
+    # Heatmap value suitable for readHeatMap
+    HEATMAP
+    # Top metrics is for readSampledRecords only. This value
+    SAMPLED_RECORD
+}
+
 input Entity {
     # 1. scope=All, no name is required.
     # 2. scope=Service, ServiceInstance and Endpoint, set neccessary serviceName/serviceInstanceName/endpointName
@@ -50,16 +67,6 @@ input MetricsCondition {
     entity: Entity
 }
 
-input BatchMetricsConditions {
-    # Metrics name, which should be defined in OAL script
-    # Such as:
-    # Endpoint_avg = from(Endpoint.latency).avg()
-    # Then, `Endpoint_avg`
-    name: String!
-    # Follow entity definition description.
-    ids: [Entity!]!
-}
-
 input TopNCondition {
     # Metrics name
     name: String!
@@ -69,60 +76,52 @@ input TopNCondition {
     order: Order!
 }
 
-type MetricsDefintion {
-    valueType: MetricsType
-}
-
-# Metrics type is a new concept since v8.
-enum MetricsType {
-    # Regular value type is suitable for getValuesByEntity, getLinearIntValuesByEntity
-    REGULAR_VALUE
-    HEATMAP
+type MetricsValues {
+    # Could be null if no label assigned in the query condition
+    lable: String
+    # Values of this label value.
+    values: IntValues
 }
 
 type HeatMap {
-    # Each element in nodes represents a point in Thermodynamic Diagram
-    # And the element includes three values:
-    # 1) Time Bucket based on query duration
-    # 2) Response time index.
-    #    Response time = [responseTimeStep * index, responseTimeStep * (index+1))
-    #    The last element: [Response Time * index, MAX)
-    # 3) The number of calls in this response time duration.
-    #
-    # Example:
-    # [ [0, 0, 10], [0, 1, 43], ...]
-    # These ^^^ two represent the left bottom element, and another element above it.
-    nodes: [[Int]!]!
-    axisYStep: Int!
+    # Each element of values matches the time point of the query duration.
+    # The element in the IntValues represents the value of the same index bucket
+    values: [IntValues!]!
+    # Bucket describes the values represents.
+    buckets: [Bucket!]!
 }
 
-type TopNMetrics {
+# Bucket represents the value range.
+type Bucket {
+    start: Int!
+    end: Int!
+}
+
+type TopNRecords {
+    # Literal string name for visualization
     name: String!
+    # ID repesents the owner of this entity.
     id: ID!
-    value: Long!
-}
-
-type TopNStatement {
-    statement: String
-    latency: Long!
-    # Have value, Only if the record has the trace id.
-    # Slow record
-    traceId: String
+    # Usually an integer as this is metrics.
+    value: String
+    # Have value, Only if the record has related trace id.
+    # UI should show this as an attached value.
+    refId: ID
 }
 
 extend type Query {
-    getValuesByEntity(metrics: BatchMetricsConditions!, duration: Duration!): IntValues
-    getLinearIntValuesByEntity(metrics: MetricsCondition!, duration: Duration!): IntValues
-    # Query the type of metrics including multiple values, and format them as multiple linears.
-    # The seq of these multiple lines base on the calculation func in OAL
-    # Such as, should us this to query the result of func percentile(50,75,90,95,99) in OAL,
-    # then five lines will be responsed, p50 is the first element of return value.
-    getMultipleLinearIntValuesByEntity(metrics: MetricsCondition!, linearIndex: [Int!]!, duration: Duration!): [IntValues!]!
-    getHeatmapByEntity(metrics: MetricsCondition!, duration: Duration!): HeatMap
-    # Get TopN metrics values from the given entity and parameters.
-    # The alternative query of get* in aggregation.graphqls
-    getTopN(metrics: TopNCondition!, order: Order!): [TopNMetrics!]!
-    # Get TopN statements from the given entity and parameters.
-    # The alternative query of get* in top-n-records.graphqls
-    getTopNStatements(metrics: TopNCondition!, order: Order!): [TopNStatement!]!
+    # Metrics definition metadata query. Respont the metrics type which determines the suitable query methods.
+    typeOfMetrics(names: String!): [MetricsDefintion!]!
+
+    # Read metrics single value in the duration of required metrics for
+    readMetricsValue(metrics: MetricsCondition!, duration: Duration!): Int!
+    readMetricsValues(metrics: MetricsCondition!, duration: Duration!): [MetricsValues!]!
+    sortMetrics(metrics: MetricsCondition!, duration: Duration!): [TopNRecords!]!
+    # Read value in the given time duration, usually as a linear.
+    # labels: the labels you need to query.
+    readLabeledMetricsValues(metrics: MetricsCondition!, labels: [String!]!, duration: Duration!): [MetricsValues!]!
+    # Heatmap is bucket based value statistic result.
+    readHeatMap(metrics: MetricsCondition!, duration: Duration!): HeatMap
+    # Read the sampled records
+    readSampledRecords(metrics: TopNCondition!, order: Order!): [TopNRecords!]!
 }
