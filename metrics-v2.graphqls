@@ -124,5 +124,5 @@ extend type Query {
     # Heatmap is bucket based value statistic result.
     readHeatMap(metrics: MetricsCondition!, duration: Duration!): HeatMap
     # Read the sampled records
-    readSampledRecords(metrics: TopNCondition!, order: Order!): [TopNRecords!]!
+    readSampledRecords(metrics: TopNCondition!, order: Order!, duration: Duration!): [TopNRecords!]!
 }
