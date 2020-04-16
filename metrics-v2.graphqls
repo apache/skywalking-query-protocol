@@ -79,7 +79,7 @@ input TopNCondition {
 
 type MetricsValues {
     # Could be null if no label assigned in the query condition
-    lable: String
+    label: String
     # Values of this label value.
     values: IntValues
 }
