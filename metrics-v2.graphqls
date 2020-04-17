@@ -18,7 +18,7 @@
 # defined in the metric.graphql, top-n-records.graphqls, and aggregation.graphqls.
 # By leveraging the new ID rule(no register) in the v8, we could query metrics based on name(s) directly.
 
-type MetricsDefintion {
+type MetricsDefinition {
     name: String!
     valueType: MetricsType!
 }
@@ -112,7 +112,7 @@ type TopNRecords {
 
 extend type Query {
     # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
-    typeOfMetrics(names: String!): [MetricsDefintion!]!
+    typeOfMetrics(names: String!): [MetricsDefinition!]!
 
     # Read metrics single value in the duration of required metrics for
     readMetricsValue(metrics: MetricsCondition!, duration: Duration!): Int!
