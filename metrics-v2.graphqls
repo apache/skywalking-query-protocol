@@ -18,13 +18,10 @@
 # defined in the metric.graphql, top-n-records.graphqls, and aggregation.graphqls.
 # By leveraging the new ID rule(no register) in the v8, we could query metrics based on name(s) directly.
 
-type MetricsDefinition {
-    name: String!
-    valueType: MetricsType!
-}
-
 # Metrics type is a new concept since v8.
 enum MetricsType {
+    # Can't find the metrics type definition.
+    UNKNOWN
     # Regular value type is suitable for readMetricsValue, readMetricsValues and sortMetrics
     REGULAR_VALUE
     # Metrics value includes multiple labels, is suitable for readLabeledMetricsValues
@@ -32,7 +29,7 @@ enum MetricsType {
     LABELED_VALUE
     # Heatmap value suitable for readHeatMap
     HEATMAP
-    # Top metrics is for readSampledRecords only. This value
+    # Top metrics is for readSampledRecords only.
     SAMPLED_RECORD
 }
 
@@ -72,7 +69,7 @@ input TopNCondition {
     # Metrics name
     name: String!
     # Follow entity definition description.
-    entity: Entity
+    parentEntity: Entity
     topN: Int!
     order: Order!
 }
@@ -98,12 +95,12 @@ type Bucket {
     end: Int!
 }
 
-type TopNRecords {
+type SelectedRecord {
     # Literal string name for visualization
     name: String!
-    # ID repesents the owner of this entity.
+    # ID represents the owner of this entity.
     id: ID!
-    # Usually an integer as this is metrics.
+    # Usually an integer value as this is metrics.
     value: String
     # Have value, Only if the record has related trace id.
     # UI should show this as an attached value.
@@ -112,17 +109,19 @@ type TopNRecords {
 
 extend type Query {
     # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
-    typeOfMetrics(names: String!): [MetricsDefinition!]!
+    typeOfMetrics(name: String!): MetricsType!
 
-    # Read metrics single value in the duration of required metrics for
+    # Read metrics single value in the duration of required metrics
     readMetricsValue(metrics: MetricsCondition!, duration: Duration!): Int!
+    # Read time-series values in the duration of required metrics
     readMetricsValues(metrics: MetricsCondition!, duration: Duration!): [MetricsValues!]!
-    sortMetrics(metrics: MetricsCondition!, duration: Duration!): [TopNRecords!]!
+    # Read entity list of required metrics and parent entity type.
+    sortMetrics(metrics: TopNCondition!, duration: Duration!): [SelectedRecord!]!
     # Read value in the given time duration, usually as a linear.
     # labels: the labels you need to query.
     readLabeledMetricsValues(metrics: MetricsCondition!, labels: [String!]!, duration: Duration!): [MetricsValues!]!
     # Heatmap is bucket based value statistic result.
     readHeatMap(metrics: MetricsCondition!, duration: Duration!): HeatMap
     # Read the sampled records
-    readSampledRecords(metrics: TopNCondition!, order: Order!, duration: Duration!): [TopNRecords!]!
+    readSampledRecords(metrics: TopNCondition!, duration: Duration!): [SelectedRecord!]!
 }
