@@ -68,8 +68,12 @@ input MetricsCondition {
 input TopNCondition {
     # Metrics name
     name: String!
-    # Follow entity definition description.
-    parentEntity: Entity
+    # Could be null if query the global top N.
+    parentService: String
+    # Indicate the metrics entity scope.
+    # Because this is a top list, don't need to set the Entity like the MetricsCondition.
+    # Only accept scope = Service/ServiceInstance/Endpoint, ignore others due to those are pointless.
+    scope: Scope
     topN: Int!
     order: Order!
 }
