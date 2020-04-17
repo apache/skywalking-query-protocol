@@ -86,6 +86,7 @@ enum Language {
 }
 
 enum Scope {
+    All
     Service
     ServiceInstance
     Endpoint

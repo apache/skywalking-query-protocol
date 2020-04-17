@@ -14,15 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Query the cluster brief based on the given duration
-type ClusterBrief {
-    numOfService: Int!
-    numOfEndpoint: Int!
-    numOfDatabase: Int!
-    numOfCache: Int!
-    numOfMQ: Int!
-}
-
 type Service {
     id: ID!
     name: String!
@@ -67,8 +58,6 @@ type TimeInfo {
 }
 
 extend type Query {
-    getGlobalBrief(duration: Duration!): ClusterBrief
-
     # Normal service related metainfo 
     getAllServices(duration: Duration!): [Service!]!
     searchServices(duration: Duration!, keyword: String!): [Service!]!
