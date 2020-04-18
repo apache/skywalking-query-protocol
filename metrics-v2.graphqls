@@ -98,8 +98,10 @@ type HeatMap {
 
 # Bucket represents the value range.
 type Bucket {
-    start: Int!
-    end: Int!
+    # The min value of this bucket representing.
+    min: Int!
+    # The max value of this bucket representing.
+    max: Int!
 }
 
 type SelectedRecord {
