@@ -121,7 +121,7 @@ extend type Query {
     # Read metrics single value in the duration of required metrics
     readMetricsValue(condition: MetricsCondition!, duration: Duration!): Int!
     # Read time-series values in the duration of required metrics
-    readMetricsValues(condition: MetricsCondition!, duration: Duration!): [MetricsValues!]!
+    readMetricsValues(condition: MetricsCondition!, duration: Duration!): MetricsValues!
     # Read entity list of required metrics and parent entity type.
     sortMetrics(condition: TopNCondition!, duration: Duration!): [SelectedRecord!]!
     # Read value in the given time duration, usually as a linear.
