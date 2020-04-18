@@ -91,9 +91,14 @@ type MetricsValues {
 type HeatMap {
     # Each element of values matches the time point of the query duration.
     # The element in the IntValues represents the value of the same index bucket
-    values: [IntValues!]!
+    values: [HeatMapColumn!]!
     # Bucket describes the ranges of #values represent.
     buckets: [Bucket!]!
+}
+
+type HeatMapColumn {
+    id: ID!
+    values: [Long!]!
 }
 
 # Bucket represents the value range.
