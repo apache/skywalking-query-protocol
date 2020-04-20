@@ -103,10 +103,12 @@ type HeatMapColumn {
 
 # Bucket represents the value range.
 type Bucket {
-    # The min value of this bucket representing.
-    min: Int!
-    # The max value of this bucket representing.
-    max: Int!
+    # Usually the number represents the min value of this bucket,
+    # could be `infinite-` string as unbounded value
+    min: String!
+    # Usually the number represents the max value of this bucket,
+    # could be `infinite+` string as unbounded value
+    max: String!
 }
 
 type SelectedRecord {
