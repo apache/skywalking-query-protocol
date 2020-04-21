@@ -14,6 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Query the cluster brief based on the given duration
+type ClusterBrief {
+    numOfService: Int!
+    numOfEndpoint: Int!
+    numOfDatabase: Int!
+    numOfCache: Int!
+    numOfMQ: Int!
+}
+
 type Service {
     id: ID!
     name: String!
@@ -78,4 +87,7 @@ extend type Query {
     # Database related meta info.
     getAllDatabases(duration: Duration!): [Database!]!
     getTimeInfo: TimeInfo
+
+    # Deprecated query, left only for not breaking UI for short term.
+    getGlobalBrief(duration: Duration!): ClusterBrief
 }
