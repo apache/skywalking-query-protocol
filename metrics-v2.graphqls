@@ -44,13 +44,13 @@ input Entity {
     serviceName: String
     # Normal service is the service having installed agent or metrics reported directly.
     # Unnormal service is conjectural service, usually detected by the agent.
-    isNormal: Boolean
+    normal: Boolean
     serviceInstanceName: String
     endpointName: String
     destServiceName: String
     # Normal service is the service having installed agent or metrics reported directly.
     # Unnormal service is conjectural service, usually detected by the agent.
-    destIsNormal: Boolean
+    destNormal: Boolean
     destServiceInstanceName: String
     destEndpointName: String
 }
