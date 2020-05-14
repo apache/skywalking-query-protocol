@@ -72,7 +72,7 @@ input TopNCondition {
     parentService: String
     # Normal service is the service having installed agent or metrics reported directly.
     # Unnormal service is conjectural service, usually detected by the agent.
-    isNormal: Boolean
+    normal: Boolean
     # Indicate the metrics entity scope.
     # This is required in sortMetrics query.
     # Only accept scope = Service/ServiceInstance/Endpoint, ignore others due to those are pointless.
