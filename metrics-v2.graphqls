@@ -114,8 +114,6 @@ type Bucket {
 type SelectedRecord {
     # Literal string name for visualization
     name: String!
-    # ID represents the owner of this entity.
-    id: ID!
     # Usually an integer value as this is metrics.
     value: String
     # Have value, Only if the record has related trace id.
