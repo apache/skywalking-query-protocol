@@ -29,9 +29,9 @@ type DashboardConfiguration {
     type: TemplateType!,
     # JSON based configuration. The format of text is the export result on the UI page.
     configuration: String!,
-    # Default means this configuration should effect directly.
+    # Activated means this configuration should effect directly.
     # If the name is already used in the browser storage, the UI decides the behaviour, override/ignore/user-confirmation.
-    default: Boolean!,
+    activated: Boolean!,
     # Disable means this template is not working.
     disabled: Boolean!
 }
