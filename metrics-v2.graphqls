@@ -62,7 +62,7 @@ input MetricsCondition {
     # Then, `Endpoint_avg`
     name: String!
     # Follow entity definition description.
-    entity: Entity
+    entity: Entity!
 }
 
 input TopNCondition {
