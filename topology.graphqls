@@ -26,6 +26,12 @@ type ServiceInstanceTopology {
     calls: [Call!]!
 }
 
+# The endpoint topology
+type EndpointTopology {
+    nodes: [EndpointNode!]!
+    calls: [Call!]!
+}
+
 # Node in Topology
 type Node {
     # The global id of each node,
@@ -46,7 +52,25 @@ type Node {
 type ServiceInstanceNode {
     # The instance id of each node,
     id: ID!
-    # The literal name of the #id.
+    # The literal name of the #id. Instance Name.
+    name: String!
+    # Service id
+    serviceId: ID!
+    # The literal name of the #serviceId.
+    serviceName: String!
+    # The type name may be
+    # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
+    # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
+    type: String
+    # It is a conjuecture node or real node, to represent an instance.
+    isReal: Boolean!
+}
+
+# Node in EndpointTopology
+type EndpointNode {
+    # The instance id of each node,
+    id: ID!
+    # The literal name of the #id. Endpoint Name
     name: String!
     # Service id
     serviceId: ID!
@@ -93,4 +117,6 @@ extend type Query {
     getServiceInstanceTopology(clientServiceId: ID!, serverServiceId: ID!, duration: Duration!): ServiceInstanceTopology
     # Query the topology, based on the given endpoint
     getEndpointTopology(endpointId: ID!, duration: Duration!): Topology
+    # v2 of getEndpointTopology
+    getEndpointDependencies(endpointId: ID!, duration: Duration!): EndpointTopology
 }
