@@ -100,3 +100,16 @@ enum DetectPoint {
     SERVER
     PROXY
 }
+
+type HealthStatus {
+    # 0 means healthy, more than 0 means unhealthy 
+    # and less than 0 means oap doesn't startup.
+    score: Int!
+    # some details about the score value.
+    details: String
+}
+
+extend type Query {
+    # Query Health Checker module for the status of OAP server
+    checkHealth(): HealthStatus!
+}
