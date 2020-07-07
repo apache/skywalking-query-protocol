@@ -111,5 +111,5 @@ type HealthStatus {
 
 extend type Query {
     # Query Health Checker module for the status of OAP server
-    checkHealth(): HealthStatus!
+    checkHealth: HealthStatus!
 }
