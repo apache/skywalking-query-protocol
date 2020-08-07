@@ -46,7 +46,14 @@ input TraceQueryCondition {
     maxTraceDuration: Int
     traceState: TraceState!
     queryOrder: QueryOrder!
+    # Map to the tags included in the traces
+    tags: [SpanTag!]
     paging: Pagination!
+}
+
+input SpanTag {
+    key: String!
+    value: String
 }
 
 enum TraceState {
