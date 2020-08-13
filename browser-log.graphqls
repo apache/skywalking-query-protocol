@@ -70,6 +70,6 @@ enum ErrorCategory {
 }
 
 extend type Query {
-    queryBasicBrowserErrorLog(condition: BrowserErrorLogQueryCondition): BrowserErrorLogBrief
+    queryBasicBrowserErrorLogs(condition: BrowserErrorLogQueryCondition): BrowserErrorLogBrief
     queryBrowserErrorLog(uniqueId: String!): BrowserErrorLog
 }
