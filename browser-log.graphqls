@@ -14,22 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The list of browser error log
-type BrowserErrorLogBrief {
-    errorLogs: [BasicBrowserErrorLog!]!
-    total: Int!
-}
-
-# Browser error log basic info
-type BasicBrowserErrorLog {
-    uniqueId: String!
-    pagePath: String!
-    time: Long!
-    category: ErrorCategory!
-}
-
 # Represent the conditions used for query BrowserErrorLogBrief
 input BrowserErrorLogQueryCondition {
+    uniqueId: String
     # The value of 0 means all services.
     serviceId: ID
     serviceVersionId: ID
@@ -39,6 +26,12 @@ input BrowserErrorLogQueryCondition {
     # The time range of browser perf data time
     queryDuration: Duration
     paging: Pagination!
+}
+
+# The list of browser error log
+type BrowserErrorLogs {
+    logs: [BrowserErrorLog!]!
+    total: Int!
 }
 
 # Represent the browser error log
@@ -70,6 +63,5 @@ enum ErrorCategory {
 }
 
 extend type Query {
-    queryBasicBrowserErrorLogs(condition: BrowserErrorLogQueryCondition): BrowserErrorLogBrief
-    queryBrowserErrorLog(uniqueId: String!): BrowserErrorLog
+    queryBrowserErrorLogs(condition: BrowserErrorLogQueryCondition): BrowserErrorLogs
 }
