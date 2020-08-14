@@ -128,7 +128,7 @@ extend type Query {
     typeOfMetrics(name: String!): MetricsType!
 
     # Read metrics single value in the duration of required metrics
-    readMetricsValue(condition: MetricsCondition!, duration: Duration!): Int!
+    readMetricsValue(condition: MetricsCondition!, duration: Duration!): Long!
     # Read time-series values in the duration of required metrics
     readMetricsValues(condition: MetricsCondition!, duration: Duration!): MetricsValues!
     # Read entity list of required metrics and parent entity type.
