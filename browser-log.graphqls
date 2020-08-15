@@ -16,7 +16,6 @@
 
 # Represent the conditions used for query BrowserErrorLogBrief
 input BrowserErrorLogQueryCondition {
-    uniqueId: String
     # The value of 0 means all services.
     serviceId: ID
     serviceVersionId: ID
@@ -36,7 +35,6 @@ type BrowserErrorLogs {
 
 # Represent the browser error log
 type BrowserErrorLog {
-    uniqueId: String!
     service: String!
     serviceVersion: String!
     time: Long!
