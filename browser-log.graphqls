@@ -40,7 +40,6 @@ type BrowserErrorLog {
     time: Long!
     pagePath: String!
     category: ErrorCategory!
-    catalog: String
     grade: String
     message: String
     line: Int
