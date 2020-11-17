@@ -68,7 +68,7 @@ type TimeInfo {
 
 extend type Query {
     # Normal service related metainfo 
-    getAllServices(duration: Duration!): [Service!]!
+    getAllServices(duration: Duration!, group: String): [Service!]!
     searchServices(duration: Duration!, keyword: String!): [Service!]!
     searchService(serviceCode: String!): Service
     
