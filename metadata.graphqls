@@ -26,6 +26,7 @@ type ClusterBrief {
 type Service {
     id: ID!
     name: String!
+    group: String!
 }
 
 type ServiceInstance {
