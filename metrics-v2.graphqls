@@ -81,6 +81,16 @@ input TopNCondition {
     order: Order!
 }
 
+# Define the metrics provided in the OAP server.
+type MetricDefinition {
+    name: String!
+    type: MetricsType!
+    # Catalog includes
+    # SERVICE_CATALOG,SERVICE_INSTANCE_CATALOG,ENDPOINT_CATALOG,
+    # SERVICE_RELATION_CATALOG,SERVICE_INSTANCE_RELATION_CATALOG_NAME,ENDPOINT_RELATION_CATALOG_NAME
+    catalog: String
+}
+
 type MetricsValues {
     # Could be null if no label assigned in the query condition
     label: String
@@ -126,6 +136,9 @@ type SelectedRecord {
 extend type Query {
     # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
     typeOfMetrics(name: String!): MetricsType!
+    # Get the list of all available metrics in the current OAP server.
+    # Param, regex, could be used to filter the metrics by name.
+    listMetrics(regex: String): [MetricDefinition!]!
 
     # Read metrics single value in the duration of required metrics
     readMetricsValue(condition: MetricsCondition!, duration: Duration!): Long!
