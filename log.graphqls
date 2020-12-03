@@ -44,19 +44,27 @@ input LogQueryCondition {
     serviceId: ID
     serviceInstanceId: ID
     endpointId: ID
+    # Related trace condition.
+    # When use related trace condition, duration is not required.
     relatedTrace: TraceScopeCondition
     # The time range of log happened
+    # [Required] duration is required in most query, only exception is when use relatedTrace.
     queryDuration: Duration
     state: LogState!
-    stateCode: String
     paging: Pagination!
+    tags: [LogTag!]
 }
 
 # Trace related condition
 input TraceScopeCondition {
-    traceId: String
+    traceId: String!
     segmentId: String
     spanId: Int
+}
+
+input LogTag {
+    key: String!
+    value: String
 }
 
 enum LogState {
