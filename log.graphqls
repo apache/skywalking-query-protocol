@@ -44,12 +44,19 @@ input LogQueryCondition {
     serviceId: ID
     serviceInstanceId: ID
     endpointId: ID
-    traceId: String
+    relatedTrace: TraceScopeCondition
     # The time range of log happened
     queryDuration: Duration
     state: LogState!
     stateCode: String
     paging: Pagination!
+}
+
+# Trace related condition
+input TraceScopeCondition {
+    traceId: String
+    segmentId: String
+    spanId: Int
 }
 
 enum LogState {
@@ -61,7 +68,7 @@ enum LogState {
 enum ContentType {
     TEXT
     JSON
-    NONE
+    YAML
 }
 
 extend type Query {
