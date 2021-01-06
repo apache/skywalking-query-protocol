@@ -112,11 +112,6 @@ enum RefType {
     CROSS_THREAD
 }
 
-type KeyValue {
-    key: String!
-    value: String
-}
-
 type LogEntity {
     time: Long!
     data: [KeyValue!]

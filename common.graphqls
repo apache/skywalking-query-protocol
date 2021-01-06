@@ -28,6 +28,12 @@ type Mutation {
     version: String
 }
 
+# String key, String value pair.
+type KeyValue {
+    key: String!
+    value: String
+}
+
 # The Duration defines the start and end time for each query operation.
 # Fields: `start` and `end`
 #   represents the time span. And each of them matches the step.

@@ -34,7 +34,7 @@ type Log {
     statusCode: String
     contentType: ContentType!
     content: String
-    tags: [LogTag!]
+    tags: [KeyValue!]
 }
 
 # Represent the conditions used for query logs
