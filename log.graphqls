@@ -55,6 +55,10 @@ input LogQueryCondition {
     state: LogState!
     paging: Pagination!
     tags: [LogTag!]
+    # Fuzzy query condition for the log content.
+    # Could be a huge performance impact for some storage implementation.
+    # The storage implementation could choose different strategy to support this kind of query.
+    keyword: String
 }
 
 # Trace related condition
