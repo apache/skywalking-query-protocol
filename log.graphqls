@@ -56,7 +56,9 @@ input LogQueryCondition {
     paging: Pagination!
     tags: [LogTag!]
     # Fuzzy query conditions for the log content.
+    # Use these 2 keyword related condition, when supportQueryLogsByKeywords = TRUE.
     keywordsOfContent: [!String]
+    excludingKeywordsOfContent: [!String]
 }
 
 # Trace related condition
@@ -84,6 +86,7 @@ enum ContentType {
 }
 
 extend type Query {
+    # Return true if the current storage implementation supports fuzzy query for logs.
     supportQueryLogsByKeywords: Boolean!
     queryLogs(condition: LogQueryCondition): Logs
 }
