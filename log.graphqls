@@ -56,7 +56,7 @@ input LogQueryCondition {
     paging: Pagination!
     tags: [LogTag!]
     # Fuzzy query conditions for the log content.
-    # Use these 2 keyword related condition, when supportQueryLogsByKeywords = TRUE.
+    # Use these 2 keyword related condition, when supportQueryLogsByKeywords returns TRUE.
     keywordsOfContent: [!String]
     excludingKeywordsOfContent: [!String]
 }
