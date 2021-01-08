@@ -55,10 +55,8 @@ input LogQueryCondition {
     state: LogState!
     paging: Pagination!
     tags: [LogTag!]
-    # Fuzzy query condition for the log content.
-    # Could be a huge performance impact for some storage implementation.
-    # The storage implementation could choose different strategy to support this kind of query.
-    keyword: String
+    # Fuzzy query conditions for the log content.
+    keywordsOfContent: [!String]
 }
 
 # Trace related condition
@@ -86,5 +84,6 @@ enum ContentType {
 }
 
 extend type Query {
+    supportQueryLogsByKeywords: Boolean!
     queryLogs(condition: LogQueryCondition): Logs
 }
