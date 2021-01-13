@@ -59,6 +59,8 @@ input LogQueryCondition {
     # Use these 2 keyword related condition, when supportQueryLogsByKeywords returns TRUE.
     keywordsOfContent: [String!]
     excludingKeywordsOfContent: [String!]
+    # Order by timestamp, default desc
+    queryOrder: Order
 }
 
 # Trace related condition
