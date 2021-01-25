@@ -54,19 +54,9 @@ input EventQueryCondition {
     source: SourceInput
     name: String
     type: Type
-    startTime: TimeRangeInput
-    endTime: TimeRangeInput
-    size: Int # How many events returned, the maximum size is 100, default value is 20
-}
-
-type TimeRange {
-    start: Long
-    end: Long
-}
-
-input TimeRangeInput {
-    start: Long
-    end: Long
+    time: Duration
+    order: Order
+    pagination: Pagination!
 }
 
 extend type Query {
