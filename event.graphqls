@@ -23,7 +23,9 @@ type Event {
     type: Type!
     message: String
     parameters: String
+    # The start time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC.
     startTime: Long!
+    # The end time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC. Empty if the event have not finished yet.
     endTime: Long
 }
 
@@ -56,7 +58,7 @@ input EventQueryCondition {
     type: Type
     time: Duration
     order: Order
-    pagination: Pagination!
+    size: Int
 }
 
 extend type Query {
