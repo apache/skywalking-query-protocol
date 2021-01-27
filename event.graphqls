@@ -1,0 +1,66 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+scalar Long
+
+type Event {
+    uuid: String!
+    source: Source!
+    name: String!
+    type: EventType!
+    message: String
+    parameters: [KeyValue!]
+    # The start time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC.
+    startTime: Long!
+    # The end time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC. Empty if the event have not finished yet.
+    endTime: Long
+}
+
+type Source {
+    service: String
+    serviceInstance: String
+    endpoint: String
+}
+
+input SourceInput {
+    service: String
+    serviceInstance: String
+    endpoint: String
+}
+
+enum EventType {
+    Normal
+    Error
+}
+
+type Events {
+    events: [Event!]!
+    total: Int!
+}
+
+input EventQueryCondition {
+    uuid: String
+    source: SourceInput
+    name: String
+    type: EventType
+    time: Duration
+    order: Order
+    size: Int
+}
+
+extend type Query {
+    queryEvents(condition: EventQueryCondition): Events
+}
