@@ -20,9 +20,9 @@ type Event {
     uuid: String!
     source: Source!
     name: String!
-    type: Type!
+    type: EventType!
     message: String
-    parameters: String
+    parameters: [KeyValue!]
     # The start time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC.
     startTime: Long!
     # The end time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC. Empty if the event have not finished yet.
@@ -41,7 +41,7 @@ input SourceInput {
     endpoint: String
 }
 
-enum Type {
+enum EventType {
     Normal
     Error
 }
@@ -55,7 +55,7 @@ input EventQueryCondition {
     uuid: String
     source: SourceInput
     name: String
-    type: Type
+    type: EventType
     time: Duration
     order: Order
     size: Int
