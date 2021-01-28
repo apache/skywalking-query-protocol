@@ -30,7 +30,6 @@ type Log {
     endpointId: ID
     traceId: String
     timestamp: String!
-    isError: Boolean
     statusCode: String
     contentType: ContentType!
     content: String
@@ -50,7 +49,6 @@ input LogQueryCondition {
     # The time range of log happened
     # [Required] duration is required in most query, only exception is when use relatedTrace.
     queryDuration: Duration
-    state: LogState!
     paging: Pagination!
     tags: [LogTag!]
     # Fuzzy query conditions for the log content.
@@ -71,12 +69,6 @@ input TraceScopeCondition {
 input LogTag {
     key: String!
     value: String
-}
-
-enum LogState {
-    ALL
-    SUCCESS
-    ERROR
 }
 
 enum ContentType {
