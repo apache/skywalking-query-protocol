@@ -30,7 +30,6 @@ type Log {
     endpointId: ID
     traceId: String
     timestamp: String!
-    statusCode: String
     contentType: ContentType!
     content: String
     tags: [KeyValue!]
