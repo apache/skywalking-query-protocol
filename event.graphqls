@@ -24,8 +24,10 @@ type Event {
     message: String
     parameters: [KeyValue!]
     # The start time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC.
+    # This field may be 0 if the user didn't report it or the `start` event is lost due to network issues.
     startTime: Long!
-    # The end time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC. Empty if the event have not finished yet.
+    # The end time (in milliseconds) of the event, measured between the current time and midnight, January 1, 1970 UTC. Empty or 0 if the event have not finished yet.
+    # This field may be 0 if the user didn't report it or the `end` event is lost due to network issues.
     endTime: Long
 }
 
