@@ -29,7 +29,7 @@ type Log {
     endpointName: String
     endpointId: ID
     traceId: String
-    timestamp: String!
+    timestamp: Long!
     contentType: ContentType!
     content: String
     tags: [KeyValue!]
