@@ -24,6 +24,7 @@ type AlarmMessage {
     scope: Scope
     id: ID!
     message: String!
+    tags: [KeyValue!]!
 }
 
 type Alarms {
@@ -31,7 +32,21 @@ type Alarms {
     total: Int!
 }
 
+# Represent the conditions used for query alarms
+input AlarmQueryCondition {
+    duration: Duration!
+    scope: Scope
+    keyword: String
+    paging: Pagination!
+    tags: [AlarmTag!]
+}
+
+input AlarmTag {
+    key: String!
+    value: String
+}
+
 extend type Query {
     getAlarmTrend(duration: Duration!): AlarmTrend!
-    getAlarm(duration: Duration!, scope: Scope, keyword: String, paging: Pagination!): Alarms
+    getAlarm(condition: AlarmQueryCondition): Alarms
 }
