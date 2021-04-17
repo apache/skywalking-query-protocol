@@ -84,7 +84,7 @@ type ProfileTask {
     logs: [ProfileTaskLog!]!
 }
 
-# Profile thread stack anayze tree element
+# Profile thread stack analyze tree element
 type ProfileStackElement {
     # work for tree building, id matches multiple parentId
     id: ID!
