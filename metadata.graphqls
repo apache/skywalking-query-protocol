@@ -68,7 +68,7 @@ type TimeInfo {
 }
 
 extend type Query {
-    # Normal service related metainfo 
+    # Normal service related meta info 
     getAllServices(duration: Duration!, group: String): [Service!]!
     searchServices(duration: Duration!, keyword: String!): [Service!]!
     searchService(serviceCode: String!): Service
@@ -76,7 +76,7 @@ extend type Query {
     # Fetch all services of Browser type
     getAllBrowserServices(duration: Duration!): [Service!]!
 
-    # Service intance query
+    # Service instance query
     getServiceInstances(duration: Duration!, serviceId: ID!): [ServiceInstance!]!
 
     # Endpoint query

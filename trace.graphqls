@@ -40,7 +40,7 @@ input TraceQueryCondition {
     endpointName: String
     # The time range of traces started
     queryDuration: Duration
-    # The mix time of trace
+    # The min time of trace
     minTraceDuration: Int
     # The max time of trace
     maxTraceDuration: Int
