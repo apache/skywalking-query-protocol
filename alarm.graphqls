@@ -24,6 +24,7 @@ type AlarmMessage {
     scope: Scope
     id: ID!
     message: String!
+    events: [Event!]!
     tags: [KeyValue!]!
 }
 
