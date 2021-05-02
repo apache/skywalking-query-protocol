@@ -38,7 +38,6 @@ input AlarmTag {
     value: String
 }
 
-
 extend type Query {
     getAlarmTrend(duration: Duration!): AlarmTrend!
     getAlarm(duration: Duration!, scope: Scope, keyword: String, paging: Pagination!, tags: [AlarmTag]): Alarms
