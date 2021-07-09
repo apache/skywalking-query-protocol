@@ -60,7 +60,7 @@ input EventQueryCondition {
     type: EventType
     time: Duration
     order: Order
-    size: Int
+    paging: Pagination!
 }
 
 extend type Query {
