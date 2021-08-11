@@ -37,7 +37,6 @@ input TraceQueryCondition {
     serviceInstanceId: ID
     traceId: String
     endpointId: ID
-    endpointName: String
     # The time range of traces started
     queryDuration: Duration
     # The min time of trace
