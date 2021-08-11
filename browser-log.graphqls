@@ -20,7 +20,6 @@ input BrowserErrorLogQueryCondition {
     serviceId: ID
     serviceVersionId: ID
     pagePathId: ID
-    pagePath: String
     category: ErrorCategory
     # The time range of browser perf data time
     queryDuration: Duration
