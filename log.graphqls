@@ -41,7 +41,6 @@ input LogQueryCondition {
     serviceId: ID
     serviceInstanceId: ID
     endpointId: ID
-    endpointName: String
     # Related trace condition.
     # When use related trace condition, duration is not required.
     relatedTrace: TraceScopeCondition
