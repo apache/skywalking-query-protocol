@@ -75,8 +75,33 @@ enum ContentType {
     YAML
 }
 
+input LogTestRequest {
+    # The log data of protocol https://github.com/apache/skywalking-data-collect-protocol/blob/e626ee04850703c220f64b642d2893fa65572943/logging/Logging.proto#41
+    # in JSON format
+    log: String!
+    dsl: String!
+}
+
+type LogTestResponse {
+    # The final log if it will be persisted, this can be empty if the log is dropped.
+    log: Log
+    # The metrics generated during the LAL when testing a LogTestRequest
+    metrics: [LogTestMetrics!]
+}
+
+# The metrics generated during the LAL when testing a LogTestRequest
+type LogTestMetrics {
+    name: String!
+    labels: [KeyValue!]
+    value: Long!
+    timestamp: Long!
+}
+
 extend type Query {
     # Return true if the current storage implementation supports fuzzy query for logs.
     supportQueryLogsByKeywords: Boolean!
     queryLogs(condition: LogQueryCondition): Logs
+
+    # Test the logs and get the results of the LAL output.
+    test(requests: [LogTestRequest!]): [LogTestResponse!]
 }
