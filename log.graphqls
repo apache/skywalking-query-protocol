@@ -92,7 +92,7 @@ type LogTestResponse {
 # The metrics generated during the LAL when testing a LogTestRequest
 type LogTestMetrics {
     name: String!
-    labels: [KeyValue!]
+    tags: [KeyValue!]
     value: Long!
     timestamp: Long!
 }
