@@ -103,5 +103,5 @@ extend type Query {
     queryLogs(condition: LogQueryCondition): Logs
 
     # Test the logs and get the results of the LAL output.
-    test(requests: [LogTestRequest!]): [LogTestResponse!]
+    test(requests: LogTestRequest!): LogTestResponse!
 }
