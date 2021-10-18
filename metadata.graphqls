@@ -75,6 +75,8 @@ extend type Query {
     
     # Fetch all services of Browser type
     getAllBrowserServices(duration: Duration!): [Service!]!
+    searchBrowserServices(duration: Duration!, keyword: String!): [Service!]!
+    searchBrowserService(serviceCode: String!): Service
 
     # Service instance query
     getServiceInstances(duration: Duration!, serviceId: ID!): [ServiceInstance!]!
