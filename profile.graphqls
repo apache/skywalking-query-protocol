@@ -150,9 +150,11 @@ extend type Mutation {
 extend type Query {
     # query all task list, order by ProfileTask#startTime descending
     getProfileTaskList(serviceId: ID, endpointName: String): [ProfileTask!]!
+    # query all task logs
+    getProfileTaskLogs(taskID: String): [ProfileTaskLog!]!
     # query all task profiled segment list
     getProfileTaskSegmentList(taskID: String): [BasicTrace!]!
-    # query profiled segemnt
+    # query profiled segment
     getProfiledSegment(segmentId: String): ProfiledSegment
     # analyze profiled segment, start and end time use timestamp(millisecond)
     getProfileAnalyze(segmentId: String!, timeRanges: [ProfileAnalyzeTimeRange!]!): ProfileAnalyzation!
