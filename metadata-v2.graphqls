@@ -1,0 +1,103 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Metadata query v2 protocol provides the layer-based query to various services monitored by SkyWalking ecosystem.
+# It would adopt multiple-layer modern cloud native infrastructure.
+# In the v9 core, v1 protocol is provided on the top of the v2 implementation.
+# The v1's services, Databases, Browsers are all services with layer=general, layer=database, layer=browser.
+# Each service would have native definition about instance and endpoint.
+
+# Service is a logic concept, representing a collection of runnable context.
+type Service {
+    id: ID!
+    name: String!
+    # The custom/logi group of the service
+    group: String!
+    # Layer represents an abstract framework in the computer science, such as operation system(VM layer), Kubernetes(k8s layer),
+    # Service Mesh(typical Istio+Envoy layer).
+    # The name of layer is a string, but we would reserve some for visualization(UI)
+    # - os-linux
+    # - k8s
+    # - general(agent-installed)
+    # - faas
+    # - mesh
+    # - mesh-cp
+    # - mesh-dp
+    # - database
+    # - cache
+    # - browser
+    # - skywalking
+    #
+    # UI uses this literal string names to provide various layout for their services with metrics.
+    layer: String!
+}
+
+# The minimal runnable unit in the service. It provides consistent and fundamental capabilities in physical perspective.
+# A service, as a logic unit, have multiple instances in the runtime.
+# Such as, an OS-level processor, a pod in k8s, a running function in the FAAS engine.
+type ServiceInstance {
+    id: ID!
+    name: String!
+    attributes: [Attribute!]!
+    language: Language!
+    instanceUUID: String!
+}
+
+type Attribute {
+    name: String!
+    value: String!
+}
+
+# The endpoint is the minimal functional unit.
+# Typically, it presents a URI or gRPC service name in the service.
+# Different from instance, this is a logical functional unit.
+type Endpoint {
+    id: ID!
+    name: String!
+}
+
+type EndpointInfo {
+    id: ID!
+    name: String!
+    serviceId: ID!
+    serviceName: String!
+}
+
+type TimeInfo {
+  # server current timezone, format: +0800
+  timezone: String
+  # server current timestamp, format: 1569124528392
+  currentTimestamp: Long
+}
+
+extend type Query {
+    # Read the service list according to layer.
+    listServices(layer: String!): [Service!]!
+    # Read service instance list.
+    listInstances(duration: Duration!, serviceId: ID!): [ServiceInstance!]!
+
+    # Search and find service according to given ID. Return null if not existing.
+    findService(serviceId: String!): Service
+    # Search and find service instance according to given ID. Return null if not existing.
+    findInstance(instanceId: String!): ServiceInstance
+    # Search and find matched endpoints according to given service and keyword(optional)
+    # If no keyword, randomly choose endpoint based on `limit` value.
+    findEndpoint(keyword: String, serviceId: ID!, limit: Int!): [Endpoint!]!
+
+    # Legacy query(s) from v1
+    getEndpointInfo(endpointId: ID!): EndpointInfo
+    getTimeInfo: TimeInfo
+}
