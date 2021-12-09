@@ -39,6 +39,7 @@ type Service {
     # - database
     # - cache
     # - browser
+    # - skywalking
     #
     # UI uses this literal string names to provide various layout for their services with metrics.
     layer: String!
