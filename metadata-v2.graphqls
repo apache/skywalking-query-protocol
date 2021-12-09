@@ -75,12 +75,6 @@ type EndpointInfo {
     serviceName: String!
 }
 
-type Database {
-    id: ID!
-    name: String!
-    type: String!
-}
-
 type TimeInfo {
   # server current timezone, format: +0800
   timezone: String
@@ -97,7 +91,7 @@ extend type Query {
     # Search and find service according to given ID. Return null if not existing.
     findService(serviceId: String!): Service
     # Search and find service instance according to given ID. Return null if not existing.
-    findInstance(endpointId: String!): ServiceInstance
+    findInstance(instanceId: String!): ServiceInstance
     # Search and find matched endpoints according to given service and keyword(optional)
     # If no keyword, randomly choose endpoint based on `limit` value.
     findEndpoint(keyword: String, serviceId: ID!, limit: Int!): [Endpoint!]!
