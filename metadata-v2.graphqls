@@ -84,6 +84,12 @@ type TimeInfo {
 }
 
 extend type Query {
+    # Read all available layers
+    # UI could use this list to determine available dashboards/panels
+    # The available layers would change with time in the runtime, because new service could be detected in any time.
+    # This list should be loaded periodically.
+    listLayers: [String!]!
+    
     # Read the service list according to layer.
     listServices(layer: String!): [Service!]!
     # Read service instance list.
