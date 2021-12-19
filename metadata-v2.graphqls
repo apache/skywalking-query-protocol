@@ -46,7 +46,7 @@ type Service {
     # UI uses this literal layer names to provide various layout for their services with metrics.
     #
     # The layer collection is from the instances of this service. So, one service could have multiple layer due to instance-level registration.
-    layer: [String!]!
+    layers: [String!]!
 }
 
 # The minimal runnable unit in the service. It provides consistent and fundamental capabilities in physical perspective.
