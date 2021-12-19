@@ -22,27 +22,31 @@
 
 # Service is a logic concept, representing a collection of runnable context.
 type Service {
+    # Service ID = BASE64(name) + '.' + Layer ID
     id: ID!
     name: String!
     # The custom/logi group of the service
     group: String!
     # Layer represents an abstract framework in the computer science, such as operation system(VM layer), Kubernetes(k8s layer),
     # Service Mesh(typical Istio+Envoy layer).
-    # The name of layer is a string, but we would reserve some for visualization(UI)
-    # - os-linux
-    # - k8s
-    # - general(agent-installed)
-    # - faas
-    # - mesh
-    # - mesh-cp
-    # - mesh-dp
-    # - database
-    # - cache
-    # - browser
-    # - skywalking
+    # The name of layer is a string, but we would reserve the following for visualization(UI)
+    # - ID: 0,  NAME: undefined
+    # - ID: 1,  NAME: mesh
+    # - ID: 2,  NAME: general(agent-installed)
+    # - ID: 3,  NAME: os-linux
+    # - ID: 4,  NAME: k8s
+    # - ID: 5,  NAME: faas
+    # - ID: 6,  NAME: mesh-cp
+    # - ID: 7,  NAME: mesh-dp
+    # - ID: 8,  NAME: database
+    # - ID: 9,  NAME: cache
+    # - ID: 10, NAME: browser
+    # - ID: 11, NAME: skywalking
     #
-    # UI uses this literal string names to provide various layout for their services with metrics.
-    layer: String!
+    # UI uses this literal layer names to provide various layout for their services with metrics.
+    #
+    # The layer collection is from the instances of this service. So, one service could have multiple layer due to instance-level registration.
+    layers: [String!]!
 }
 
 # The minimal runnable unit in the service. It provides consistent and fundamental capabilities in physical perspective.
@@ -54,6 +58,8 @@ type ServiceInstance {
     attributes: [Attribute!]!
     language: Language!
     instanceUUID: String!
+    # Same as the layer definition. This is set according to the registration channel or MAL/LAL script definitions.
+    layer: String!
 }
 
 type Attribute {
