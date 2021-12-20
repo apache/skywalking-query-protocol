@@ -22,7 +22,13 @@
 
 # Service is a logic concept, representing a collection of runnable context.
 type Service {
+    # Service ID = BASE64(name) + '.1' which keeps the most compatibility to 8.x data formats.
+    # All metrics of the service would refer to this ID.
+    # The layer ID would not be included in the service ID, as a service could have multidimensional monitoring, such as ALS + DP for the same service
+    # ----- Storage -----
+    # Row ID in service_traffic entity includes layer ID.
     # Service ID = BASE64(name) + '.' + Layer ID
+    # -------------------
     id: ID!
     name: String!
     # The custom/logi group of the service
