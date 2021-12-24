@@ -30,9 +30,13 @@ type Service {
     # Service ID = BASE64(name) + '.' + Layer ID
     # -------------------
     id: ID!
+    # The unqiue name gloablly. 
+    # Typically, name could be formated as `group::name` which would be recognized as a group and a short name.
     name: String!
-    # The custom/logi group of the service
+    # The custom/logic group of the service
     group: String!
+    # The unique name in the group. Mostly for visualization.
+    shortName: String!
     # Layer represents an abstract framework in the computer science, such as operation system(VM layer), Kubernetes(k8s layer),
     # Service Mesh(typical Istio+Envoy layer).
     # The name of layer is a string, but we would reserve the following for visualization(UI)
