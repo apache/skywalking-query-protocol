@@ -108,18 +108,20 @@ extend type Query {
     
     # Read the service list according to layer.
     listServices(layer: String!): [Service!]!
+    # Find service according to given ID. Return null if not existing.
+    getService(serviceId: String!): Service
+    # Search and find service according to given name. Return null if not existing.
+    findService(serviceName: String!): Service
+    
     # Read service instance list.
     listInstances(duration: Duration!, serviceId: ID!): [ServiceInstance!]!
-
-    # Search and find service according to given ID. Return null if not existing.
-    findService(serviceId: String!): Service
     # Search and find service instance according to given ID. Return null if not existing.
-    findInstance(instanceId: String!): ServiceInstance
+    getInstance(instanceId: String!): ServiceInstance
+    
     # Search and find matched endpoints according to given service and keyword(optional)
     # If no keyword, randomly choose endpoint based on `limit` value.
     findEndpoint(keyword: String, serviceId: ID!, limit: Int!): [Endpoint!]!
-
-    # Legacy query(s) from v1
     getEndpointInfo(endpointId: ID!): EndpointInfo
+    
     getTimeInfo: TimeInfo
 }
