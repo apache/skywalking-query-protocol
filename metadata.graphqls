@@ -17,15 +17,6 @@
 # Legacy metrics query protocol
 # Replaced by the metadata-v2 in the future
 
-# Query the cluster brief based on the given duration
-type ClusterBrief {
-    numOfService: Int!
-    numOfEndpoint: Int!
-    numOfDatabase: Int!
-    numOfCache: Int!
-    numOfMQ: Int!
-}
-
 type Database {
     id: ID!
     name: String!
@@ -53,7 +44,4 @@ extend type Query {
 
     # Database related meta info.
     getAllDatabases(duration: Duration!): [Database!]!
-
-    # Deprecated query, left only for not breaking UI for short term.
-    getGlobalBrief(duration: Duration!): ClusterBrief
 }
