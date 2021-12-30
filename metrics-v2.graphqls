@@ -18,10 +18,6 @@
 # defined in the metric.graphql, top-n-records.graphqls, and aggregation.graphqls.
 # By leveraging the new ID rule(no register) in the v8, we could query metrics based on name(s) directly.
 
-# Metrics v2.1 is introduced since SkyWalking v9 core.
-# Change logs:
-# - The normal and destNormal tags have been deprecated.
-
 # Metrics type is a new concept since v8.
 enum MetricsType {
     # Can't find the metrics type definition.
@@ -46,16 +42,17 @@ input Entity {
     #    set necessary names of sources and destinations.
     scope: Scope!
     serviceName: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    normal: Boolean
     serviceInstanceName: String
     endpointName: String
     destServiceName: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    destNormal: Boolean
     destServiceInstanceName: String
     destEndpointName: String
-
-    # Deprecated since 9.0.0. Don't need to use this anymore
-    normal: Boolean
-    # Deprecated since 9.0.0. Don't need to use this anymore
-    destNormal: Boolean
 }
 
 input MetricsCondition {
@@ -73,15 +70,15 @@ input TopNCondition {
     name: String!
     # Could be null if query the global top N.
     parentService: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    normal: Boolean
     # Indicate the metrics entity scope.
     # This is required in sortMetrics query.
     # Only accept scope = Service/ServiceInstance/Endpoint, ignore others due to those are pointless.
     scope: Scope
     topN: Int!
     order: Order!
-
-    # Deprecated since 9.0.0. Don't need to use this anymore
-    normal: Boolean
 }
 
 # Define the metrics provided in the OAP server.

@@ -14,12 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Topology v1.1 is introduced from SkyWalking v9 core.
-# Change logs
-# - Deprecated `isReal`, due to in v9, service is about real or not real, it has native layer attribute to determine its type and scope.
-# - Deprecated `type` in instance topology and endpoint dependency, because by their latest definitions, they are subsets of services, no point has specific type.
-# - All deprecated fields are kept for keeping back-forward compatibility. `isReal=true` and `type=(empty string)` are default values only.
-
 # The overview topology of the whole application cluster or services,
 type Topology {
     nodes: [Node!]!
@@ -48,8 +42,7 @@ type Node {
     # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
     # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
     type: String
-
-    # Deprecated since 9.0.0. Don't need to use this anymore
+    # It is a conjecture node or real node, to represent a service or endpoint.
     isReal: Boolean!
 }
 
@@ -63,11 +56,12 @@ type ServiceInstanceNode {
     serviceId: ID!
     # The literal name of the #serviceId.
     serviceName: String!
-
-    # Deprecated since 9.0.0. Instance is an executable unit of service, it doesn't have its own type.
+    # The type name may be
+    # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
+    # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
     type: String
-    # Deprecated since 9.0.0. Don't need to use this anymore
-    isReal: Boolean
+    # It is a conjecture node or real node, to represent an instance.
+    isReal: Boolean!
 }
 
 # Node in EndpointTopology
@@ -80,11 +74,12 @@ type EndpointNode {
     serviceId: ID!
     # The literal name of the #serviceId.
     serviceName: String!
-
-    # Deprecated since 9.0.0. The endpoint is the minimal functional unit., it doesn't have its own type.
+    # The type name may be
+    # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
+    # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
     type: String
-    # Deprecated since 9.0.0. Don't need to use this anymore
-    isReal: Boolean
+    # It is a conjuecture node or real node, to represent an instance.
+    isReal: Boolean!
 }
 
 # The Call represents a directed distributed call,
