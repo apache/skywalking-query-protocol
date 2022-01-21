@@ -40,23 +40,15 @@ type Service {
     # Layer represents an abstract framework in the computer science, such as operation system(VM layer), Kubernetes(k8s layer),
     # Service Mesh(typical Istio+Envoy layer).
     # The name of layer is a string, but we would reserve the following for visualization(UI)
-    # - ID: 0,  NAME: undefined
-    # - ID: 1,  NAME: mesh
-    # - ID: 2,  NAME: general(agent-installed)
-    # - ID: 3,  NAME: os-linux
-    # - ID: 4,  NAME: k8s
-    # - ID: 5,  NAME: faas
-    # - ID: 6,  NAME: mesh-cp
-    # - ID: 7,  NAME: mesh-dp
-    # - ID: 8,  NAME: database
-    # - ID: 9,  NAME: cache
-    # - ID: 10, NAME: browser
-    # - ID: 11, NAME: skywalking
+    # https://github.com/apache/skywalking/blob/master/oap-server/server-core/src/main/java/org/apache/skywalking/oap/server/core/analysis/Layer.java
     #
     # UI uses this literal layer names to provide various layout for their services with metrics.
     #
     # The layer collection is from the instances of this service. So, one service could have multiple layer due to instance-level registration.
     layers: [String!]!
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    normal: Boolean
 }
 
 # The minimal runnable unit in the service. It provides consistent and fundamental capabilities in physical perspective.
