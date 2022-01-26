@@ -15,49 +15,47 @@
 # limitations under the License.
 
 # Dashboard Configuration provides the management capabilities for SkyWalking native UI.
-enum TemplateType {
-    DASHBOARD,
-    TOPOLOGY_SERVICE,
-    TOPOLOGY_INSTANCE,
-    TOPOLOGY_ENDPOINT,
-    TOPOLOGY_SERVICE_RELATION,
-    TOPOLOGY_SERVICE_INSTANCE_RELATION,
-    TOPOLOGY_ENDPOINT_RELATION
+enum EntityOwnerTypeOfTemplate {
+    ALL,
+    SERVICE,
+    INSTANCE,
+    ENDPOINT,
+    SERVICE_RELATION,
+    SERVICE_INSTANCE_RELATION,
+    ENDPOINT_RELATION
 }
 
 type DashboardConfiguration {
+    # ID is a generated UUID.
+    id: String!
     name: String!,
-    type: TemplateType!,
+    type: EntityOwnerTypeOfTemplate!,
+    layer: String!
     # JSON based configuration. The format of text is the export result on the UI page.
     configuration: String!,
-    # Activated means this configuration should effect directly.
-    # If the name is already used in the browser storage, the UI decides the behaviour, override/ignore/user-confirmation.
-    activated: Boolean!,
-    # Disable means this template is not working.
-    disabled: Boolean!
 }
 
 extend type Query {
-    # Read all configuration templates for dashboard and topology pages.
-    # Dashboard could have multiple options and partial actived.
-    # Topology templates should be unique for every typs, if more than one exists, UI should choose one only.
+    # Read an existing UI template according to given name.
+    getTemplate(name: String!): DashboardConfiguration!
+    # Read all configuration templates。
     #
     # includingDisabled represents whether includes the disabled templates in the query result. Default value is false.
     # Mostly, should not include, but in the management page, should consider support this.
-    getAllTemplates(includingDisabled: Boolean): [DashboardConfiguration!]!
+    getAllTemplates(type: EntityOwnerTypeOfTemplate!, layer: String!): [DashboardConfiguration!]!
 }
 
 input DashboardSetting {
+    id: String!
     name: String!,
-    type: TemplateType!,
+    type: EntityOwnerTypeOfTemplate!,
+    layer: String!
     # JSON based configuration. The format of text is the export result on the UI page.
     configuration: String!,
-    # Active means this configuration should display directly.
-    # If the name is already used in the browser storage, the UI decides the behaviour, override/ignore/user-confirmation.
-    active: Boolean!,
 }
 
 type TemplateChangeStatus {
+    id: String!
     # True means change successfully.
     status: Boolean!,
     message: String
@@ -67,5 +65,4 @@ type TemplateChangeStatus {
 extend type Mutation {
     addTemplate(setting: DashboardSetting!): TemplateChangeStatus!
     changeTemplate(setting: DashboardSetting!): TemplateChangeStatus!
-    disableTemplate(name: String!): TemplateChangeStatus!
 }
