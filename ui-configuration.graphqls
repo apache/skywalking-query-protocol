@@ -26,6 +26,8 @@ enum EntityOwnerTypeOfTemplate {
 }
 
 type DashboardConfiguration {
+    # ID is a generated UUID.
+    id: String!
     name: String!,
     type: EntityOwnerTypeOfTemplate!,
     layer: String!
@@ -44,6 +46,7 @@ extend type Query {
 }
 
 input DashboardSetting {
+    id: String!
     name: String!,
     type: EntityOwnerTypeOfTemplate!,
     layer: String!
@@ -52,6 +55,7 @@ input DashboardSetting {
 }
 
 type TemplateChangeStatus {
+    id: String!
     # True means change successfully.
     status: Boolean!,
     message: String
