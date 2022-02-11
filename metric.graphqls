@@ -20,8 +20,8 @@
 input MetricCondition {
     # Metric name, which should be defined in OAL script
     # Such as:
-    # Endpoint_avg = from(Endpoint.latency).avg()
-    # Then, `Endpoint_avg`
+    # endpoint_resp_time = from(Endpoint.latency).avg()
+    # Then, `endpoint_resp_time`
     name: String!
     # Id in this metric type.
     # In the above case, the id should be endpoint id.
@@ -31,8 +31,8 @@ input MetricCondition {
 input BatchMetricConditions {
     # Metric name, which should be defined in OAL script
     # Such as:
-    # Endpoint_avg = from(Endpoint.latency).avg()
-    # Then, `Endpoint_avg`
+    # endpoint_resp_time = from(Endpoint.latency).avg()
+    # Then, `endpoint_resp_time`
     name: String!
     # Id in this metric type.
     # In the above case, the id should be endpoint id.

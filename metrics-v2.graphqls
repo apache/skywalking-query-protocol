@@ -58,8 +58,8 @@ input Entity {
 input MetricsCondition {
     # Metrics name, which should be defined in OAL script
     # Such as:
-    # Endpoint_avg = from(Endpoint.latency).avg()
-    # Then, `Endpoint_avg`
+    # endpoint_resp_time = from(Endpoint.latency).avg()
+    # Then, `endpoint_resp_time`
     name: String!
     # Follow entity definition description.
     entity: Entity!
