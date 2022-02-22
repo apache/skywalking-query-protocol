@@ -1,0 +1,151 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# eBPF profiling task create need data
+input EBPFProfilingTaskCreationRequest {
+    # find process type
+    processFindType: EBPFProfilingProcessFindType!
+    # use process id find process when use type PROCESS_ID
+    processId: String
+
+    # profiling trigger type
+    triggerType: EBPFProfilingTriggerType!
+    # fixed time trigger
+    fixedTimeTrigger: EBPFProfilingFixTimeTrigger
+
+    # profiling target type
+    targetType: EBPFProfilingTargetType!
+    onCPUTarget: EBPFProfilingOnCPUTarget
+}
+
+enum EBPFProfilingProcessFindType {
+    PROCESS_ID
+}
+
+enum EBPFProfilingTriggerType {
+    FIXED_TIME
+}
+
+type EBPFProfilingFixTimeTrigger {
+    # if null means the task starts ASAP, otherwise the task begin after the startTime(based on rover side time)
+    startTime: Long
+    # duration of this task(second)
+    duration: Int!
+}
+
+enum EBPFProfilingTargetType {
+    ON_CPU
+}
+
+type EBPFProfilingOnCPUTarget {
+    # time interval for each dumping the stack
+    dumpPeriod: Int!
+}
+
+type EBPFProfilingTaskCreateResult {
+    # if null or empty means the task create success, otherwise get create error reason
+    errorReason: String
+
+    # get data id when create success
+    id: String
+}
+
+input EBPFProfilingTaskQueryCondition {
+   # find process type
+   processFindType: EBPFProfilingProcessFindType
+   # process id list find when use type PROCESS_ID to find process
+   processIdList: [String]
+
+   # profiling trigger type
+   triggerType: EBPFProfilingTriggerType
+}
+
+type EBPFProfilingTask {
+    id: String!
+    # find process type
+    processFindType: EBPFProfilingProcessFindType!
+    # use process id find process when use type PROCESS_ID
+    processId: String
+
+    # profiling trigger type
+    triggerType: EBPFProfilingTriggerType!
+    # fixed time trigger
+    fixedTimeTrigger: EBPFProfilingFixTimeTrigger
+
+    # profiling target type
+    targetType: EBPFProfilingTargetType!
+    onCPUTarget: EBPFProfilingOnCPUTarget
+
+    # task create time
+    createTime: Long!
+
+    # profiled list from the task been triggered
+    triggerList: [EBPFProfilingTrigger!]!
+}
+
+type EBPFProfilingTrigger {
+    # profiled process trigger id
+    id: String!
+    # profiling task id
+    taskId: String!
+    # profiled process
+    process: EBPFProcess!
+    # profiling start time
+    startTime: Long!
+    # profiling finished time
+    endTime: Long!
+}
+
+enum EBPFProfilingStackElementType {
+    USER_SPACE,
+    KERNEL_SPACE
+}
+
+# Profiling stack analyze tree element
+type EBPFProfilingStackElement {
+    # work for tree building, id matches multiple parentId
+    id: ID!
+    parentId: ID!
+    # stack code symbol
+    symbol: String!
+    # total dump count
+    count: Int!
+    # stack element type
+    type: EBPFProfilingStackElementType!
+}
+
+# Profiling Stack analyze tree
+type EBPFProfilingStackTree {
+    elements: [EBPFProfilingStackElement!]!
+}
+
+# Profiling flame graph
+type EBPFProfilingFlameGraph {
+    # flame graph stack trees
+    trees: [EBPFProfilingStackTree!]!
+}
+
+extend type Mutation {
+    # crate new ebpf profiling task
+    createEBPFProfilingTask(creationRequest: EBPFProfilingTaskCreationRequest): EBPFProfilingTaskCreateResult!
+}
+
+extend type Query {
+    # query ebpf profiling task list
+    getEBPFProfilingTaskList(condition: EBPFProfilingTaskQueryCondition!): [EBPFProfilingTask]!
+    # analyze the profiling trigger data and make it as a flame graph
+    getEBPFProfilingFlameGraph(triggerId: String!): EBPFProfilingFlameGraph!
+}
