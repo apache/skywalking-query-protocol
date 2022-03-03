@@ -84,6 +84,24 @@ type EndpointInfo {
     serviceName: String!
 }
 
+# The process is an operating system process under service instance.
+type Process {
+    # Process entity
+    id: ID!
+    name: String!
+    serviceId: ID!
+    serviceName: String!
+    instanceId: ID!
+    instanceName: String!
+    layer: String!
+    # Which agent report this process.
+    agentId: String!
+    # The process found type.
+    detectType: String!
+    # The process attributes, different process detect type have different corresponding attributes.
+    attributes: [Attribute!]!
+}
+
 type TimeInfo {
   # server current timezone, format: +0800
   timezone: String
@@ -114,6 +132,11 @@ extend type Query {
     # If no keyword, randomly choose endpoint based on `limit` value.
     findEndpoint(keyword: String, serviceId: ID!, limit: Int!): [Endpoint!]!
     getEndpointInfo(endpointId: ID!): EndpointInfo
+
+    # Read process list. At least one of serviceId and instanceId is provided.
+    listProcesses(serviceId: ID, instanceId: ID): [Process!]!
+    # Find process according to given ID. Return null if not existing.
+    getProcess(processId: String!) Process
     
     getTimeInfo: TimeInfo
 }
