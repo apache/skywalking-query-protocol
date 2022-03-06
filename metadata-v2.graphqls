@@ -133,10 +133,10 @@ extend type Query {
     findEndpoint(keyword: String, serviceId: ID!, limit: Int!): [Endpoint!]!
     getEndpointInfo(endpointId: ID!): EndpointInfo
 
-    # Read process list. At least one of serviceId and instanceId is provided.
+    # Read process list. Either serviceId or instanceId is provided.
     listProcesses(serviceId: ID, instanceId: ID): [Process!]!
     # Find process according to given ID. Return null if not existing.
-    getProcess(processId: String!) Process
+    getProcess(processId: ID!) Process
     
     getTimeInfo: TimeInfo
 }
