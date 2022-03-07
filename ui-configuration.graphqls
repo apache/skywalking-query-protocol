@@ -15,54 +15,42 @@
 # limitations under the License.
 
 # Dashboard Configuration provides the management capabilities for SkyWalking native UI.
-enum EntityOwnerTypeOfTemplate {
-    ALL,
-    SERVICE,
-    INSTANCE,
-    ENDPOINT,
-    SERVICE_RELATION,
-    SERVICE_INSTANCE_RELATION,
-    ENDPOINT_RELATION
-}
 
 type DashboardConfiguration {
     # ID is a generated UUID.
     id: String!
-    name: String!,
-    type: EntityOwnerTypeOfTemplate!,
-    layer: String!
     # JSON based configuration. The format of text is the export result on the UI page.
-    configuration: String!,
+    configuration: String!
 }
 
 extend type Query {
-    # Read an existing UI template according to given name.
-    getTemplate(name: String!): DashboardConfiguration!
+    # Read an existing UI template according to given id.
+    getTemplate(id: String!): DashboardConfiguration!
     # Read all configuration templates。
-    #
-    # includingDisabled represents whether includes the disabled templates in the query result. Default value is false.
-    # Mostly, should not include, but in the management page, should consider support this.
-    getAllTemplates(type: EntityOwnerTypeOfTemplate!, layer: String!): [DashboardConfiguration!]!
+    getAllTemplates: [DashboardConfiguration!]!
+}
+
+# Used for add new template
+input NewDashboardSetting {
+    # JSON based configuration. The format of text is the export result on the UI page.
+    configuration: String!
 }
 
 input DashboardSetting {
     id: String!
-    name: String!,
-    type: EntityOwnerTypeOfTemplate!,
-    layer: String!
     # JSON based configuration. The format of text is the export result on the UI page.
-    configuration: String!,
+    configuration: String!
 }
 
 type TemplateChangeStatus {
     id: String!
     # True means change successfully.
-    status: Boolean!,
+    status: Boolean!
     message: String
 }
 
 # Template Management page provides the creation, update and deletion for the different template typs.
 extend type Mutation {
-    addTemplate(setting: DashboardSetting!): TemplateChangeStatus!
+    addTemplate(setting: NewDashboardSetting!): TemplateChangeStatus!
     changeTemplate(setting: DashboardSetting!): TemplateChangeStatus!
 }
