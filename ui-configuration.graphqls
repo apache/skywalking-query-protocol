@@ -20,7 +20,7 @@ type DashboardConfiguration {
     # ID is a generated UUID.
     id: String!
     # JSON based configuration. The format of text is the export result on the UI page.
-    configuration: String!,
+    configuration: String!
 }
 
 extend type Query {
@@ -30,20 +30,22 @@ extend type Query {
     getAllTemplates: [DashboardConfiguration!]!
 }
 
+# Used for add new template
 input NewDashboardSetting {
-    configuration: String!,
+    # JSON based configuration. The format of text is the export result on the UI page.
+    configuration: String!
 }
 
 input DashboardSetting {
     id: String!
     # JSON based configuration. The format of text is the export result on the UI page.
-    configuration: String!,
+    configuration: String!
 }
 
 type TemplateChangeStatus {
     id: String!
     # True means change successfully.
-    status: Boolean!,
+    status: Boolean!
     message: String
 }
 
