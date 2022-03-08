@@ -25,7 +25,7 @@ type DashboardConfiguration {
 
 extend type Query {
     # Read an existing UI template according to given id.
-    getTemplate(id: String!): DashboardConfiguration!
+    getTemplate(id: String!): DashboardConfiguration
     # Read all configuration templates。
     getAllTemplates: [DashboardConfiguration!]!
 }
@@ -53,4 +53,5 @@ type TemplateChangeStatus {
 extend type Mutation {
     addTemplate(setting: NewDashboardSetting!): TemplateChangeStatus!
     changeTemplate(setting: DashboardSetting!): TemplateChangeStatus!
+    disableTemplate(id: String!): TemplateChangeStatus!
 }
