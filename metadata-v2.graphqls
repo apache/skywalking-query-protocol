@@ -137,7 +137,7 @@ extend type Query {
     # Otherwise, read an empty list.
     listProcesses(serviceId: ID, instanceId: ID): [Process!]!
     # Find process according to given ID. Return null if not existing.
-    getProcess(processId: ID!) Process
+    getProcess(processId: ID!): Process
     
     getTimeInfo: TimeInfo
 }
