@@ -1,0 +1,172 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# eBPF Profiling task create needs data
+input EBPFProfilingTaskCreationRequest {
+    # the process find type
+    finderType: EBPFProfilingProcessFinderType!
+    # appoint process id when use the "PROCESS_ID" find type
+    processId: ID
+
+    # the task start timestamp, if less then or equal zero means the task starts ASAP
+    startTime: Long!
+    # the task trigger type, means when need to start to profiling
+    triggerType: EBPFProfilingTriggerType!
+    # trigger type "FIXED_TIME" needs data
+    fixedTimeTrigger: EBPFProfilingFixedTimeTrigger
+
+    # the task profiling target type
+    targetType: EBPFProfilingTargetType!
+    # target type "ON_CPU" needs data
+    onCPUTarget: EBPFProfilingOnCPUTarget
+}
+
+# eBPF Profiling task create result
+type EBPFProfilingTaskCreationResult {
+    # if null or empty means the task create success, otherwise get create error reason
+    errorReason: String
+
+    # get task id when create success
+    id: String
+}
+
+# query eBPF profiling task condition
+input EBPFProfilingTaskCondition {
+    # the process finder type of profiling task
+    finderType: EBPFProfilingProcessFinderType
+    # service id of process which need profiling
+    serviceId: ID
+    # instance id of process which need profiling
+    instanceId: ID
+    # instance id of process which need profiling
+    processId: ID
+}
+
+# eBPF profiling task data
+type EBPFProfilingTask {
+    # profiling task id
+    taskId: ID!
+    # profiling process finder type
+    processFinderType: EBPFProfilingProcessFinderType!
+    # service of profiling task
+    serviceId: ID
+    serviceName: String
+    # instance of profiling task
+    instanceId: ID
+    instanceName: String
+    # process of profiling task
+    processId: ID
+    processName: String
+
+    # profiling task start timestamp
+    taskStartTime: Long!
+    # profiling task trigger type
+    triggerType: EBPFProfilingTriggerType!
+    # "FIXED_TIME" type task profiling duration
+    fixedTriggerDuration: Long
+
+    # profiling task target type
+    targetType: EBPFProfilingTargetType!
+    # "ON_CPU" type task profiling dump period
+    onCPUDumpPeriod: Int
+
+    # profiling task create timestamp
+    createTime: Long!
+}
+
+type EBPFProfilingSchedule {
+    # profiling task schedule id
+    scheduleId: ID!
+    # profiling task id
+    taskId: ID!
+    # process id
+    processId: ID!
+    # profiling schedule start timestamp
+    startTime: Long!
+    # profiling schedule finished timestamp
+    endTime: Long!
+}
+
+input EBPFProfilingAnalyzeTimeRange {
+    # start timestamp
+    start: Long!
+    # end timestamp
+    end: Long!
+}
+
+type EBPFProfilingAnalyzation {
+    # if not empty means backend has information gave to the user
+    tip: String
+    # profiling analyzed trees
+    trees: [EBPFProfilingTree]!
+}
+
+type EBPFProfilingTree {
+    # profiling stack elements
+    elements: [EBPFProfilingStackElement!]!
+}
+
+type EBPFProfilingStackElement {
+    # the element id
+    id: Int!
+    # the parent element id, working on build the tree
+    parentId: Int!
+    # stack element symbol name
+    symbol: String!
+    # stack element type
+    stackType: EBPFProfilingStackType!
+    # current stack element total dump count
+    dumpCount: Long!
+}
+
+enum EBPFProfilingStackType {
+    KERNEL_SPACE,
+    USER_SPACE
+}
+
+enum EBPFProfilingProcessFinderType {
+    PROCESS_ID
+}
+
+enum EBPFProfilingTriggerType {
+    FIXED_TIME
+}
+
+enum EBPFProfilingTargetType {
+    ON_CPU
+}
+
+input EBPFProfilingFixedTimeTrigger {
+    duration: Int!
+}
+
+input EBPFProfilingOnCPUTarget {
+    dumpPeriod: Int!
+}
+
+extend type Mutation {
+    # create a new eBPF profiling task
+    createEBPFProfilingTask(request: EBPFProfilingTaskCreationRequest): EBPFProfilingTaskCreationResult
+}
+
+extend type Query {
+    # query eBPF profiling task list
+    queryEBPFProfilingTasks(query: EBPFProfilingTaskCondition): [EBPFProfilingTask]!
+    # query schedules from profiling task or process
+    queryEBPFProfilingSchedules(taskId: ID, processId: ID, duration: Duration!): [EBPFProfilingSchedule]!
+    # analyze the profiling schedule
+    getEBPFProfilingAnalyzation(scheduleId: ID!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
+}
