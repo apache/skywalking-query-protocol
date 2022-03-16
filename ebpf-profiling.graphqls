@@ -38,6 +38,8 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
 
 # eBPF Profiling task create result
 type EBPFProfilingTaskCreationResult {
+    # the task create is success
+    success: Boolean!
     # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
 
