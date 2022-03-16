@@ -14,15 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Define how to find which process need to be profiling
+# Define how to find which process needs profiling
 input EBPFProfilingProcessFinder {
-   # the process find type
+   # the way to address the target process
    finderType: EBPFProfilingProcessFinderType!
-   # appoint process id when use the "PROCESS_ID" find type
+   # appoint process ID when use the "PROCESS_ID" finder type
    processId: ID
 }
 
-# eBPF Profiling fixed time task create needs data
+# The creation request of eBPF profiling fixed time task
 input EBPFProfilingTaskFixedTimeCreationRequest {
     # define how to find the process
     processFinder: EBPFProfilingProcessFinder!
@@ -36,14 +36,14 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
-# eBPF Profiling task create result
+# eBPF Profiling task creation result
 type EBPFProfilingTaskCreationResult {
-    # the task is created successfully
-    success: Boolean!
-    # task create error reason
+    # TRUE if the task is created successfully
+    status: Boolean!
+    # error reason when status == FALSE
     errorReason: String
 
-    # get task id when create success
+    # The task ID when status = TRUE
     id: String
 }
 
@@ -51,17 +51,17 @@ type EBPFProfilingTaskCreationResult {
 input EBPFProfilingTaskCondition {
     # the process finder type of profiling task
     finderType: EBPFProfilingProcessFinderType
-    # service id of process which need profiling
+    # service ID of process which need profiling
     serviceId: ID
-    # instance id of process which need profiling
+    # instance ID of process which need profiling
     instanceId: ID
-    # instance id of process which need profiling
+    # instance ID of process which need profiling
     processId: ID
 }
 
 # eBPF profiling task data
 type EBPFProfilingTask {
-    # profiling task id
+    # profiling task ID
     taskId: ID!
     # profiling process finder type
     processFinderType: EBPFProfilingProcessFinderType!
@@ -75,7 +75,7 @@ type EBPFProfilingTask {
     processId: ID
     processName: String
 
-    # profiling task start timestamp
+    # Start time of the task, type is timestamp.
     taskStartTime: Long!
     # profiling task trigger type
     triggerType: EBPFProfilingTriggerType!
@@ -85,16 +85,16 @@ type EBPFProfilingTask {
     # profiling task target type
     targetType: EBPFProfilingTargetType!
 
-    # profiling task create timestamp
+    # the timestamp of creating this task
     createTime: Long!
 }
 
 type EBPFProfilingSchedule {
-    # profiling task schedule id
+    # profiling task schedule ID
     scheduleId: ID!
-    # profiling task id
+    # profiling task ID
     taskId: ID!
-    # process id
+    # process ID
     processId: ID!
     # profiling schedule start timestamp(ms)
     startTime: Long!
@@ -122,9 +122,9 @@ type EBPFProfilingTree {
 }
 
 type EBPFProfilingStackElement {
-    # the element id
+    # the element ID
     id: String!
-    # the parent element id, working on build the tree
+    # the parent element ID
     parentId: String!
     # stack element symbol name
     symbol: String!
@@ -149,8 +149,8 @@ enum EBPFProfilingTriggerType {
     FIXED_TIME
 }
 
-# How to profiling the process
-# relate with linux function: https://man7.org/linux/man-pages/man2/perf_event_open.2.html
+# The way of profiling the process
+# relate with Linux function: https://man7.org/linux/man-pages/man2/perf_event_open.2.html
 enum EBPFProfilingTargetType {
     # Using "PERF_COUNT_SW_CPU_CLOCK" to profiling process with CPU clock
     ON_CPU
