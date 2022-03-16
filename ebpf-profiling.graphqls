@@ -113,7 +113,7 @@ type EBPFProfilingAnalyzation {
     # if not empty means backend has information gave to the user
     tip: String
     # profiling analyzed trees
-    trees: [EBPFProfilingTree]!
+    trees: [EBPFProfilingTree!]!
 }
 
 type EBPFProfilingTree {
@@ -165,7 +165,7 @@ extend type Query {
     # query eBPF profiling task list
     queryEBPFProfilingTasks(query: EBPFProfilingTaskCondition): [EBPFProfilingTask]!
     # query schedules from profiling task
-    queryEBPFProfilingSchedules(taskId: ID!, duration: Duration!): [EBPFProfilingSchedule]!
+    queryEBPFProfilingSchedules(taskId: ID!, duration: Duration!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
     getEBPFProfilingAnalyzation(taskId: ID!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
 }
