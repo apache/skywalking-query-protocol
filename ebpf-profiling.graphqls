@@ -40,7 +40,7 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
 type EBPFProfilingTaskCreationResult {
     # the task create is success
     success: Boolean!
-    # if null or empty means the task create success, otherwise get create error reason
+    # task create error reason
     errorReason: String
 
     # get task id when create success
