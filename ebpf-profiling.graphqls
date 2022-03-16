@@ -158,12 +158,12 @@ enum EBPFProfilingTargetType {
 
 extend type Mutation {
     # create a new eBPF fixed time profiling task
-    createEBPFProfilingFixedTimeTask(request: EBPFProfilingTaskFixedTimeCreationRequest): EBPFProfilingTaskCreationResult
+    createEBPFProfilingFixedTimeTask(request: EBPFProfilingTaskFixedTimeCreationRequest!): EBPFProfilingTaskCreationResult!
 }
 
 extend type Query {
     # query eBPF profiling task list
-    queryEBPFProfilingTasks(query: EBPFProfilingTaskCondition): [EBPFProfilingTask]!
+    queryEBPFProfilingTasks(query: EBPFProfilingTaskCondition): [EBPFProfilingTask!]!
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!, duration: Duration!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
