@@ -121,9 +121,9 @@ type EBPFProfilingTree {
 
 type EBPFProfilingStackElement {
     # the element id
-    id: Int!
+    id: String!
     # the parent element id, working on build the tree
-    parentId: Int!
+    parentId: String!
     # stack element symbol name
     symbol: String!
     # stack element type
