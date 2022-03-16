@@ -164,8 +164,8 @@ extend type Mutation {
 extend type Query {
     # query eBPF profiling task list
     queryEBPFProfilingTasks(query: EBPFProfilingTaskCondition): [EBPFProfilingTask]!
-    # query schedules from profiling task or process
-    queryEBPFProfilingSchedules(taskId: ID, processId: ID, duration: Duration!): [EBPFProfilingSchedule]!
+    # query schedules from profiling task
+    queryEBPFProfilingSchedules(taskId: ID, duration: Duration!): [EBPFProfilingSchedule]!
     # analyze the profiling schedule
-    getEBPFProfilingAnalyzation(scheduleId: ID!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
+    getEBPFProfilingAnalyzation(taskId: ID!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
 }
