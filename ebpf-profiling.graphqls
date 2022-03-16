@@ -14,24 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# eBPF Profiling task create needs data
-input EBPFProfilingTaskCreationRequest {
-    # the process find type
-    finderType: EBPFProfilingProcessFinderType!
-    # appoint process id when use the "PROCESS_ID" find type
-    processId: ID
+# Define how to find which process need to be profiling
+input EBPFProfilingProcessFinder {
+   # the process find type
+   finderType: EBPFProfilingProcessFinderType!
+   # appoint process id when use the "PROCESS_ID" find type
+   processId: ID
+}
 
-    # the task start timestamp, if less then or equal zero means the task starts ASAP
+# eBPF Profiling fixed time task create needs data
+input EBPFProfilingTaskFixedTimeCreationRequest {
+    # define how to find the process
+    processFinder: EBPFProfilingProcessFinder!
+
+    # the task start timestamp(ms), if less then or equal zero means the task starts ASAP
     startTime: Long!
-    # the task trigger type, means when need to start to profiling
-    triggerType: EBPFProfilingTriggerType!
-    # trigger type "FIXED_TIME" needs data
-    fixedTimeTrigger: EBPFProfilingFixedTimeTrigger
+    # the profiling duration(s)
+    duration: Int!
 
     # the task profiling target type
     targetType: EBPFProfilingTargetType!
-    # target type "ON_CPU" needs data
-    onCPUTarget: EBPFProfilingOnCPUTarget
 }
 
 # eBPF Profiling task create result
@@ -80,8 +82,6 @@ type EBPFProfilingTask {
 
     # profiling task target type
     targetType: EBPFProfilingTargetType!
-    # "ON_CPU" type task profiling dump period
-    onCPUDumpPeriod: Int
 
     # profiling task create timestamp
     createTime: Long!
@@ -94,16 +94,16 @@ type EBPFProfilingSchedule {
     taskId: ID!
     # process id
     processId: ID!
-    # profiling schedule start timestamp
+    # profiling schedule start timestamp(ms)
     startTime: Long!
-    # profiling schedule finished timestamp
+    # profiling schedule finished timestamp(ms)
     endTime: Long!
 }
 
 input EBPFProfilingAnalyzeTimeRange {
-    # start timestamp
+    # start timestamp(ms)
     start: Long!
-    # end timestamp
+    # end timestamp(ms)
     end: Long!
 }
 
@@ -141,25 +141,22 @@ enum EBPFProfilingProcessFinderType {
     PROCESS_ID
 }
 
+# Define when the profiling task would be execute
 enum EBPFProfilingTriggerType {
+    # Appoint the task executing total duration
     FIXED_TIME
 }
 
+# How to profiling the process
+# relate with linux function: https://man7.org/linux/man-pages/man2/perf_event_open.2.html
 enum EBPFProfilingTargetType {
+    # Using "PERF_COUNT_SW_CPU_CLOCK" to profiling process with CPU clock
     ON_CPU
 }
 
-input EBPFProfilingFixedTimeTrigger {
-    duration: Int!
-}
-
-input EBPFProfilingOnCPUTarget {
-    dumpPeriod: Int!
-}
-
 extend type Mutation {
-    # create a new eBPF profiling task
-    createEBPFProfilingTask(request: EBPFProfilingTaskCreationRequest): EBPFProfilingTaskCreationResult
+    # create a new eBPF fixed time profiling task
+    createEBPFProfilingFixedTimeTask(request: EBPFProfilingTaskFixedTimeCreationRequest): EBPFProfilingTaskCreationResult
 }
 
 extend type Query {
