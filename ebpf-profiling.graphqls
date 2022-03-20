@@ -94,8 +94,8 @@ type EBPFProfilingSchedule {
     scheduleId: ID!
     # profiling task ID
     taskId: ID!
-    # process ID
-    processId: ID!
+    # process entity
+    process: Process!
     # profiling schedule start timestamp(ms)
     startTime: Long!
     # profiling schedule finished timestamp(ms)
