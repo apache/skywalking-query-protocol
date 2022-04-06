@@ -100,6 +100,8 @@ type Process {
     detectType: String!
     # The process attributes, different process detect type have different corresponding attributes.
     attributes: [Attribute!]!
+    # The process labels.
+    labels: [String!]!
 }
 
 type TimeInfo {
