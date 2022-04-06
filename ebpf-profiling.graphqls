@@ -136,22 +136,6 @@ enum EBPFProfilingTargetType {
     ON_CPU
 }
 
-# The eBPF Profiling data aggregation type
-enum EBPFProfilingAggregateType {
-    LABEL,
-    PROCESS
-}
-
-# The eBPF Profiling data aggregation config
-input EBPFProfilingAggregation {
-    # aggregation type
-    type: EBPFProfilingAggregateType!
-    # provide process id when using "PROCESS" aggregation type
-    processId: String
-    # provide process labels when using "LABEL" aggregation type
-    labels: [String!]
-}
-
 extend type Mutation {
     # create a new eBPF fixed time profiling task
     createEBPFProfilingFixedTimeTask(request: EBPFProfilingTaskFixedTimeCreationRequest!): EBPFProfilingTaskCreationResult!
@@ -162,12 +146,8 @@ extend type Query {
     queryPrepareCreateEBPFProfilingTaskData(serviceId: ID!): EBPFProfilingTaskPrepare!
     # query eBPF profiling task list
     queryEBPFProfilingTasks(serviceId: ID): [EBPFProfilingTask!]!
-    # query eBPF profiling instances of task
-    queryEBPFProfilingInstances(taskId: ID!, serviceId: ID!, duration: Duration!): [ServiceInstance!]!
-    # query eBPF profiling processes of task and instance
-    queryEBPFProfilingProcesses(taskId: ID!, instanceId: ID!, duration: Duration!): [Process]!
     # query schedules from profiling task
-    queryEBPFProfilingSchedules(taskId: ID!, duration: Duration!, aggregation: EBPFProfilingAggregation!): [EBPFProfilingSchedule!]!
+    queryEBPFProfilingSchedules(taskId: ID!, duration: Duration!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
-    getEBPFProfilingAnalyzation(taskId: ID!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!, aggregation: EBPFProfilingAggregation!): EBPFProfilingAnalyzation!
+    getEBPFProfilingAnalyzation(scheduleIdList: [ID!]!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
 }
