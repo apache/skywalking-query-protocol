@@ -14,18 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Define how to find which process needs profiling
-input EBPFProfilingProcessFinder {
-   # the way to address the target process
-   finderType: EBPFProfilingProcessFinderType!
-   # appoint process ID when use the "PROCESS_ID" finder type
-   processId: ID
-}
-
 # The creation request of eBPF profiling fixed time task
 input EBPFProfilingTaskFixedTimeCreationRequest {
-    # define how to find the process
-    processFinder: EBPFProfilingProcessFinder!
+    # define which processes under the service need to be profiling
+    serviceId: String!
+    # aggregate which processes need to be profiling from labels
+    processLabels: [String!]!
 
     # the task start timestamp(ms), if less then or equal zero means the task starts ASAP
     startTime: Long!
@@ -47,33 +41,15 @@ type EBPFProfilingTaskCreationResult {
     id: String
 }
 
-# query eBPF profiling task condition
-input EBPFProfilingTaskCondition {
-    # the process finder type of profiling task
-    finderType: EBPFProfilingProcessFinderType
-    # service ID of process which need profiling
-    serviceId: ID
-    # instance ID of process which need profiling
-    instanceId: ID
-    # instance ID of process which need profiling
-    processId: ID
-}
-
 # eBPF profiling task data
 type EBPFProfilingTask {
     # profiling task ID
     taskId: ID!
-    # profiling process finder type
-    processFinderType: EBPFProfilingProcessFinderType!
     # service of profiling task
-    serviceId: ID
-    serviceName: String
-    # instance of profiling task
-    instanceId: ID
-    instanceName: String
-    # process of profiling task
-    processId: ID
-    processName: String
+    serviceId: ID!
+    serviceName: String!
+    # process labels for filter
+    processLabels: [String!]!
 
     # Start time of the task, type is timestamp.
     taskStartTime: Long!
@@ -134,13 +110,17 @@ type EBPFProfilingStackElement {
     dumpCount: Long!
 }
 
+# Prepare for creating the eBPF profiling task needs data
+type EBPFProfilingTaskPrepare {
+    # have enough process could profiling
+    couldProfiling: Boolean!
+    # all process unique labels for filter
+    processLabels: [String!]!
+}
+
 enum EBPFProfilingStackType {
     KERNEL_SPACE,
     USER_SPACE
-}
-
-enum EBPFProfilingProcessFinderType {
-    PROCESS_ID
 }
 
 # Define when the profiling task would be execute
@@ -162,10 +142,12 @@ extend type Mutation {
 }
 
 extend type Query {
+    # query eBPF profiling data for prepare create task
+    queryPrepareCreateEBPFProfilingTaskData(serviceId: ID!): EBPFProfilingTaskPrepare!
     # query eBPF profiling task list
-    queryEBPFProfilingTasks(query: EBPFProfilingTaskCondition): [EBPFProfilingTask!]!
+    queryEBPFProfilingTasks(serviceId: ID): [EBPFProfilingTask!]!
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!, duration: Duration!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
-    getEBPFProfilingAnalyzation(taskId: ID!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
+    analysisEBPFProfilingResult(scheduleIdList: [ID!]!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
 }
