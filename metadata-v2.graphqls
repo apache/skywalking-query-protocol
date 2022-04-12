@@ -140,6 +140,12 @@ extend type Query {
     listProcesses(serviceId: ID, instanceId: ID): [Process!]!
     # Find process according to given ID. Return null if not existing.
     getProcess(processId: ID!): Process
+    # Get the number of matched processes through serviceId, labels, and duration
+    # Labels: the matched process should contain all labels
+    #
+    # The return is not a precise number, the process has its lifecycle, as it reboots and shutdowns with time.
+    # The return number just gives an abstract of the scale of profiling that would be applied.
+    estimateProfilingScale(serviceId: ID!, labels: [String!]!, duration: Duration!): Long!
     
     getTimeInfo: TimeInfo
 }
