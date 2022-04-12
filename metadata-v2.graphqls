@@ -140,6 +140,9 @@ extend type Query {
     listProcesses(serviceId: ID, instanceId: ID): [Process!]!
     # Find process according to given ID. Return null if not existing.
     getProcess(processId: ID!): Process
+    # Get process count by serviceId, labels and duration
+    # The labels means that the process must contains all of labels which queried
+    getProcessCount(serviceId: ID!, labels: [String!]!, duration: Duration!): Long!
     
     getTimeInfo: TimeInfo
 }
