@@ -145,7 +145,7 @@ extend type Query {
     #
     # The return is not a precise number, the process has its lifecycle, as it reboots and shutdowns with time.
     # The return number just gives an abstract of the scale of profiling that would be applied.
-    estimateProfilingScale(serviceId: ID!, labels: [String!]!, duration: Duration!): Long!
+    estimateProcessScale(serviceId: ID!, labels: [String!]!, duration: Duration!): Long!
     
     getTimeInfo: TimeInfo
 }
