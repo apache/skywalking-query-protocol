@@ -135,17 +135,16 @@ extend type Query {
     findEndpoint(keyword: String, serviceId: ID!, limit: Int!): [Endpoint!]!
     getEndpointInfo(endpointId: ID!): EndpointInfo
 
-    # Read process list if either serviceId or instanceId is provided.
-    # Otherwise, read an empty list.
-    listProcesses(serviceId: ID, instanceId: ID): [Process!]!
+    # Read process list.
+    listProcesses(duration: Duration!, instanceId: ID!): [Process!]!
     # Find process according to given ID. Return null if not existing.
     getProcess(processId: ID!): Process
-    # Get the number of matched processes through serviceId, labels, and duration
+    # Get the number of matched processes through serviceId, labels
     # Labels: the matched process should contain all labels
     #
     # The return is not a precise number, the process has its lifecycle, as it reboots and shutdowns with time.
     # The return number just gives an abstract of the scale of profiling that would be applied.
-    estimateProcessScale(serviceId: ID!, labels: [String!]!, duration: Duration!): Long!
+    estimateProcessScale(serviceId: ID!, labels: [String!]!): Long!
     
     getTimeInfo: TimeInfo
 }
