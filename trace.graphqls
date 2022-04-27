@@ -119,4 +119,6 @@ type LogEntity {
 extend type Query {
     queryBasicTraces(condition: TraceQueryCondition): TraceBrief
     queryTrace(traceId: ID!): Trace
+    queryTraceTagAutocompleteKeys:[String!]
+    queryTraceTagAutocompleteValues(tagKey: String!):[String!]
 }
