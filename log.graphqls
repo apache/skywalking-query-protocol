@@ -104,4 +104,7 @@ extend type Query {
 
     # Test the logs and get the results of the LAL output.
     test(requests: LogTestRequest!): LogTestResponse!
+
+    queryLogTagAutocompleteKeys(duration: Duration!):[String!]
+    queryLogTagAutocompleteValues(tagKey: String! , duration: Duration!):[String!]
 }
