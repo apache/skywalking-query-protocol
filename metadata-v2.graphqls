@@ -91,7 +91,6 @@ type Process {
     serviceName: String!
     instanceId: ID!
     instanceName: String!
-    layer: String!
     # Which agent report this process.
     agentId: String!
     # The process found type.
