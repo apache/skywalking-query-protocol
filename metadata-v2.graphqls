@@ -60,8 +60,6 @@ type ServiceInstance {
     attributes: [Attribute!]!
     language: Language!
     instanceUUID: String!
-    # Same as the layer definition. This is set according to the registration channel or MAL/LAL script definitions.
-    layer: String!
 }
 
 type Attribute {
