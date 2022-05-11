@@ -147,7 +147,7 @@ extend type Query {
     # query eBPF profiling task list
     queryEBPFProfilingTasks(serviceId: ID): [EBPFProfilingTask!]!
     # query schedules from profiling task
-    queryEBPFProfilingSchedules(taskId: ID!, duration: Duration!): [EBPFProfilingSchedule!]!
+    queryEBPFProfilingSchedules(taskId: ID!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
     analysisEBPFProfilingResult(scheduleIdList: [ID!]!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
 }
