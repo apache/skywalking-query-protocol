@@ -133,7 +133,20 @@ enum EBPFProfilingTriggerType {
 # relate with Linux function: https://man7.org/linux/man-pages/man2/perf_event_open.2.html
 enum EBPFProfilingTargetType {
     # Using "PERF_COUNT_SW_CPU_CLOCK" to profiling process with CPU clock
-    ON_CPU
+    ON_CPU,
+    # Using "finish_task_switch" of kprobe to profiling process
+    # relate with blog: https://www.brendangregg.com/offcpuanalysis.html
+    OFF_CPU
+}
+
+enum EBPFProfilingAnalyzeAggregateType {
+    # Aggregate by the total duration of stack
+    # For "OFF_CPU" target type of profiling: Statics the total time spent in off cpu.
+    DURATION,
+    # Aggregate by the trigger count
+    # For "ON_CPU" target type of profiling: Statics the number of dump count.
+    # For "OFF_CPU" target type of profiling: Statics the number of times the process is switched to off cpu by the scheduler.
+    COUNT
 }
 
 extend type Mutation {
@@ -149,5 +162,6 @@ extend type Query {
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
-    analysisEBPFProfilingResult(scheduleIdList: [ID!]!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!): EBPFProfilingAnalyzation!
+    # aggregateType is "EBPFProfilingAnalyzeAggregateType#COUNT" as default. 
+    analysisEBPFProfilingResult(scheduleIdList: [ID!]!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!, aggregateType: EBPFProfilingAnalyzeAggregateType): EBPFProfilingAnalyzation!
 }
