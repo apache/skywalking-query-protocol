@@ -162,6 +162,6 @@ extend type Query {
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
-    # if the value of aggregate type is missing, "COUNT" as the default value
+    # aggregateType is "EBPFProfilingAnalyzeAggregateType#COUNT" as default. 
     analysisEBPFProfilingResult(scheduleIdList: [ID!]!, timeRanges: [EBPFProfilingAnalyzeTimeRange!]!, aggregateType: EBPFProfilingAnalyzeAggregateType): EBPFProfilingAnalyzation!
 }
