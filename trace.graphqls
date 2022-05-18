@@ -17,7 +17,6 @@
 # The list of traces
 type TraceBrief {
     traces: [BasicTrace!]!
-    total: Int!
 }
 
 # Trace basic info
