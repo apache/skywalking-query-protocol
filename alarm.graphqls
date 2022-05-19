@@ -30,7 +30,6 @@ type AlarmMessage {
 
 type Alarms {
     msgs: [AlarmMessage!]!
-    total: Int!
 }
 
 input AlarmTag {

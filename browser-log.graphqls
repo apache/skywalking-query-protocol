@@ -29,7 +29,6 @@ input BrowserErrorLogQueryCondition {
 # The list of browser error log
 type BrowserErrorLogs {
     logs: [BrowserErrorLog!]!
-    total: Int!
 }
 
 # Represent the browser error log
