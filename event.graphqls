@@ -49,7 +49,6 @@ enum EventType {
 
 type Events {
     events: [Event!]!
-    total: Int!
 }
 
 input EventQueryCondition {
