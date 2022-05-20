@@ -49,6 +49,7 @@ input TraceQueryCondition {
     paging: Pagination!
     # [Optional] SkyWalking supports traces collected by SkyWalking's native agents and Zipkin's native agents
     # This prioritized source determines one of them has high priority in the trace list.
+    # The default value is TraceSource.SKYWALKING
     prioritizedSource: TraceSource
 }
 
