@@ -39,7 +39,7 @@ input ContainerQueryCondition {
 }
 
 extend type Query {
-    listNamespaces(): [String!]!
+    listNamespaces: [String!]!
     listContainers(condition: ContainerQueryCondition): [String!]!
     ondemandPodLogs(condition: OndemandLogQueryCondition): Logs
 }
