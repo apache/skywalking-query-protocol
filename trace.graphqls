@@ -47,10 +47,6 @@ input TraceQueryCondition {
     # Map to the tags included in the traces
     tags: [SpanTag!]
     paging: Pagination!
-    # [Optional] SkyWalking supports traces collected by SkyWalking's native agents and Zipkin's native agents
-    # This prioritized source determines one of them has high priority in the trace list.
-    # The default value is TraceSource.SKYWALKING
-    prioritizedSource: TraceSource
 }
 
 input SpanTag {
@@ -67,12 +63,6 @@ enum TraceState {
 enum QueryOrder {
     BY_START_TIME
     BY_DURATION
-}
-
-# The datasource and datasource of collected traces/spans
-enum TraceSource {
-    SKYWALKING
-    ZIPKIN
 }
 
 # The trace represents a distributed trace, includes all segments and spans.
