@@ -23,8 +23,6 @@
 # configuration documentation to enable this manually.
 
 input OndemandLogQueryCondition {
-    namespace: String!
-    serviceId: ID
     serviceInstanceId: ID
     container: String!
     duration: Duration
@@ -32,14 +30,11 @@ input OndemandLogQueryCondition {
     excludingKeywordsOfContent: [String!]
 }
 
-input ContainerQueryCondition {
-    namespace: String!
-    serviceId: ID
+input OndemandContainergQueryCondition {
     serviceInstanceId: ID
 }
 
 extend type Query {
-    listNamespaces: [String!]!
-    listContainers(condition: ContainerQueryCondition): [String!]!
+    listContainers(condition: OndemandContainergQueryCondition): [String!]!
     ondemandPodLogs(condition: OndemandLogQueryCondition): Logs
 }
