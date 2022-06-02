@@ -16,6 +16,9 @@
 
 # The list of logs
 type Logs {
+    # When this field is not empty, frontend should display it in UI
+    errorReason: String
+
     logs: [Log!]!
 }
 
