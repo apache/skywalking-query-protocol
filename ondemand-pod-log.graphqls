@@ -34,7 +34,14 @@ input OndemandContainergQueryCondition {
     serviceInstanceId: ID
 }
 
+type PodContainers {
+    # When this field is not empty, frontend should display it in UI
+    errorReason: String
+
+    containers: [String!]!
+}
+
 extend type Query {
-    listContainers(condition: OndemandContainergQueryCondition): [String!]!
+    listContainers(condition: OndemandContainergQueryCondition): PodContainers
     ondemandPodLogs(condition: OndemandLogQueryCondition): Logs
 }
