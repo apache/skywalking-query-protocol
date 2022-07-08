@@ -48,8 +48,12 @@ type EBPFProfilingTaskCreationResult {
 }
 
 # eBPF Profiling task keep alive result
-type EBPFNetworkProfilingKeepResult {
+type EBPFNetworkKeepProfilingResult {
     # TRUE if the task is keep alive successfully
+    # When the following conditions occur, an error would be generated:
+    # 1. Profiling task does not exist.
+    # 2. The target type of profiling task is not "NETWORK".
+    # 3. Profiling Task already finished when sent keep alive.
     status: Boolean!
     # error reason when status == FALSE
     errorReason: String
@@ -175,7 +179,7 @@ extend type Mutation {
     # create a new eBPF network profiling task
     createEBPFNetworkProfiling(request: EBPFProfilingNetworkTaskRequest!): EBPFProfilingTaskCreationResult!
     # keep alive the eBPF profiling task
-    keepEBPFNetworkProfiling(taskId: ID!): EBPFNetworkProfilingKeepResult!
+    keepEBPFNetworkProfiling(taskId: ID!): EBPFNetworkKeepProfilingResult!
 }
 
 extend type Query {
