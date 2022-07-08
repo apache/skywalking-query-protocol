@@ -33,10 +33,7 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
 # The request of eBPF network profiling task
 input EBPFProfilingNetworkTaskRequest {
     # define which processes under the service instance need to be profiling
-    instanceId: String
-    # define which eBPF network topology profiling task need to be extension the duration of profiling
-    # Use the task id when the task is created through instance id
-    taskId: String
+    instanceId: String!
 }
 
 # eBPF Profiling task creation result
@@ -48,6 +45,14 @@ type EBPFProfilingTaskCreationResult {
 
     # The task ID when status = TRUE
     id: String
+}
+
+# eBPF Profiling task keep alive result
+type EBPFProfilingTaskKeepAliveResult {
+    # TRUE if the task is keep alive successfully
+    status: Boolean!
+    # error reason when status == FALSE
+    errorReason: String
 }
 
 # eBPF profiling task data
@@ -168,7 +173,9 @@ extend type Mutation {
     createEBPFProfilingFixedTimeTask(request: EBPFProfilingTaskFixedTimeCreationRequest!): EBPFProfilingTaskCreationResult!
 
     # create a new eBPF network profiling task
-    ondemandEBPFNetworkProfiling(request: EBPFProfilingNetworkTaskRequest!): EBPFProfilingTaskCreationResult!
+    createEBPFNetworkProfiling(request: EBPFProfilingNetworkTaskRequest!): EBPFProfilingTaskCreationResult!
+    # keep alive the eBPF profiling task
+    keepAliveEBPFProfilingTask(taskId: ID!): EBPFProfilingTaskKeepAliveResult!
 }
 
 extend type Query {
