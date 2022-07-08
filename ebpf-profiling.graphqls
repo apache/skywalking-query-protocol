@@ -30,6 +30,15 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
+# The request of eBPF network topology profiling ondemand task
+input EBPFProfilingOnDemandNetworkTopologyTaskRequest {
+    # define which processes under the service instance need to be profiling
+    instanceId: String
+    # define which eBPF network topology profiling task need to be extension the duration of profiling
+    # Use the task id when the task is created through instance id
+    taskId: String
+}
+
 # eBPF Profiling task creation result
 type EBPFProfilingTaskCreationResult {
     # TRUE if the task is created successfully
@@ -48,6 +57,9 @@ type EBPFProfilingTask {
     # service of profiling task
     serviceId: ID!
     serviceName: String!
+    # service instance of profiling task
+    serviceInstanceId: ID
+    serviceInstanceName: String
     # process labels for filter
     processLabels: [String!]!
 
@@ -136,7 +148,9 @@ enum EBPFProfilingTargetType {
     ON_CPU,
     # Using "finish_task_switch" of kprobe to profiling process
     # relate with blog: https://www.brendangregg.com/offcpuanalysis.html
-    OFF_CPU
+    OFF_CPU,
+    # Using many syscall to complete network topology monitoring, such as sys_connect, sys_read, sys_write, etc.
+    NETWORK_TOPOLOGY
 }
 
 enum EBPFProfilingAnalyzeAggregateType {
@@ -152,13 +166,16 @@ enum EBPFProfilingAnalyzeAggregateType {
 extend type Mutation {
     # create a new eBPF fixed time profiling task
     createEBPFProfilingFixedTimeTask(request: EBPFProfilingTaskFixedTimeCreationRequest!): EBPFProfilingTaskCreationResult!
+
+    # create a new eBPF network topology profiling task with ondemand mode
+    ondemandEBPFNetWorkTopologyProfiling(request: EBPFProfilingOnDemandNetworkTopologyTaskRequest!): EBPFProfilingTaskCreationResult!
 }
 
 extend type Query {
     # query eBPF profiling data for prepare create task
     queryPrepareCreateEBPFProfilingTaskData(serviceId: ID!): EBPFProfilingTaskPrepare!
     # query eBPF profiling task list
-    queryEBPFProfilingTasks(serviceId: ID): [EBPFProfilingTask!]!
+    queryEBPFProfilingTasks(serviceId: ID, serviceInstanceId: ID, targets: [EBPFProfilingTargetType!]): [EBPFProfilingTask!]!
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
