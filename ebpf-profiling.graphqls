@@ -49,11 +49,11 @@ type EBPFProfilingTaskCreationResult {
 
 # eBPF Profiling task keep alive result
 type EBPFNetworkKeepProfilingResult {
-    # TRUE if the task is keep alive successfully
-    # When the following conditions occur, an error would be generated:
-    # 1. Profiling task does not exist.
+    # TRUE if the task is kept alive successfully
+    # When one of the following conditions occurs, response in error status:
+    # 1. The profiling task does not exist.
     # 2. The target type of profiling task is not "NETWORK".
-    # 3. Profiling Task already finished when sent keep alive.
+    # 3. The profiling task is already finished when the OAP received keep-alive request.
     status: Boolean!
     # error reason when status == FALSE
     errorReason: String
