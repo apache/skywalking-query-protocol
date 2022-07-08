@@ -48,7 +48,7 @@ type EBPFProfilingTaskCreationResult {
 }
 
 # eBPF Profiling task keep alive result
-type EBPFProfilingTaskKeepAliveResult {
+type EBPFNetworkProfilingKeepResult {
     # TRUE if the task is keep alive successfully
     status: Boolean!
     # error reason when status == FALSE
@@ -175,7 +175,7 @@ extend type Mutation {
     # create a new eBPF network profiling task
     createEBPFNetworkProfiling(request: EBPFProfilingNetworkTaskRequest!): EBPFProfilingTaskCreationResult!
     # keep alive the eBPF profiling task
-    keepAliveEBPFProfilingTask(taskId: ID!): EBPFProfilingTaskKeepAliveResult!
+    keepEBPFNetworkProfiling(taskId: ID!): EBPFNetworkProfilingKeepResult!
 }
 
 extend type Query {
