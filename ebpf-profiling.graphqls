@@ -30,6 +30,12 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
+# The request of eBPF network profiling task
+input EBPFProfilingNetworkTaskRequest {
+    # define which processes under the service instance need to be profiling
+    instanceId: String!
+}
+
 # eBPF Profiling task creation result
 type EBPFProfilingTaskCreationResult {
     # TRUE if the task is created successfully
@@ -41,6 +47,18 @@ type EBPFProfilingTaskCreationResult {
     id: String
 }
 
+# eBPF Profiling task keep alive result
+type EBPFNetworkKeepProfilingResult {
+    # TRUE if the task is kept alive successfully
+    # When one of the following conditions occurs, response in error status:
+    # 1. The profiling task does not exist.
+    # 2. The target type of profiling task is not "NETWORK".
+    # 3. The profiling task is already finished when the OAP received keep-alive request.
+    status: Boolean!
+    # error reason when status == FALSE
+    errorReason: String
+}
+
 # eBPF profiling task data
 type EBPFProfilingTask {
     # profiling task ID
@@ -48,6 +66,9 @@ type EBPFProfilingTask {
     # service of profiling task
     serviceId: ID!
     serviceName: String!
+    # service instance of profiling task
+    serviceInstanceId: ID
+    serviceInstanceName: String
     # process labels for filter
     processLabels: [String!]!
 
@@ -136,7 +157,9 @@ enum EBPFProfilingTargetType {
     ON_CPU,
     # Using "finish_task_switch" of kprobe to profiling process
     # relate with blog: https://www.brendangregg.com/offcpuanalysis.html
-    OFF_CPU
+    OFF_CPU,
+    # Using many syscall to complete network topology monitoring, such as sys_connect, sys_read, sys_write, etc.
+    NETWORK
 }
 
 enum EBPFProfilingAnalyzeAggregateType {
@@ -152,13 +175,18 @@ enum EBPFProfilingAnalyzeAggregateType {
 extend type Mutation {
     # create a new eBPF fixed time profiling task
     createEBPFProfilingFixedTimeTask(request: EBPFProfilingTaskFixedTimeCreationRequest!): EBPFProfilingTaskCreationResult!
+
+    # create a new eBPF network profiling task
+    createEBPFNetworkProfiling(request: EBPFProfilingNetworkTaskRequest!): EBPFProfilingTaskCreationResult!
+    # keep alive the eBPF profiling task
+    keepEBPFNetworkProfiling(taskId: ID!): EBPFNetworkKeepProfilingResult!
 }
 
 extend type Query {
     # query eBPF profiling data for prepare create task
     queryPrepareCreateEBPFProfilingTaskData(serviceId: ID!): EBPFProfilingTaskPrepare!
     # query eBPF profiling task list
-    queryEBPFProfilingTasks(serviceId: ID): [EBPFProfilingTask!]!
+    queryEBPFProfilingTasks(serviceId: ID, serviceInstanceId: ID, targets: [EBPFProfilingTargetType!]): [EBPFProfilingTask!]!
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule

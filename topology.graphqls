@@ -32,6 +32,11 @@ type EndpointTopology {
     calls: [Call!]!
 }
 
+type ProcessTopology {
+    nodes: [ProcessNode!]!
+    calls: [Call!]!
+}
+
 # Node in Topology
 type Node {
     # The service ID of the node.
@@ -82,6 +87,17 @@ type EndpointNode {
     isReal: Boolean!
 }
 
+# Node in ProcessTopology
+type ProcessNode {
+    # The process id of each node.
+    id: ID!
+    # The name of the process
+    name: String!
+    # It's a virtual node or real node.
+    # A unreal node means that the current node is not a process belonging to this instance, but interacting with the processes belonging to the instance.
+    isReal: Boolean!
+}
+
 # The Call represents a directed distributed call,
 # from the `source` to the `target`.
 type Call {
@@ -110,4 +126,6 @@ extend type Query {
     getEndpointTopology(endpointId: ID!, duration: Duration!): Topology
     # v2 of getEndpointTopology
     getEndpointDependencies(endpointId: ID!, duration: Duration!): EndpointTopology
+    # Query the topology, based on the given instance
+    getProcessTopology(serviceInstanceId: ID!, duration: Duration!): ProcessTopology
 }
