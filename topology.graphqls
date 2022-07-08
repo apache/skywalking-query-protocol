@@ -94,7 +94,7 @@ type ProcessNode {
     # The name of the process
     name: String!
     # It's a virtual node or real node.
-    # A not real node means that current node is not a process under this instance.
+    # A unreal node means that the current node is not a process belonging to this instance, but interacting with the processes belonging to the instance.
     isReal: Boolean!
 }
 
