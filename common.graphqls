@@ -101,6 +101,7 @@ enum Scope {
     ServiceRelation
     ServiceInstanceRelation
     EndpointRelation
+    ProcessRelation
 }
 
 enum DetectPoint {

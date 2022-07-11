@@ -91,6 +91,14 @@ type EndpointNode {
 type ProcessNode {
     # The process id of each node.
     id: ID!
+    # Service id
+    serviceId: ID!
+    # The literal name of the #serviceId.
+    serviceName: String!
+    # Service Instance id
+    serviceInstanceId: ID!
+    # The literal name of the #serviceInstanceId.
+    serviceInstanceName: String!
     # The name of the process
     name: String!
     # It's a virtual node or real node.
