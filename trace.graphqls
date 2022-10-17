@@ -145,8 +145,8 @@ type Instant {
 # Notice, THIS IS ALSO AVAILABLE FOR ZIPKIN SPAN.
 # -----------------------------------------------
 # In SkyWalking, ZipkinQueryHandler provides full support for all Zipkin span queries.
-# SpanAttachedEvent query is supported through a new URI: /api/v2/trace/{traceId}/ext/spanAttachedEvents
-# The response is in JSON as usually, includes all fields of SpanAttachedEvent, and `spanId` as an additional field.
+# SpanAttachedEvent query is supported through the trace query URI: /api/v2/trace/{traceId}
+# A new `attachedEvents` field would be added in JSONArray format with SpanAttachedEvent in JSON as elements.
 type SpanAttachedEvent {
     # The nanosecond timestamp of the event's start time.
     # Notice, most unit of timestamp in SkyWalking is milliseconds, but NANO-SECOND is required here.
