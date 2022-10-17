@@ -144,7 +144,7 @@ type Instant {
 #
 # Notice, THIS IS ALSO AVAILABLE FOR ZIPKIN SPAN.
 # -----------------------------------------------
-# In SkyWalking, ZipkinQueryHandler provides a fully support for all Zipkin span query.
+# In SkyWalking, ZipkinQueryHandler provides full support for all Zipkin span queries.
 # SpanAttachedEvent query is supported through a new URI: /api/v2/trace/{traceId}/ext/spanAttachedEvents
 # The response is in JSON as usually, includes all fields of SpanAttachedEvent, and `spanId` as an additional field.
 type SpanAttachedEvent {
