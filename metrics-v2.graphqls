@@ -153,6 +153,7 @@ extend type Query {
     readLabeledMetricsValues(condition: MetricsCondition!, labels: [String!]!, duration: Duration!): [MetricsValues!]!
     # Heatmap is bucket based value statistic result.
     readHeatMap(condition: MetricsCondition!, duration: Duration!): HeatMap
+    # Deprecated since 9.3.0, replaced by readRecords defined in record.graphqls
     # Read the sampled records
     # TopNCondition#scope is not required.
     readSampledRecords(condition: TopNCondition!, duration: Duration!): [SelectedRecord!]!
