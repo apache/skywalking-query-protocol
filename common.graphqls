@@ -36,6 +36,12 @@ type KeyValue {
     value: String
 }
 
+# String key, Long/Int value pair.
+type KeyNumericValue {
+    key: String!
+    value: Long!
+}
+
 # The Duration defines the start and end time for each query operation.
 # Fields: `start` and `end`
 #   represents the time span. And each of them matches the step.
