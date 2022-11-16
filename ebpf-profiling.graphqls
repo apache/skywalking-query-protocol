@@ -30,41 +30,35 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
-input EBPFProfilingNetworkDataCollectConfig {
-    # is collect the full request data
-    collectFullRequest: Boolean!
-    # max size of the request data(B)
-    # collect all data if not set
+input EBPFNetworkDataCollectingSettings {
+    # Require to collect the complete request
+    requireCompleteRequest: Boolean!
+    # The max size of request context. The unit is byte.
+    # Collect the whole request header and body if this is not set.
     maxRequestSize: Int
 
-    # is collect the full response data
-    collectFullResponse: Boolean!
-    # max size of the response data(B)
-    # collect all data if not set
+    # Require to collect the complete response
+    requireCompleteResponse: Boolean!
+    # The max size of response context. The unit is byte.
+    # Collect the whole response header and body if this is not set.
     maxResponseSize: Int
 }
 
-enum EBPFProfilingNetworkSamplingStrategy {
-    # Order the slow traces by the duration of the response
-    SLOW
-    # collect the trace that response status code between 400-499
-    STATUS_4XX
-    # collect the trace that response status code between 500-599
-    STATUS_5XX
-}
-
-input EBPFProfilingNetworkSamplingConfig {
-    # how to matches the request URI
-    # matches all request URI when uriRegex is empty
+input EBPFNetworkSamplingRule {
+    # The match pattern for HTTP request. This is HTTP URI-oriented.
+    # matches all requests if not set
     uriRegex: String
 
-    # how to sampling the profiling data
-    strategy: EBPFProfilingNetworkSamplingStrategy!
-    # the minimal response duration when using the "SLOW" strategy
-    durationThreshold: Int!
+    # the minimal request duration to activate the network data(HTTP request/response raw data) sampling.
+    # Collecting requests without minimal request duration
+    minDuration: Int
+    # Collecting requests when the response code is 400-499
+    when4xx: Boolean!
+    # Collecting requests when the response code is 500-599
+    when5xx: Boolean!
 
     # define how to collect sampled data
-    collect: EBPFProfilingNetworkDataCollectConfig!
+    settings: EBPFNetworkDataCollectingSettings!
 }
 
 # The request of eBPF network profiling task
@@ -72,8 +66,9 @@ input EBPFProfilingNetworkTaskRequest {
     # define which processes under the service instance need to be profiling
     instanceId: String!
 
-    # define how to sampling the profiling data
-    samplings: [EBPFProfilingNetworkSamplingConfig!]!
+    # The rule list for network profiling.
+    # Set various rules for different HTTP URIs if necessary.
+    samplings: [EBPFNetworkSamplingRule!]!
 }
 
 # eBPF Profiling task creation result
