@@ -30,7 +30,7 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
-input EBPFProfilingNetworkSamplingStrategy {
+input EBPFProfilingNetworkDataCollectConfig {
     # is collect the full request data
     collectFullRequest: Boolean!
     # max size of the request data(B)
@@ -44,41 +44,27 @@ input EBPFProfilingNetworkSamplingStrategy {
     maxResponseSize: Int
 }
 
-input EBPFProfilingNetworkSlowTraceSamplingConfig {
+enum EBPFProfilingNetworkSamplingStrategy {
+    # Order the slow traces by the duration of the response
+    SLOW
+    # collect the trace that response status code between 400-499
+    STATUS_4XX
+    # collect the trace that response status code between 500-599
+    STATUS_5XX
+}
+
+input EBPFProfilingNetworkSamplingConfig {
     # how to matches the request URI
     # matches all request URI when uriRegex is empty
     uriRegex: String
-    # the minimal response duration
+
+    # how to sampling the profiling data
+    strategy: EBPFProfilingNetworkSamplingStrategy!
+    # the minimal response duration when using the "SLOW" strategy
     durationThreshold: Int!
-    # how to sampling the request or response data
-    strategy: EBPFProfilingNetworkSamplingStrategy!
-}
 
-# define the status code matches operation
-input EBPFProfilingNetworkErrorStatusMatchType {
-    EQUALS
-    BIGGER
-    BIGGER_EQUALS
-    SMALLER
-    SMALLER_EQUALS
-}
-
-input EBPFProfilingNetworkErrorStatusMatchConfig {
-    # define how to operate with the response status code
-    matchType: EBPFProfilingNetworkErrorStatusMatchType!
-    # define the matches value
-    matchValue: Int!
-}
-
-input EBPFProfilingNetworkErrorTraceSamplingConfig {
-    # how to matches the request URI
-    # matches all request URI when uriRegex is empty
-    urlRegex: String
-    # the response status match config
-    # if one of the matches config is validate success, then sampling the tracing data
-    matches: [EBPFProfilingNetworkErrorStatusMatchConfig!]!
-    # how to sampling the request or response dat
-    strategy: EBPFProfilingNetworkSamplingStrategy!
+    # define how to collect sampled data
+    collect: EBPFProfilingNetworkDataCollectConfig!
 }
 
 # The request of eBPF network profiling task
@@ -86,10 +72,8 @@ input EBPFProfilingNetworkTaskRequest {
     # define which processes under the service instance need to be profiling
     instanceId: String!
 
-    # define the sampling strategy for slow traces
-    slowTraceSampling: [EBPFProfilingNetworkSlowTraceSamplingConfig!]!
-    # define the sampling strategy for error traces
-    errorTraceSampling: [EBPFProfilingNetworkErrorTraceSamplingConfig!]!
+    # define how to sampling the profiling data
+    samplings: [EBPFProfilingNetworkSamplingConfig!]!
 }
 
 # eBPF Profiling task creation result
