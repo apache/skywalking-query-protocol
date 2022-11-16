@@ -30,10 +30,66 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
+input EBPFProfilingNetworkSamplingStrategy {
+    # is collect the full request data
+    collectFullRequest: Boolean!
+    # max size of the request data(B)
+    # collect all data if not set
+    maxRequestSize: Int
+
+    # is collect the full response data
+    collectFullResponse: Boolean!
+    # max size of the response data(B)
+    # collect all data if not set
+    maxResponseSize: Int
+}
+
+input EBPFProfilingNetworkSlowTraceSamplingConfig {
+    # how to matches the request URI
+    # matches all request URI when uriRegex is empty
+    uriRegex: String
+    # the minimal response duration
+    durationThreshold: Int!
+    # how to sampling the request or response data
+    strategy: EBPFProfilingNetworkSamplingStrategy!
+}
+
+# define the status code matches operation
+input EBPFProfilingNetworkErrorStatusMatchType {
+    EQUALS
+    BIGGER
+    BIGGER_EQUALS
+    SMALLER
+    SMALLER_EQUALS
+}
+
+input EBPFProfilingNetworkErrorStatusMatchConfig {
+    # define how to operate with the response status code
+    matchType: EBPFProfilingNetworkErrorStatusMatchType!
+    # define the matches value
+    matchValue: Int!
+}
+
+input EBPFProfilingNetworkErrorTraceSamplingConfig {
+    # how to matches the request URI
+    # matches all request URI when uriRegex is empty
+    urlRegex: String
+    # the response status match config
+    # if one of the matches config is validate success, then sampling the tracing data
+    matches: [EBPFProfilingNetworkErrorStatusMatchConfig!]!
+    # how to sampling the request or response dat
+    strategy: EBPFProfilingNetworkSamplingStrategy!
+}
+
 # The request of eBPF network profiling task
 input EBPFProfilingNetworkTaskRequest {
     # define which processes under the service instance need to be profiling
     instanceId: String!
+
+    # define the sampling strategy for slow traces
+    slowTraceSampling: [EBPFProfilingNetworkSlowTraceSamplingConfig!]!
+    # define the sampling strategy for error traces
+    errorTraceSampling: [EBPFProfilingNetworkErrorTraceSamplingConfig!]!
 }
 
 # eBPF Profiling task creation result
