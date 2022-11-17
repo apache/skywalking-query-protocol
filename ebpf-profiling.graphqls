@@ -30,10 +30,45 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
+input EBPFNetworkDataCollectingSettings {
+    # Require to collect the complete request
+    requireCompleteRequest: Boolean!
+    # The max size of request context. The unit is byte.
+    # Collect the whole request header and body if this is not set.
+    maxRequestSize: Int
+
+    # Require to collect the complete response
+    requireCompleteResponse: Boolean!
+    # The max size of response context. The unit is byte.
+    # Collect the whole response header and body if this is not set.
+    maxResponseSize: Int
+}
+
+input EBPFNetworkSamplingRule {
+    # The match pattern for HTTP request. This is HTTP URI-oriented.
+    # matches all requests if not set
+    uriRegex: String
+
+    # the minimal request duration to activate the network data(HTTP request/response raw data) sampling.
+    # Collecting requests without minimal request duration
+    minDuration: Int
+    # Collecting requests when the response code is 400-499
+    when4xx: Boolean!
+    # Collecting requests when the response code is 500-599
+    when5xx: Boolean!
+
+    # define how to collect sampled data
+    settings: EBPFNetworkDataCollectingSettings!
+}
+
 # The request of eBPF network profiling task
 input EBPFProfilingNetworkTaskRequest {
     # define which processes under the service instance need to be profiling
     instanceId: String!
+
+    # The rule list for network profiling.
+    # Set various rules for different HTTP URIs if necessary.
+    samplings: [EBPFNetworkSamplingRule!]!
 }
 
 # eBPF Profiling task creation result
