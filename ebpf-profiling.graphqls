@@ -68,7 +68,7 @@ input EBPFProfilingNetworkTaskRequest {
 
     # The rule list for network profiling.
     # Set various rules for different HTTP URIs if necessary.
-    samplings: [EBPFNetworkSamplingRule!]!
+    samplings: [EBPFNetworkSamplingRule!]
 }
 
 # eBPF Profiling task creation result
