@@ -30,6 +30,9 @@ input EBPFProfilingTaskFixedTimeCreationRequest {
     targetType: EBPFProfilingTargetType!
 }
 
+# Settings for the behaviours of sampling.
+# HTTP request and response could be large between the system.
+# These settings help the agent to collect necessary data and cost reasonable resources for the agent, transforming, and OAP storage.
 input EBPFNetworkDataCollectingSettings {
     # Require to collect the complete request
     requireCompleteRequest: Boolean!
@@ -44,6 +47,7 @@ input EBPFNetworkDataCollectingSettings {
     maxResponseSize: Int
 }
 
+# EBPFNetworkSamplingRule defines the URI scopes for HTTP request and response collecting under given HTTP response code circumstances.
 input EBPFNetworkSamplingRule {
     # The match pattern for HTTP request. This is HTTP URI-oriented.
     # matches all requests if not set
@@ -57,7 +61,7 @@ input EBPFNetworkSamplingRule {
     # Collecting requests when the response code is 500-599
     when5xx: Boolean!
 
-    # define how to collect sampled data
+    # define the sampled data size and scopes.
     settings: EBPFNetworkDataCollectingSettings!
 }
 
@@ -66,7 +70,7 @@ input EBPFProfilingNetworkTaskRequest {
     # define which processes under the service instance need to be profiling
     instanceId: String!
 
-    # The rule list for network profiling.
+    # The rule list for network profiling about collecting HTTP request and response raw data.
     # Set various rules for different HTTP URIs if necessary.
     samplings: [EBPFNetworkSamplingRule!]
 }
