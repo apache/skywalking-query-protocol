@@ -61,9 +61,8 @@ type ServiceInstanceNode {
     serviceId: ID!
     # The literal name of the #serviceId.
     serviceName: String!
-    # The type name may be
-    # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
-    # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
+    # [Deprecated]
+    # No type for service instance topology.
     type: String
     # It is a conjecture node or real node, to represent an instance.
     isReal: Boolean!
@@ -79,9 +78,8 @@ type EndpointNode {
     serviceId: ID!
     # The literal name of the #serviceId.
     serviceName: String!
-    # The type name may be
-    # 1. The service provider/middleware tech, such as: Tomcat, SpringMVC
-    # 2. Conjectural Service, e.g. MySQL, Redis, Kafka
+    # [Deprecated]
+    # No type for service instance topology.
     type: String
     # It is a conjuecture node or real node, to represent an instance.
     isReal: Boolean!
@@ -111,9 +109,11 @@ type ProcessNode {
 type Call {
     source: ID!
     # The protocol and tech stack used at source side in this distributed call
+    # No value in instance topology and endpoint dependency.
     sourceComponents: [ID!]!
     target: ID!
     # The protocol and tech stack used at target side in this distributed call
+    # No value in instance topology and endpoint dependency.
     targetComponents: [ID!]!
     id: ID!
     # The detect Points of this distributed call.
