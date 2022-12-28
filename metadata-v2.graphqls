@@ -116,7 +116,7 @@ extend type Query {
     listLayers: [String!]!
     
     # Read the service list according to layer.
-    listServices(layer: String!): [Service!]!
+    listServices(layer: String): [Service!]!
     # Find service according to given ID. Return null if not existing.
     getService(serviceId: String!): Service
     # Search and find service according to given name. Return null if not existing.
