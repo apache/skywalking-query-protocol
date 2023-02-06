@@ -117,6 +117,8 @@ type EBPFProfilingTask {
     triggerType: EBPFProfilingTriggerType!
     # "FIXED_TIME" type task profiling duration
     fixedTriggerDuration: Long
+    # "CONTINUOUS_PROFILING" type task id
+    continuousProfilingTaskId: String
 
     # profiling task target type
     targetType: EBPFProfilingTargetType!
@@ -186,7 +188,10 @@ enum EBPFProfilingStackType {
 # Define when the profiling task would be execute
 enum EBPFProfilingTriggerType {
     # Appoint the task executing total duration
-    FIXED_TIME
+    FIXED_TIME,
+
+    # Reached the continuous profiling task threshold
+    CONTINUOUS_PROFILING
 }
 
 # The way of profiling the process

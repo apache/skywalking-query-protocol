@@ -1,0 +1,245 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http:#www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# The creation request of continuous profiling task
+input ContinuousProfilingCreationRequest {
+    # define which processes under the services need to monitor and profiling
+    serviceId: String!
+
+    # consists of one or more condition
+    # the profiling task would be start when the condition are reached the threshold.
+    conditions: [ContinuousProfilingCondition!]!
+    # how to combine the multiple condition
+    conditionConnectType: ContinuousProfilingConditionConnectType!
+
+    # start which type of profiling task when the determination condition are met.
+    targetType: ContinuousProfilingTargetType!
+    # when start profiling task, what processes would be triggered.
+    targetScope: ContinuousProfilingTargetScope!
+
+    # profiling task execute duration(s).
+    duration: Int!
+    # customizing configuration for eBPF network profiling task.
+    eBPFNetworkConfig: ContinuousProfilingEBPFNetworkTaskConfig
+}
+
+# continuous profiling task create result
+type ContinuousProfilingCreationResult {
+    # TRUE if the task is created successfully
+    status: Boolean!
+    # error reason when status == FALSE
+    errorReason: String
+
+    # The task ID when status = TRUE
+    id: String
+}
+
+# continuous profiling task change status result
+type ContinuousProfilingChangeStatusResult {
+    # TRUE if the task is status update successfully
+    status: Boolean!
+    # error reason when status == FALSE
+    errorReason: String
+}
+
+# continuous profiling task info
+type ContinuousProfilingTask {
+    # continuous profiling task ID
+    taskId: ID!
+
+    # service of continuous profiling task
+    serviceId: ID!
+    serviceName: String!
+
+    # the condition of the continuous profiling task
+    conditions: [ContinuousProfilingTaskCondition!]!
+    conditionConnectType: ContinuousProfilingConditionConnectType!
+
+    # the profiling task configuration when determination condition are met.
+    targetType: ContinuousProfilingTargetType!
+    targetScope: ContinuousProfilingTargetScope!
+    duration: Int!
+
+    # the status of the continuous profiling task
+    status: ContinuousProfilingTaskStatus!
+    # the timestamp of creating this task
+    createTime: Long!
+    # the timestamp of last update this task
+    lastUpdateTime: Long!
+}
+
+# the triggered task info when continuous profiling condition are met.
+type ContinuousProfilingTriggeredTask {
+    # original eBPF task info when target type is belong to eBPF
+    eBPFTask: EBPFProfilingTask
+
+    # which conditions are met when the profiling task start
+    reachedConditions: [ContinuousProfilingTaskReachCondition!]!
+
+    # which process are start to profiling
+    processes: [Process!]!
+}
+
+# The profiling condition, start profiling task when reached threshold
+input ContinuousProfilingCondition {
+    # the type of condition
+    type: ContinuousProfilingConditionType!
+    # the meter condition when the type in "PROCESS_CPU_PERCENT", "PROCESS_MEMORY_PERCENT", "PROCESS_THREAD_COUNT"
+    singleMeter: ContinuousProfilingSingleMeterCondition
+    # the URI condition when the type in "PROCESS_RESPONSE_STATUS", "PROCESS_RESPONSE_DURATION"
+    uriConditions: [ContinuousProfilingURICondition!]!
+}
+
+input ContinuousProfilingSingleMeterCondition {
+    # threshold judge operator.
+    operator: ContinuousProfilingConditionOperator!
+    # threshold value.
+    value: Int!
+}
+
+input ContinuousProfilingURICondition {
+    # which HTTP request URI that match the specified regular expression and met the condition below, the profiling task would be start.
+    # matches all requests if not set
+    uriRegex: String!
+    # the status code if the condition type is "PROCESS_RESPONSE_STATUS"
+    statusCode: Int
+    # the minimal duration(ms) if the condition type is "PROCESS_RESPONSE_DURATION"
+    minDuration: Int
+    # detection time(s) window counts when minimum time or status code is met and triggers profiling if current window data exceeds threshold.
+    checkDuration: Int!
+    # the check type of the counter in current time window.
+    checkType: ContinuousProfilingConditionType!
+    # the threshold of count.
+    checkCount: Int!
+}
+
+input ContinuousProfilingEBPFNetworkTaskConfig {
+    samplings: [EBPFNetworkSamplingRule!]
+}
+
+enum ContinuousProfilingConditionType {
+    # the cpu usage percent in current process, value between 0-100
+    PROCESS_CPU_PERCENT,
+    # the memory usage percent in current process, value between 0-100
+    PROCESS_MEMORY_PERCENT,
+    # the thread count in current process, it should bigger than or equals 1
+    PROCESS_THREAD_COUNT,
+    # The response status code for the current process to receive and respond to the HTTP request.
+    PROCESS_RESPONSE_STATUS,
+    # The duration(ms) for the current process to receive and respond to the HTTP request.
+    PROCESS_RESPONSE_DURATION
+}
+
+enum ContinuousProfilingConditionOperator {
+    # same with "<"
+    SMALLER,
+    # same with "<="
+    SMALLER_THAN,
+    # same with "="
+    EQUALS,
+    # same with ">"
+    BIGGER,
+    # same with ">="
+    BIGGER_THAN
+}
+
+enum ContinuousProfilingConditionConnectType {
+    # all condition are reached
+    AND,
+    # one single condition is reached
+    OR
+}
+
+enum ContinuousProfilingTargetType {
+    # the eBPF On CPU Profiling task
+    EBPF_ON_CPU,
+    # the eBPF Off CPU Profiling task
+    EBPF_OFF_CPU,
+    # the eBPF Network Profiling task
+    EBPF_NETWORK
+}
+
+enum ContinuousProfilingTargetScope {
+    # All the process under the same instance
+    INSTANCE,
+    # Only the prcess which reached the threshold
+    PROCESS
+}
+
+enum ContinuousProfilingTaskStatus {
+    # Active the task monitoring
+    ACTIVE,
+    # Disable the task monitoring
+    DISABLE
+}
+
+type ContinuousProfilingTaskReachCondition {
+    type: ContinuousProfilingConditionType!
+    singleMeter: ContinuousProfilingTaskReachSingleMeterCondition
+    uriConditions: [ContinuousProfilingTaskReachURICondition!]!
+}
+
+type ContinuousProfilingTaskReachSingleMeterCondition {
+    # current value of the meter
+    value: Int!
+}
+
+type ContinuousProfilingTaskReachURICondition {
+    # the matched HTTP URI
+    uri: String!
+    # match with status code number
+    statusCode: Int
+    # match with min duration(ms)
+    minDuration: Int
+    # the time(s) window
+    duration: Int!
+    # Reached count
+    count: Int!
+}
+
+type ContinuousProfilingTaskCondition {
+    type: ContinuousProfilingConditionType!
+    singleMeter: ContinuousProfilingTaskSingleMeterCondition
+    uriConditions: [ContinuousProfilingTaskURICondition!]!
+}
+
+type ContinuousProfilingTaskSingleMeterCondition {
+    operator: ContinuousProfilingConditionOperator!
+    value: Int!
+}
+
+type ContinuousProfilingTaskURICondition {
+    uriRegex: String!
+    statusCode: Int
+    minDuration: Int
+    checkDuration: Int!
+    checkType: ContinuousProfilingConditionType!
+    checkCount: Int!
+}
+
+extend type Mutation {
+    # create a new continuous profiling task
+    createContinuousProfilingTask(request: ContinuousProfilingCreationRequest!): ContinuousProfilingCreationResult!
+    # change the status of the continuous profiling task
+    changeContinuousProfilingTaskStatus(id: String!, status: ContinuousProfilingTaskStatus!): ContinuousProfilingChangeStatusResult!
+}
+
+extend type Query {
+    # query all continuous profiling task through service
+    queryContinuousProfilingTasks(serviceId: ID!): [ContinuousProfilingTask!]!
+    # query the triggered eBPF profiling task from continuous profiling task ID
+    queryContinuousProfilingTriggeredTasks(taskId: ID!, duration: Duration!): [ContinuousProfilingTriggeredTask!]!
+}
