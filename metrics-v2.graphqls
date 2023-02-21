@@ -37,7 +37,7 @@ input Entity {
     # Deprecated from 9.4.0
     # Scope could be sensed automatically through given metric name.
     scope: Scope
-    # 1. metrics scope=Service, ServiceInstance and Endpoint, set necessary serviceName/serviceInstanceName/endpointName
+    # 1. metrics Scope=Service, ServiceInstance and Endpoint, set necessary serviceName/serviceInstanceName/endpointName
     # 2. metrics Scope=ServiceRelation, ServiceInstanceRelation, EndpointRelation and ProcessRelation
     #    serviceName/serviceInstanceName/endpointName/processName is/are the source(s)
     #    destServiceName/destServiceInstanceName/destEndpointName/destProcessName is/are destination(s)
