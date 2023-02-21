@@ -35,7 +35,7 @@ enum MetricsType {
 
 input Entity {
     # Deprecated from 9.4.0
-    # Backend query service would get Scope by condition's `metrics name` from `ValueColumnMetadata`, and override the Scope here.
+    # Scope could be sensed automatically through given metric name.
     scope: Scope
     # 1. metrics scope=Service, ServiceInstance and Endpoint, set necessary serviceName/serviceInstanceName/endpointName
     # 2. metrics Scope=ServiceRelation, ServiceInstanceRelation, EndpointRelation and ProcessRelation
