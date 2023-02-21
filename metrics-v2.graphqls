@@ -34,13 +34,14 @@ enum MetricsType {
 }
 
 input Entity {
-    # 1. scope=All, no name is required.
-    # 2. scope=Service, ServiceInstance and Endpoint, set necessary serviceName/serviceInstanceName/endpointName
-    # 3. Scope=ServiceRelation, ServiceInstanceRelation, EndpointRelation and ProcessRelation
+    # Deprecated from 9.4.0
+    # Backend query service would get Scope by condition's `metrics name` from `ValueColumnMetadata`, and override the Scope here.
+    scope: Scope
+    # 1. metrics scope=Service, ServiceInstance and Endpoint, set necessary serviceName/serviceInstanceName/endpointName
+    # 2. metrics Scope=ServiceRelation, ServiceInstanceRelation, EndpointRelation and ProcessRelation
     #    serviceName/serviceInstanceName/endpointName/processName is/are the source(s)
     #    destServiceName/destServiceInstanceName/destEndpointName/destProcessName is/are destination(s)
     #    set necessary names of sources and destinations.
-    scope: Scope!
     serviceName: String
     # Normal service is the service having installed agent or metrics reported directly.
     # Unnormal service is conjectural service, usually detected by the agent.
