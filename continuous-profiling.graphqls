@@ -42,19 +42,6 @@ input ContinuousProfilingServicePolicyItemSaveRequest {
     uriRegex: String
 }
 
-enum ContinuousProfilingMonitorType {
-    # monitoring Process CPU percent, value in [0-100]
-    PROCESS_CPU,
-    # monitoring process thread count, value must bigger than zero
-    PROCESS_THREAD_COUNT,
-    # monitoring current system load
-    SYSTEM_LOAD,
-    # monitoring the process HTTP response error(status>=500) percent, value in [0-100]
-    HTTP_ERROR_RATE,
-    # monitoring the process HTTP response duration(ms)
-    HTTP_AVG_RESPONSE_TIME
-}
-
 enum ContinuousProfilingTargetType {
     # eBPF On CPU Profiling
     ON_CPU,
@@ -86,55 +73,6 @@ type ContinuousProfilingServicePolicyItem {
     uriRegex: String
 }
 
-type ContinuousProfilingTriggeredTask {
-    # ID of task
-    taskId: ID!
-    # triggered threshold process entity metadata
-    serviceId: ID!
-    serviceName: String!
-    serviceInstanceId: ID!
-    serviceInstanceName: String!
-    processId: ID!
-    processName: String!
-
-    # triggered threshold causes
-    causes: [ContinuousProfilingReportedTaskCause!]!
-
-    # target profiling task type
-    targetType: ContinuousProfilingTargetType!
-    # task start timestamp(ms)
-    startTime: Long!
-    # time execute duration(s)
-    duration: Long!
-}
-
-type ContinuousProfilingReportedTaskCause {
-    # which type is reached the threshold
-    # all causes threshold and current value has multiply with "100" for avoid float value
-    type: ContinuousProfilingMonitorType!
-    # single value based cause
-    singleValue: ContinuousProfilingSingleValueCause
-    # uri based cause
-    uri: ContinuousProfilingURICause
-}
-
-type ContinuousProfilingSingleValueCause {
-    # defined threshold
-    threshold: Long!
-    # current value of the process
-    current: Long!
-}
-
-type ContinuousProfilingURICause {
-    # which URI triggered threshold(one of)
-    uriRegex: String
-    uriPath: String
-    # defined threshold
-    threshold: Long!
-    # current value of the process URI
-    current: Long!
-}
-
 extend type Mutation {
     # create a new continuous profiling task
     saveContinuousProfilingPolicy(request: ContinuousProfilingServicePolicySaveRequest!): ContinuousProfilingSaveResult!
@@ -143,6 +81,4 @@ extend type Mutation {
 extend type Query {
     # query all continuous profiling task through service
     queryContinuousProfilingServiceTargets(serviceId: ID!): [ContinuousProfilingServicePolicyTarget!]!
-    # query the triggered eBPF profiling task from continuous profiling task ID
-    queryContinuousProfilingTriggeredTasks(serviceId: ID!, targetType: ContinuousProfilingTargetType!, duration: Duration!): [ContinuousProfilingTriggeredTask!]!
 }

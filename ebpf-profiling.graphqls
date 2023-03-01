@@ -110,19 +110,64 @@ type EBPFProfilingTask {
     serviceInstanceName: String
     # process labels for filter
     processLabels: [String!]!
+    # process of profiling task when trigger by continuous profiling
+    processId: ID
+    processName: String
 
     # Start time of the task, type is timestamp.
     taskStartTime: Long!
     # profiling task trigger type
     triggerType: EBPFProfilingTriggerType!
-    # "FIXED_TIME" type task profiling duration
+    # task profiling duration
     fixedTriggerDuration: Long
+    # "CONTINUOUS_PROFILING" type task causes
+    continuousProfilingCauses: [ContinuousProfilingTriggeredCause!]
 
     # profiling task target type
     targetType: EBPFProfilingTargetType!
 
     # the timestamp of creating this task
     createTime: Long!
+}
+
+type ContinuousProfilingTriggeredCause {
+    # which type is reached the threshold
+    # all causes threshold and current value has multiply with "100" for avoid float value
+    type: ContinuousProfilingMonitorType!
+    # single value based cause
+    singleValue: ContinuousProfilingSingleValueCause
+    # uri based cause
+    uri: ContinuousProfilingURICause
+}
+
+enum ContinuousProfilingMonitorType {
+    # monitoring Process CPU percent, value in [0-100]
+    PROCESS_CPU,
+    # monitoring process thread count, value must bigger than zero
+    PROCESS_THREAD_COUNT,
+    # monitoring current system load
+    SYSTEM_LOAD,
+    # monitoring the process HTTP response error(status>=500) percent, value in [0-100]
+    HTTP_ERROR_RATE,
+    # monitoring the process HTTP response duration(ms)
+    HTTP_AVG_RESPONSE_TIME
+}
+
+type ContinuousProfilingSingleValueCause {
+    # defined threshold
+    threshold: Long!
+    # current value of the process
+    current: Long!
+}
+
+type ContinuousProfilingURICause {
+    # which URI triggered threshold(one of)
+    uriRegex: String
+    uriPath: String
+    # defined threshold
+    threshold: Long!
+    # current value of the process URI
+    current: Long!
 }
 
 type EBPFProfilingSchedule {
@@ -186,7 +231,9 @@ enum EBPFProfilingStackType {
 # Define when the profiling task would be execute
 enum EBPFProfilingTriggerType {
     # Appoint the task executing total duration
-    FIXED_TIME
+    FIXED_TIME,
+    # Trigger by the reach the continuous profiling policy
+    CONTINUOUS_PROFILING
 }
 
 # The way of profiling the process
@@ -225,7 +272,7 @@ extend type Query {
     # query eBPF profiling data for prepare create task
     queryPrepareCreateEBPFProfilingTaskData(serviceId: ID!): EBPFProfilingTaskPrepare!
     # query eBPF profiling task list
-    queryEBPFProfilingTasks(serviceId: ID, serviceInstanceId: ID, targets: [EBPFProfilingTargetType!]): [EBPFProfilingTask!]!
+    queryEBPFProfilingTasks(serviceId: ID, serviceInstanceId: ID, targets: [EBPFProfilingTargetType!], triggerType: EBPFProfilingTriggerType, duration: Duration): [EBPFProfilingTask!]!
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!): [EBPFProfilingSchedule!]!
     # analyze the profiling schedule
