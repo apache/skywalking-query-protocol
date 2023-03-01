@@ -15,20 +15,20 @@
 # limitations under the License.
 
 # Save service policy
-input ContinuousProfilingServicePolicySaveRequest {
+input ContinuousProfilingPolicyCreation {
     # service of the policy
     serviceId: ID!
     # target of the policy
-    targets: [ContinuousProfilingServicePolicyTargetSaveRequest!]!
+    targets: [ContinuousProfilingPolicyTargetCreation!]!
 }
 
-input ContinuousProfilingServicePolicyTargetSaveRequest {
+input ContinuousProfilingPolicyTargetCreation {
     targetType: ContinuousProfilingTargetType!
-    checkItems: [ContinuousProfilingServicePolicyItemSaveRequest!]!
+    checkItems: [ContinuousProfilingPolicyItemCreation!]!
 }
 
 # Policy item of continuous profiling
-input ContinuousProfilingServicePolicyItemSaveRequest {
+input ContinuousProfilingPolicyItemCreation {
     # define the monitor type to collect metrics
     type: ContinuousProfilingMonitorType!
     # threshold of policy, which decide by the monitor type
@@ -51,20 +51,19 @@ enum ContinuousProfilingTargetType {
     NETWORK
 }
 
-type ContinuousProfilingSaveResult {
-    # TRUE if the policy is created successfully
+type ContinuousProfilingSetResult {
+    # TRUE if the policy is set successfully
     status: Boolean!
     # error reason when status == FALSE
     errorReason: String
 }
 
-type ContinuousProfilingServicePolicyTarget {
-    targetType: ContinuousProfilingTargetType!
-    checkItems: [ContinuousProfilingServicePolicyItem!]!
+type ContinuousProfilingPolicyTarget {
+    type: ContinuousProfilingTargetType!
+    checkItems: [ContinuousProfilingPolicyItem!]!
 }
 
-# Similar with ContinuousProfilingServicePolicyItemSaveRequest
-type ContinuousProfilingServicePolicyItem {
+type ContinuousProfilingPolicyItem {
     type: ContinuousProfilingMonitorType!
     threshold: String!
     period: Int!
@@ -74,11 +73,11 @@ type ContinuousProfilingServicePolicyItem {
 }
 
 extend type Mutation {
-    # create a new continuous profiling task
-    saveContinuousProfilingPolicy(request: ContinuousProfilingServicePolicySaveRequest!): ContinuousProfilingSaveResult!
+    # set the continuous profiling policy
+    setContinuousProfilingPolicy(request: ContinuousProfilingPolicyCreation!): ContinuousProfilingSetResult!
 }
 
 extend type Query {
     # query all continuous profiling task through service
-    queryContinuousProfilingServiceTargets(serviceId: ID!): [ContinuousProfilingServicePolicyTarget!]!
+    queryContinuousProfilingServiceTargets(serviceId: ID!): [ContinuousProfilingPolicyTarget!]!
 }
