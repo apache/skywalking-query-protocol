@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Save service policy
+# Set policy configuration
 input ContinuousProfilingPolicyCreation {
     # service of the policy
     serviceId: ID!
