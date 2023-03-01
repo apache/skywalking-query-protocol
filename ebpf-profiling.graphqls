@@ -110,7 +110,7 @@ type EBPFProfilingTask {
     serviceInstanceName: String
     # process labels for filter
     processLabels: [String!]!
-    # process of profiling task when trigger by continuous profiling
+    # process of profiling task triggered by continuous profiling
     processId: ID
     processName: String
 
