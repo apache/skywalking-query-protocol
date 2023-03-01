@@ -104,6 +104,7 @@ enum Scope {
     Service
     ServiceInstance
     Endpoint
+    Process
     ServiceRelation
     ServiceInstanceRelation
     EndpointRelation
