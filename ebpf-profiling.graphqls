@@ -272,6 +272,7 @@ extend type Query {
     # query eBPF profiling data for prepare create task
     queryPrepareCreateEBPFProfilingTaskData(serviceId: ID!): EBPFProfilingTaskPrepare!
     # query eBPF profiling task list
+    # query `triggerType == FIXED_TIME` when triggerType is absent
     queryEBPFProfilingTasks(serviceId: ID, serviceInstanceId: ID, targets: [EBPFProfilingTargetType!], triggerType: EBPFProfilingTriggerType, duration: Duration): [EBPFProfilingTask!]!
     # query schedules from profiling task
     queryEBPFProfilingSchedules(taskId: ID!): [EBPFProfilingSchedule!]!
