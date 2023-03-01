@@ -1,0 +1,83 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http:#www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Set policy configuration
+input ContinuousProfilingPolicyCreation {
+    # service of the policy
+    serviceId: ID!
+    # target of the policy
+    targets: [ContinuousProfilingPolicyTargetCreation!]!
+}
+
+input ContinuousProfilingPolicyTargetCreation {
+    targetType: ContinuousProfilingTargetType!
+    checkItems: [ContinuousProfilingPolicyItemCreation!]!
+}
+
+# Policy item of continuous profiling
+input ContinuousProfilingPolicyItemCreation {
+    # define the monitor type to collect metrics
+    type: ContinuousProfilingMonitorType!
+    # threshold of policy, which decide by the monitor type
+    threshold: String!
+    # the length of time to evaluate the metrics
+    period: Int!
+    # how many times after the metrics match the threshold, will trigger profiling
+    count: Int!
+    # the URI path/regex filter when monitor the HTTP related types
+    uriList: [String!]
+    uriRegex: String
+}
+
+enum ContinuousProfilingTargetType {
+    # eBPF On CPU Profiling
+    ON_CPU,
+    # eBPF Off CPU Profiling
+    OFF_CPU,
+    # eBPF Network Profiling
+    NETWORK
+}
+
+type ContinuousProfilingSetResult {
+    # TRUE if the policy is set successfully
+    status: Boolean!
+    # error reason when status == FALSE
+    errorReason: String
+}
+
+type ContinuousProfilingPolicyTarget {
+    type: ContinuousProfilingTargetType!
+    checkItems: [ContinuousProfilingPolicyItem!]!
+}
+
+type ContinuousProfilingPolicyItem {
+    type: ContinuousProfilingMonitorType!
+    threshold: String!
+    period: Int!
+    count: Int!
+    uriList: [String!]
+    uriRegex: String
+}
+
+extend type Mutation {
+    # set the continuous profiling policy
+    setContinuousProfilingPolicy(request: ContinuousProfilingPolicyCreation!): ContinuousProfilingSetResult!
+}
+
+extend type Query {
+    # query all continuous profiling task through service
+    queryContinuousProfilingServiceTargets(serviceId: ID!): [ContinuousProfilingPolicyTarget!]!
+}
