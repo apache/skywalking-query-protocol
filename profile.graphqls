@@ -116,6 +116,8 @@ type ProfileAnalyzation {
 type ProfiledSpan {
     spanId: Int!
     parentSpanId: Int!
+    segmentId: ID!
+    refs: [Ref!]!
     serviceCode: String!
     serviceInstanceName: ID!
     startTime: Long!
@@ -134,6 +136,11 @@ type ProfiledSpan {
 }
 
 type ProfiledSegment {
+    spans: [ProfiledSpan!]!
+}
+
+type ProfiledSegments {
+    segments: [ID!]!
     spans: [ProfiledSpan!]!
 }
 
@@ -156,6 +163,10 @@ extend type Query {
     getProfileTaskSegmentList(taskID: String): [BasicTrace!]!
     # query profiled segment
     getProfiledSegment(segmentId: String): ProfiledSegment
+    # query combined segments by ref
+    getProfiledSegments(segmentIds: [String!]!): [ProfiledSegments!]!
     # analyze profiled segment, start and end time use timestamp(millisecond)
     getProfileAnalyze(segmentId: String!, timeRanges: [ProfileAnalyzeTimeRange!]!): ProfileAnalyzation!
+    # analyze multiple profiled segments, start and end time use timestamp(millisecond)
+    getSegmentsProfileAnalyze(segmentIds: [String!]!, timeRanges: [ProfileAnalyzeTimeRange!]!): ProfileAnalyzation!
 }
