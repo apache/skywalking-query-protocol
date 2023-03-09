@@ -50,6 +50,8 @@ type KVInt {
     # 1. If ask for cpm metric, the unit and result should be count.
     # 2. If ask for response time (p99 or avg), the unit should be millisecond.
     value: Long!
+    # Since 9.5.0, isEmptyValue indicates whether value == 0 represents actually zero(false, default) or no data(true).
+    isEmptyValue: Boolean!
 }
 
 type Thermodynamic {
