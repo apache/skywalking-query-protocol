@@ -145,6 +145,9 @@ extend type Query {
 
     # Read metrics single value in the duration of required metrics
     readMetricsValue(condition: MetricsCondition!, duration: Duration!): Long!
+    # Read metrics single value in the duration of required metrics
+    # IntValues#values#isEmptyValue == true indicates no telemetry data rather than aggregated value is actually zero.
+    readNullableMetricsValue(condition: MetricsCondition!, duration: Duration!): IntValues
     # Read time-series values in the duration of required metrics
     readMetricsValues(condition: MetricsCondition!, duration: Duration!): MetricsValues!
     # Read entity list of required metrics and parent entity type.
