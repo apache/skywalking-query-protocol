@@ -133,7 +133,7 @@ type ProfiledSpan {
     layer: String
     tags: [KeyValue!]!
     logs: [LogEntity!]!
-    # is the span belongs the segments been profiled
+    # Status represents profiling data that covers the duration of the span.
     profiled: Boolean!
 }
 
