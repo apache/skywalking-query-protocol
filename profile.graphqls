@@ -146,7 +146,7 @@ input ProfileAnalyzeTimeRange {
     end: Long!
 }
 
-type ProfiledSegments {
+type ProfiledTraceSegments {
     traceId: String!
     instanceId: ID!
     instanceName: String!
@@ -154,6 +154,11 @@ type ProfiledSegments {
     duration: Int!
     start: String!
     spans: [ProfiledSpan!]!
+}
+
+input SegmentProfileAnalyzeQuery {
+    segmentId: String!
+    timeRange: ProfileAnalyzeTimeRange!
 }
 
 extend type Mutation {
@@ -167,7 +172,7 @@ extend type Query {
     # query all task logs
     getProfileTaskLogs(taskID: String): [ProfileTaskLog!]!
     # query all task profiled segment list
-    getProfileTaskSegments(taskID: ID!): [ProfiledSegments!]!
+    getProfileTaskSegments(taskID: ID!): [ProfiledTraceSegments!]!
     # analyze multiple profiled segments, start and end time use timestamp(millisecond)
-    getSegmentsProfileAnalyze(segmentIds: [String!]!, timeRanges: [ProfileAnalyzeTimeRange!]!): ProfileAnalyzation!
+    getSegmentsProfileAnalyze(queries: [SegmentProfileAnalyzeQuery!]!): ProfileAnalyzation!
 }
