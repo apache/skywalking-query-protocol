@@ -116,6 +116,8 @@ type ProfileAnalyzation {
 type ProfiledSpan {
     spanId: Int!
     parentSpanId: Int!
+    segmentId: ID!
+    refs: [Ref!]!
     serviceCode: String!
     serviceInstanceName: ID!
     startTime: Long!
@@ -131,6 +133,8 @@ type ProfiledSpan {
     layer: String
     tags: [KeyValue!]!
     logs: [LogEntity!]!
+    # Status represents profiling data that covers the duration of the span.
+    profiled: Boolean!
 }
 
 type ProfiledSegment {
@@ -140,6 +144,21 @@ type ProfiledSegment {
 input ProfileAnalyzeTimeRange {
     start: Long!
     end: Long!
+}
+
+type ProfiledTraceSegments {
+    traceId: String!
+    instanceId: ID!
+    instanceName: String!
+    endpointNames: [String!]!
+    duration: Int!
+    start: String!
+    spans: [ProfiledSpan!]!
+}
+
+input SegmentProfileAnalyzeQuery {
+    segmentId: String!
+    timeRange: ProfileAnalyzeTimeRange!
 }
 
 extend type Mutation {
@@ -153,9 +172,7 @@ extend type Query {
     # query all task logs
     getProfileTaskLogs(taskID: String): [ProfileTaskLog!]!
     # query all task profiled segment list
-    getProfileTaskSegmentList(taskID: String): [BasicTrace!]!
-    # query profiled segment
-    getProfiledSegment(segmentId: String): ProfiledSegment
-    # analyze profiled segment, start and end time use timestamp(millisecond)
-    getProfileAnalyze(segmentId: String!, timeRanges: [ProfileAnalyzeTimeRange!]!): ProfileAnalyzation!
+    getProfileTaskSegments(taskID: ID!): [ProfiledTraceSegments!]!
+    # analyze multiple profiled segments, start and end time use timestamp(millisecond)
+    getSegmentsProfileAnalyze(queries: [SegmentProfileAnalyzeQuery!]!): ProfileAnalyzation!
 }
