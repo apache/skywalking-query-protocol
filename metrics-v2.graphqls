@@ -136,6 +136,17 @@ type SelectedRecord {
     refId: ID
 }
 
+# Since 9.5.0, a value is Long type, and also nullable.
+type NullableValue {
+    # This is the value, the caller must understand the Unit.
+    # Such as:
+    # 1. If ask for cpm metric, the unit and result should be count.
+    # 2. If ask for response time (p99 or avg), the unit should be millisecond.
+    value: Long!
+    # isEmptyValue indicates whether value == 0 represents actually zero(false, default) or no data(true).
+    isEmptyValue: Boolean!
+}
+
 extend type Query {
     # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
     typeOfMetrics(name: String!): MetricsType!
@@ -147,7 +158,7 @@ extend type Query {
     readMetricsValue(condition: MetricsCondition!, duration: Duration!): Long!
     # Read metrics single value in the duration of required metrics
     # IntValues#values#isEmptyValue == true indicates no telemetry data rather than aggregated value is actually zero.
-    readNullableMetricsValue(condition: MetricsCondition!, duration: Duration!): IntValues
+    readNullableMetricsValue(condition: MetricsCondition!, duration: Duration!): NullableValue!
     # Read time-series values in the duration of required metrics
     readMetricsValues(condition: MetricsCondition!, duration: Duration!): MetricsValues!
     # Read entity list of required metrics and parent entity type.
