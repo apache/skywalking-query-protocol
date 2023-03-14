@@ -157,7 +157,7 @@ extend type Query {
     # Read metrics single value in the duration of required metrics
     readMetricsValue(condition: MetricsCondition!, duration: Duration!): Long!
     # Read metrics single value in the duration of required metrics
-    # IntValues#values#isEmptyValue == true indicates no telemetry data rather than aggregated value is actually zero.
+    # NullableValue#isEmptyValue == true indicates no telemetry data rather than aggregated value is actually zero.
     readNullableMetricsValue(condition: MetricsCondition!, duration: Duration!): NullableValue!
     # Read time-series values in the duration of required metrics
     readMetricsValues(condition: MetricsCondition!, duration: Duration!): MetricsValues!
