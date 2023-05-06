@@ -25,18 +25,19 @@ enum ExpressionResultType {
     # A collection of time-series values.
     # The value could have labels or not.
     TIME_SERIES_VALUES
-    # A collection of aggregated or sampled values.
-    # When the original metric type is sampled records or through metric sort function
-    LIST
+    # A collection of aggregated values through metric sort function
+    SORTED_LIST
+    # A collection of sampled records.
+    # When the original metric type is sampled records
+    RECORD_LIST
 }
 
 type MQEValues {
     labels: [String!]!
     # 1. When the type == SINGLE_VALUE, values only have one value.
     # 2. When the type == TIME_SERIES_VALUES, values would match the given elements in the duration range.
-    # 3. When the type == LIST, values could be
-    #    3.1 sampled records
-    #    3.2 results of `sort(metric)`
+    # 3. When the type == SORTED_LIST, values could be results of `sort(metric)`
+    # 4. When the type == RECORD_LIST, values could be sampled records
     values: [MQEValue!]!
 }
 
@@ -51,7 +52,7 @@ type MQEValue {
 
 type ExpressionResult {
     type: ExpressionResultType!
-    results: MQEValues!
+    results: [MQEValues!]!
 }
 
 
