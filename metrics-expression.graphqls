@@ -26,7 +26,7 @@ enum ExpressionResultType {
     # The value could have labels or not.
     TIME_SERIES_VALUES
     # A collection of aggregated or sampled values.
-    # When the original metric type is sampled records or through metric sorting
+    # When the original metric type is sampled records or through metric sort function
     LIST
 }
 
@@ -46,7 +46,7 @@ type MQEValue {
     isEmptyValue: Boolean!
     # Sampled record could associate with a trace.
     # This would be a trace ID only.
-    attachmentID: ID!
+    traceID: ID
 }
 
 type ExpressionResult {
