@@ -32,15 +32,6 @@ enum ExpressionResultType {
     RECORD_LIST
 }
 
-type MQEValues {
-    labels: [String!]!
-    # 1. When the type == SINGLE_VALUE, values only have one value.
-    # 2. When the type == TIME_SERIES_VALUES, values would match the given elements in the duration range.
-    # 3. When the type == SORTED_LIST, values could be results of `sort(metric)`
-    # 4. When the type == RECORD_LIST, values could be sampled records
-    values: [MQEValue!]!
-}
-
 type MQEValue {
     id: ID!
     value: String!
@@ -50,8 +41,19 @@ type MQEValue {
     traceID: ID
 }
 
+type MQEValues {
+    labels: [String!]!
+    # 1. When the type == SINGLE_VALUE, values only have one value.
+    # 2. When the type == TIME_SERIES_VALUES, values would match the given elements in the duration range.
+    # 3. When the type == SORTED_LIST, values could be results of `sort(metric)`
+    # 4. When the type == RECORD_LIST, values could be sampled records
+    values: [MQEValue!]!
+}
+
 type ExpressionResult {
     type: ExpressionResultType!
+    # When the type == TIME_SERIES_VALUES, the results would be a collection of MQEValues.
+    # In other legal type cases, only one MQEValues is expected in the array.
     results: [MQEValues!]!
 }
 
