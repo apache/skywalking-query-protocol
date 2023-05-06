@@ -1,0 +1,62 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# SkyWalking Metrics Query Expression(MQE) is an extension query mechanism.
+# MQE allows users to do simple query-stage calculation like well known PromQL.
+
+enum ExpressionResultType {
+    # Can't resolve the type of the given expression.
+    UNKNOWN
+    # A single value
+    SINGLE_VALUE
+    # A collection of time-series values.
+    # The value could have labels or not.
+    TIME_SERIES_VALUES
+    # A collection of aggregated or sampled values.
+    # When the original metric type is sampled records or through metric sorting
+    LIST
+}
+
+type MQEValues {
+    labels: [String!]!
+    # 1. When the type == SINGLE_VALUE, values only have one value.
+    # 2. When the type == TIME_SERIES_VALUES, values would match the given elements in the duration range.
+    # 3. When the type == LIST, values could be
+    #    3.1 sampled records
+    #    3.2 results of `sort(metric)`
+    values: [MQEValue!]!
+}
+
+type MQEValue {
+    id: ID!
+    value: String!
+    isEmptyValue: Boolean!
+    # Sampled record could associate with a trace.
+    # This would be a trace ID only.
+    attachmentID: ID!
+}
+
+type ExpressionResult {
+    type: ExpressionResultType!
+    results: MQEValues!
+}
+
+
+extend type Query {
+    # The return type of the given expression
+    returnTypeOfMQE(expression: String!): ExpressionResultType!
+    execExpression(expression: String!, entity: Entity!, duration: Duration!): ExpressionResult!
+}
