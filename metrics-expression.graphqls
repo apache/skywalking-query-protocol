@@ -1,0 +1,73 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# SkyWalking Metrics Query Expression(MQE) is an extension query mechanism.
+# MQE allows users to do simple query-stage calculation like well known PromQL.
+
+enum ExpressionResultType {
+    # Can't resolve the type of the given expression.
+    UNKNOWN
+    # A single value
+    SINGLE_VALUE
+    # A collection of time-series values.
+    # The value could have labels or not.
+    TIME_SERIES_VALUES
+    # A collection of aggregated values through metric sort function
+    SORTED_LIST
+    # A collection of sampled records.
+    # When the original metric type is sampled records
+    RECORD_LIST
+}
+
+type MQEValue {
+    id: ID!
+    value: String!
+    isEmptyValue: Boolean!
+    # Sampled record could associate with a trace.
+    # This would be a trace ID only.
+    traceID: ID
+}
+
+type MQEValues {
+    # The metadata description of this value series.
+    metric: Metadata!
+    # 1. When the type == SINGLE_VALUE, values only have one value.
+    # 2. When the type == TIME_SERIES_VALUES, values would match the given elements in the duration range.
+    # 3. When the type == SORTED_LIST, values could be results of `sort(metric)`
+    # 4. When the type == RECORD_LIST, values could be sampled records
+    values: [MQEValue!]!
+}
+
+type Metadata {
+    # The metric logical name
+    name: String!
+    # Key-value pairs to describe the metric
+    labels: [KeyValue!]!
+}
+
+type ExpressionResult {
+    type: ExpressionResultType!
+    # When the type == TIME_SERIES_VALUES, the results would be a collection of MQEValues.
+    # In other legal type cases, only one MQEValues is expected in the array.
+    results: [MQEValues!]!
+}
+
+
+extend type Query {
+    # The return type of the given expression
+    returnTypeOfMQE(expression: String!): ExpressionResultType!
+    execExpression(expression: String!, entity: Entity!, duration: Duration!): ExpressionResult!
+}
