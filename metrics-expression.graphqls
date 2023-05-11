@@ -33,9 +33,10 @@ enum ExpressionResultType {
 }
 
 type MQEValue {
+    # Timestampe or name of the entity or record.
     id: ID!
-    value: String!
-    isEmptyValue: Boolean!
+    # Value is formatted double/int or NULL if the value is absent.
+    value: String
     # Sampled record could associate with a trace.
     # This would be a trace ID only.
     traceID: ID
@@ -63,6 +64,9 @@ type ExpressionResult {
     # When the type == TIME_SERIES_VALUES, the results would be a collection of MQEValues.
     # In other legal type cases, only one MQEValues is expected in the array.
     results: [MQEValues!]!
+    # When type == ExpressionResultType.UNKNOWN,
+    # the error message includes the expression resolving errors.
+    error: String
 }
 
 
