@@ -61,6 +61,8 @@ type ContinuousProfilingSetResult {
 type ContinuousProfilingPolicyTarget {
     type: ContinuousProfilingTargetType!
     checkItems: [ContinuousProfilingPolicyItem!]!
+    triggeredCount: Int!
+    lastTriggerTimestamp: Long
 }
 
 type ContinuousProfilingPolicyItem {
@@ -72,6 +74,25 @@ type ContinuousProfilingPolicyItem {
     uriRegex: String
 }
 
+# The Continuous Profiling monitoring instance
+type ContinuousProfilingMonitoringInstance {
+    id: ID!
+    name: String!
+    attributes: [Attribute!]!
+    triggeredCount: Int!
+    lastTriggerTimestamp: Long
+}
+
+# The Continuous Profiling monitoring process
+type ContinuousProfilingMonitoringProcess {
+    id: ID!
+    name: String!
+    detectType: String!
+    labels: [String!]!
+    triggeredCount: Int!
+    lastTriggerTimestamp: Long
+}
+
 extend type Mutation {
     # set the continuous profiling policy
     setContinuousProfilingPolicy(request: ContinuousProfilingPolicyCreation!): ContinuousProfilingSetResult!
@@ -80,4 +101,8 @@ extend type Mutation {
 extend type Query {
     # query all continuous profiling task through service
     queryContinuousProfilingServiceTargets(serviceId: ID!): [ContinuousProfilingPolicyTarget!]!
+    # query all continuous profiling monitoring instances through service and policy
+    queryContinuousProfilingMonitoringInstances(serviceId: ID!, target: ContinuousProfilingTargetType!): [ContinuousProfilingMonitoringInstance!]!
+    # query all continuous profiling monitoring processes through service and policy
+    queryContinuousProfilingMonitoringProcesses(instanceId: ID!, target: ContinuousProfilingTargetType!): [ContinuousProfilingMonitoringProcess!]!
 }
