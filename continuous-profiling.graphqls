@@ -81,6 +81,9 @@ type ContinuousProfilingMonitoringInstance {
     attributes: [Attribute!]!
     triggeredCount: Int!
     lastTriggerTimestamp: Long
+
+    # monitoring process list under the monitoring instance
+    processes: [ContinuousProfilingMonitoringProcess!]!
 }
 
 # The Continuous Profiling monitoring process
@@ -103,6 +106,4 @@ extend type Query {
     queryContinuousProfilingServiceTargets(serviceId: ID!): [ContinuousProfilingPolicyTarget!]!
     # query all continuous profiling monitoring instances through service and policy
     queryContinuousProfilingMonitoringInstances(serviceId: ID!, target: ContinuousProfilingTargetType!): [ContinuousProfilingMonitoringInstance!]!
-    # query all continuous profiling monitoring processes through service and policy
-    queryContinuousProfilingMonitoringProcesses(instanceId: ID!, target: ContinuousProfilingTargetType!): [ContinuousProfilingMonitoringProcess!]!
 }
