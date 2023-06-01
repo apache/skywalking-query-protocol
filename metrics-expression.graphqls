@@ -33,8 +33,8 @@ enum ExpressionResultType {
 }
 
 type MQEValue {
-    # Timestampe or name of the entity or record.
-    id: ID!
+    # Timestamp or name of the entity or record. It could be NULL if it is the result of an aggregate calculation.
+    id: ID
     # Value is formatted double/int or NULL if the value is absent.
     value: String
     # Sampled record could associate with a trace.
@@ -43,8 +43,8 @@ type MQEValue {
 }
 
 type MQEValues {
-    # The metadata description of this value series.
-    metric: Metadata!
+    # The metadata description of this value series. It could be NULL if it is the result of the different metrics calculation.
+    metric: Metadata
     # 1. When the type == SINGLE_VALUE, values only have one value.
     # 2. When the type == TIME_SERIES_VALUES, values would match the given elements in the duration range.
     # 3. When the type == SORTED_LIST, values could be results of `sort(metric)`
@@ -71,7 +71,7 @@ type ExpressionResult {
 
 
 extend type Query {
-    # The return type of the given expression
-    returnTypeOfMQE(expression: String!): ExpressionResultType!
+    # The return type of the given expression, the MQEValues will be empty.
+    returnTypeOfMQE(expression: String!): ExpressionResult!
     execExpression(expression: String!, entity: Entity!, duration: Duration!): ExpressionResult!
 }
