@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Legacy metrics query protocol deprecated since 9.5.0. Replaced by the metrics-v3.
+
 # Metrics v2 query protocol is an alternative metrics query(s) of original v1,
 # defined in the metric.graphql, top-n-records.graphqls, and aggregation.graphqls.
 # By leveraging the new ID rule(no register) in the v8, we could query metrics based on name(s) directly.
@@ -31,31 +33,6 @@ enum MetricsType {
     HEATMAP
     # Top metrics is for readSampledRecords only.
     SAMPLED_RECORD
-}
-
-input Entity {
-    # Deprecated from 9.4.0
-    # Scope could be sensed automatically through given metric name.
-    scope: Scope
-    # 1. metrics Scope=Service, ServiceInstance and Endpoint, set necessary serviceName/serviceInstanceName/endpointName
-    # 2. metrics Scope=ServiceRelation, ServiceInstanceRelation, EndpointRelation and ProcessRelation
-    #    serviceName/serviceInstanceName/endpointName/processName is/are the source(s)
-    #    destServiceName/destServiceInstanceName/destEndpointName/destProcessName is/are destination(s)
-    #    set necessary names of sources and destinations.
-    serviceName: String
-    # Normal service is the service having installed agent or metrics reported directly.
-    # Unnormal service is conjectural service, usually detected by the agent.
-    normal: Boolean
-    serviceInstanceName: String
-    endpointName: String
-    processName: String
-    destServiceName: String
-    # Normal service is the service having installed agent or metrics reported directly.
-    # Unnormal service is conjectural service, usually detected by the agent.
-    destNormal: Boolean
-    destServiceInstanceName: String
-    destEndpointName: String
-    destProcessName: String
 }
 
 input MetricsCondition {
@@ -148,11 +125,12 @@ type NullableValue {
 }
 
 extend type Query {
+    # Since 9.5.0 `typeOfMetrics` and `listMetrics` are moved to metrics-v3.
     # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
-    typeOfMetrics(name: String!): MetricsType!
+    # typeOfMetrics(name: String!): MetricsType!
     # Get the list of all available metrics in the current OAP server.
     # Param, regex, could be used to filter the metrics by name.
-    listMetrics(regex: String): [MetricDefinition!]!
+    # listMetrics(regex: String): [MetricDefinition!]!
 
     # Read metrics single value in the duration of required metrics
     readMetricsValue(condition: MetricsCondition!, duration: Duration!): Long!

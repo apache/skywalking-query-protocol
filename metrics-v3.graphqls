@@ -17,6 +17,31 @@
 # SkyWalking Metrics Query Expression(MQE) is an extension query mechanism.
 # MQE allows users to do simple query-stage calculation like well known PromQL.
 
+input Entity {
+    # Deprecated from 9.4.0
+    # Scope could be sensed automatically through given metric name.
+    scope: Scope
+    # 1. metrics Scope=Service, ServiceInstance and Endpoint, set necessary serviceName/serviceInstanceName/endpointName
+    # 2. metrics Scope=ServiceRelation, ServiceInstanceRelation, EndpointRelation and ProcessRelation
+    #    serviceName/serviceInstanceName/endpointName/processName is/are the source(s)
+    #    destServiceName/destServiceInstanceName/destEndpointName/destProcessName is/are destination(s)
+    #    set necessary names of sources and destinations.
+    serviceName: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    normal: Boolean
+    serviceInstanceName: String
+    endpointName: String
+    processName: String
+    destServiceName: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    destNormal: Boolean
+    destServiceInstanceName: String
+    destEndpointName: String
+    destProcessName: String
+}
+
 enum ExpressionResultType {
     # Can't resolve the type of the given expression.
     UNKNOWN
@@ -71,6 +96,11 @@ type ExpressionResult {
 
 
 extend type Query {
+    # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
+    typeOfMetrics(name: String!): MetricsType!
+    # Get the list of all available metrics in the current OAP server.
+    # Param, regex, could be used to filter the metrics by name.
+    listMetrics(regex: String): [MetricDefinition!]!
     # The return type of the given expression, the MQEValues will be empty.
     returnTypeOfMQE(expression: String!): ExpressionResult!
     execExpression(expression: String!, entity: Entity!, duration: Duration!): ExpressionResult!
