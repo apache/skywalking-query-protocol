@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Legacy record query protocol deprecated since 9.5.0. Replaced by the metrics-v3.
 # Since 9.3.0
 # Record is a general and abstract type for collected raw data.
 # In the observability, traces and logs have specific and well-defined meanings, and the general records represent other
