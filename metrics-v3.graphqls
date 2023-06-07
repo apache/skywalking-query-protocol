@@ -78,8 +78,6 @@ type MQEValues {
 }
 
 type Metadata {
-    # The metric logical name
-    name: String!
     # Key-value pairs to describe the metric
     labels: [KeyValue!]!
 }
