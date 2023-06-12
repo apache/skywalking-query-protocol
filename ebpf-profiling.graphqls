@@ -138,6 +138,8 @@ type ContinuousProfilingTriggeredCause {
     singleValue: ContinuousProfilingSingleValueCause
     # uri based cause
     uri: ContinuousProfilingURICause
+    # summary message of cause, including type, value or uri
+    message: String!
 }
 
 enum ContinuousProfilingMonitorType {
