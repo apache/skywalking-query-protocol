@@ -84,7 +84,7 @@ type Metadata {
 
 type ExpressionResult {
     type: ExpressionResultType!
-    # When the type == TIME_SERIES_VALUES, the results would be a collection of MQEValues.
+    # When the type == TIME_SERIES_VALUES or SINGLE_VALUE, the results would be a collection of MQEValues according to the metric labels.
     # In other legal type cases, only one MQEValues is expected in the array.
     results: [MQEValues!]!
     # When type == ExpressionResultType.UNKNOWN,
