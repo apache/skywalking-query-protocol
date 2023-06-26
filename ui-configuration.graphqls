@@ -23,11 +23,26 @@ type DashboardConfiguration {
     configuration: String!
 }
 
+type MenuItem {
+    # Display name
+    name: String!
+    # Showing icon
+    icon: String
+    # Link path
+    path: String!
+    # Whether to activate the menu or not
+    activate: Boolean!
+    # Sub menu items
+    subItems: [MenuItem!]!
+}
+
 extend type Query {
     # Read an existing UI template according to given id.
     getTemplate(id: String!): DashboardConfiguration
     # Read all configuration templates。
     getAllTemplates: [DashboardConfiguration!]!
+    # Read all menu items
+    getMenu: [DashboardMenu!]!
 }
 
 # Used for add new template
