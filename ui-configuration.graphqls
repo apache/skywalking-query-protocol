@@ -26,11 +26,12 @@ type DashboardConfiguration {
 type MenuItem {
     # Display name
     name: String!
-    # Showing icon
+    # Showing icon name
     icon: String
     # Link path
     path: String!
-    # Whether to activate the menu or not
+    # Activated menu should be listed on the menu,
+    # otherwise, it should stay in marketplace.
     activate: Boolean!
     # Sub menu items
     subItems: [MenuItem!]!
