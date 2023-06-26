@@ -23,11 +23,27 @@ type DashboardConfiguration {
     configuration: String!
 }
 
+type MenuItem {
+    # Display name
+    name: String!
+    # Showing icon name
+    icon: String
+    # Link path
+    path: String!
+    # Activated menu should be listed on the menu,
+    # otherwise, it should stay in marketplace.
+    activate: Boolean!
+    # Sub menu items
+    subItems: [MenuItem!]!
+}
+
 extend type Query {
     # Read an existing UI template according to given id.
     getTemplate(id: String!): DashboardConfiguration
     # Read all configuration templates。
     getAllTemplates: [DashboardConfiguration!]!
+    # Read all menu items
+    getMenuItems: [MenuItem!]!
 }
 
 # Used for add new template
