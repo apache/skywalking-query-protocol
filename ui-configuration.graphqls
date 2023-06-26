@@ -42,7 +42,7 @@ extend type Query {
     # Read all configuration templates。
     getAllTemplates: [DashboardConfiguration!]!
     # Read all menu items
-    getMenu: [DashboardMenu!]!
+    getMenuItems: [MenuItem!]!
 }
 
 # Used for add new template
