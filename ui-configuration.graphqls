@@ -24,12 +24,12 @@ type DashboardConfiguration {
 }
 
 type MenuItem {
-    # Display name
-    name: String!
+    # Title name
+    title: String!
     # Showing icon name
     icon: String
-    # Link path
-    path: String!
+    # linked layer name
+    layer: String!
     # Activated menu should be listed on the menu,
     # otherwise, it should stay in marketplace.
     activate: Boolean!
