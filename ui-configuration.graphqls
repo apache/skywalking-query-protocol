@@ -37,7 +37,7 @@ type MenuItem {
     subItems: [MenuItem!]!
     # Description of the item
     description: String
-    # Link address of the document to which the current item belongs
+    # The document link for the latest version of this feature.
     documentLink: String
 }
 
