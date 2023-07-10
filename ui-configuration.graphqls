@@ -37,8 +37,8 @@ type MenuItem {
     subItems: [MenuItem!]!
     # Description of the item
     description: String
-    # Link address of the item
-    link: String
+    # Link address of the document to which the current item belongs
+    documentLink: String
 }
 
 extend type Query {
