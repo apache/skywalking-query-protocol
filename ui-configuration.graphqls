@@ -28,13 +28,17 @@ type MenuItem {
     title: String!
     # Showing icon name
     icon: String
-    # linked layer name
+    # Linked layer name
     layer: String!
     # Activated menu should be listed on the menu,
     # otherwise, it should stay in marketplace.
     activate: Boolean!
     # Sub menu items
     subItems: [MenuItem!]!
+    # Description of the item
+    description: String
+    # Link address of the item
+    link: String
 }
 
 extend type Query {
