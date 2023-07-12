@@ -39,6 +39,8 @@ type MenuItem {
     description: String
     # The document link for the latest version of this feature.
     documentLink: String
+    # The i18n key for the title and description of this feature display in the UI.
+    i18nKey: String
 }
 
 extend type Query {
