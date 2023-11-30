@@ -122,7 +122,8 @@ type Call {
 
 extend type Query {
     # Query the global topology
-    getGlobalTopology(duration: Duration!): Topology
+    # When layer is specified, the topology of this layer would be queried
+    getGlobalTopology(duration: Duration!, layer: String): Topology
     # Query the topology, based on the given service
     getServiceTopology(serviceId: ID!, duration: Duration!): Topology
     # Query the topology, based on the given services.
