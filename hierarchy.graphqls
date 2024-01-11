@@ -51,9 +51,19 @@ type InstanceHierarchy {
     relations: [HierarchyInstanceRelation!]!
 }
 
+type LayerLevel {
+    # The layer name.
+    layer: String!
+    # The layer level.
+    # The level of the upper service should greater than the level of the lower service.
+    level: Int!
+}
+
 extend type Query {
     # Query the service hierarchy, based on the given service. Will recursively return all related layers services in the hierarchy.
     getServiceHierarchy(serviceId: ID!, layer: String!): ServiceHierarchy!
     # Query the instance hierarchy, based on the given instance. Will return all direct related layers instances in the hierarchy, no recursive.
     getInstanceHierarchy(instanceId: ID!, layer: String!): InstanceHierarchy!
+    # List layer hierarchy levels. The layer levels are defined in the `hierarchy-definition.yml`.
+    listLayerLevels: [LayerLevel!]!
 }
