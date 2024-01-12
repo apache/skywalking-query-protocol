@@ -21,6 +21,7 @@ type HierarchyRelatedService {
     name: String!
     # The related service's Layer name.
     layer: String!
+    normal: Boolean!
 }
 
 type HierarchyRelatedInstance {
@@ -28,9 +29,14 @@ type HierarchyRelatedInstance {
     id: ID!
     # The literal name of the #id. Instance Name.
     name: String!
-    # The related instance service's Layer name.
+    # Service id
+    serviceId: ID!
+    # The literal name of the #serviceId.
+    serviceName: String!
+    # The service's Layer name.
     # Service could have multiple layers, this is the layer of the service that the instance belongs to.
     layer: String!
+    normal: Boolean!
 }
 
 type HierarchyServiceRelation {
