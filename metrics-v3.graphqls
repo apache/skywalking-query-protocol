@@ -68,8 +68,8 @@ type MQEValue {
 }
 
 type MQEValues {
-    # The metadata description of this value series. It could be NULL if it is the result of the different metrics calculation.
-    metric: Metadata
+    # The metadata description of this value series.
+    metric: Metadata!
     # 1. When the type == SINGLE_VALUE, values only have one value.
     # 2. When the type == TIME_SERIES_VALUES, values would match the given elements in the duration range.
     # 3. When the type == SORTED_LIST, values could be results of `sort(metric)`
