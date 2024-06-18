@@ -134,7 +134,7 @@ type DebuggingSpan {
     startTime: Long!
     endTime: Long!
     duration: Long!
-    msg: String!
+    msg: String
     error: String
 }
 
