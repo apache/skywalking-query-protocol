@@ -90,8 +90,8 @@ type ExpressionResult {
     # When type == ExpressionResultType.UNKNOWN,
     # the error message includes the expression resolving errors.
     error: String
+    debuggingTrace: DebuggingTrace
 }
-
 
 extend type Query {
     # Metrics definition metadata query. Response the metrics type which determines the suitable query methods.
@@ -99,5 +99,5 @@ extend type Query {
     # Get the list of all available metrics in the current OAP server.
     # Param, regex, could be used to filter the metrics by name.
     listMetrics(regex: String): [MetricDefinition!]!
-    execExpression(expression: String!, entity: Entity!, duration: Duration!): ExpressionResult!
+    execExpression(expression: String!, entity: Entity!, duration: Duration!, debug: Boolean, dumpDBRsp: Boolean): ExpressionResult!
 }
