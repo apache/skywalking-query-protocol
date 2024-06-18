@@ -125,6 +125,29 @@ type HealthStatus {
     details: String
 }
 
+# The Span for OAP internal debugging.
+# All time is in nanoseconds.
+type DebuggingSpan {
+    spanId: Int!
+    parentSpanId: Int!
+    operation: String!
+    startTime: Long!
+    endTime: Long!
+    duration: Long!
+    msg: String!
+    error: String
+}
+
+# The Trace for OAP internal debugging.
+type DebuggingTrace {
+    traceId: String!
+    condition: String!
+    startTime: Long!
+    endTime: Long!
+    duration: Long!
+    spans: [DebuggingSpan!]!
+}
+
 extend type Query {
     # Query Health Checker module for the status of OAP server
     checkHealth: HealthStatus!
