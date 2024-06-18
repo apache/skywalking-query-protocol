@@ -18,7 +18,7 @@
 
 github:
   description: Query Protocol for Apache SkyWalking in GraphQL format
-  homepage: https://skywalking.apache.org/docs/main/next/en/protocols/query-protocol/
+  homepage: https://skywalking.apache.org/docs/main/latest/en/api/query-protocol/
   labels:
     - skywalking
     - observability
