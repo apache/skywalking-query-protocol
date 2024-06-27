@@ -17,6 +17,8 @@
 # The list of traces
 type TraceBrief {
     traces: [BasicTrace!]!
+    #For OAP internal query debugging
+    debuggingTrace: DebuggingTrace
 }
 
 # Trace basic info
@@ -68,6 +70,8 @@ enum QueryOrder {
 # The trace represents a distributed trace, includes all segments and spans.
 type Trace {
     spans: [Span!]!
+    #For OAP internal query debugging
+    debuggingTrace: DebuggingTrace
 }
 
 type Span {
@@ -167,11 +171,12 @@ type SpanAttachedEvent {
     summary: [KeyNumericValue!]!
 }
 
+# Param, if debug is true will enable the query tracing and return DebuggingTrace in the result.
 extend type Query {
     # Search segment list with given conditions
-    queryBasicTraces(condition: TraceQueryCondition): TraceBrief
+    queryBasicTraces(condition: TraceQueryCondition, debug: Boolean): TraceBrief
     # Read the specific trace ID with given trace ID
-    queryTrace(traceId: ID!): Trace
+    queryTrace(traceId: ID!, debug: Boolean): Trace
     # Read the list of searchable keys
     queryTraceTagAutocompleteKeys(duration: Duration!):[String!]
     # Search the available value options of the given key.
