@@ -1,0 +1,133 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#  AsyncProfiler
+input AsyncProfilerTaskCreationRequest {
+    # need to monitor service id
+    serviceId: ID!
+    # serviceInstanceId to monitored under the special service.
+    serviceInstanceIds: [String!]
+    # duration of this task (second)
+    duration: Int!
+    # when the segment starts to execute, how long must it take before the monitor can be enable
+    events: [AsyncProfilerEventType!]!
+    # other async-profiler args example alloc=2k,lock=2s
+    execArgs: String
+}
+
+# Profile task create result
+type AsyncProfilerTaskCreationResult {
+    # if null or empty means the task create success, otherwise get create error reason
+    errorReason: String
+
+    # get data id when create success
+    id: String
+}
+
+# query async profiler task
+input AsyncProfilerTaskListRequest {
+    # serviceInstanceId to monitored under the special service.
+    serviceId: ID!
+    # start time
+    startTime: Long
+    # end time
+    endTime: Long
+    # The most recent limit number of tasks
+    limit: Int
+}
+
+# query analyzation
+input AsyncProfilerAnalyzationRequest {
+    # task id
+    taskId: ID!
+    # if null mean merge all
+    instanceIds: [String]
+    # jfr event type
+    eventType: JfrEventType!
+}
+
+# get profiler task result
+type AsyncProfilerTaskListResult {
+    # if null or empty means the task create success, otherwise get create error reason
+    errorReason: String
+
+    # get data id when create success
+    tasks: [AsyncProfilerTask]
+}
+
+# async profiler task data
+type AsyncProfilerTask {
+    id: String
+    serviceId: String
+    serviceInstanceIds: [String]
+    createTime: Long
+    events: [AsyncProfilerEventType!]!
+    duration: Int
+    execArgs: String
+}
+
+type AsyncProfilerStackTree {
+    type: JfrEventType!
+    elements: [AsyncProfilerStackElement!]!
+}
+
+type AsyncProfilerStackElement {
+    id: ID!
+    parentId: ID!
+    codeSignature: String!
+    total: Long!
+    self: Long!
+}
+
+# Profile task create result
+type AsyncProfilerAnalyzation {
+    # if null or empty means the task create success, otherwise get create error reason
+    errorReason: String
+
+    # get frameTree with event
+    tree: AsyncProfilerStackTree
+}
+
+# async profiler task event type
+enum AsyncProfilerEventType {
+    CPU
+    WALL
+    LOCK
+    ALLOC
+    CTIMER
+    ITIMER
+}
+
+enum JfrEventType {
+    UNKNOWN
+    EXECUTION_SAMPLE
+    JAVA_MONITOR_ENTER
+    THREAD_PARK
+    OBJECT_ALLOCATION_IN_NEW_TLAB
+    OBJECT_ALLOCATION_OUTSIDE_TLAB
+    PROFILER_LIVE_OBJECT
+}
+
+extend type Mutation {
+    createAsyncProfilerTask(asyncProfilerTaskCreationRequest: AsyncProfilerTaskCreationRequest!): AsyncProfilerTaskCreationResult!
+}
+
+extend type Query {
+    queryAsyncProfilerTaskList(request: AsyncProfilerTaskListRequest!): AsyncProfilerTaskListResult!
+    queryAsyncProfilerTaskLogs(taskId: String): [ProfileTaskLog]!
+    queryAsyncProfilerAnalyze(request: AsyncProfilerAnalyzationRequest!): AsyncProfilerAnalyzation!
+}
+
