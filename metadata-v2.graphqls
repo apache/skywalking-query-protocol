@@ -129,7 +129,8 @@ extend type Query {
     
     # Search and find matched endpoints according to given service and keyword(optional)
     # If no keyword, randomly choose endpoint based on `limit` value.
-    findEndpoint(keyword: String, serviceId: ID!, limit: Int!): [Endpoint!]!
+    # If duration is nil mean get all endpoints, otherwise, get the endpoint list in the given duration.
+    findEndpoint(keyword: String, serviceId: ID!, limit: Int!, duration: Duration): [Endpoint!]!
     getEndpointInfo(endpointId: ID!): EndpointInfo
 
     # Read process list.
