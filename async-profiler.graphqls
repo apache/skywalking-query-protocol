@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# use to create profiler task
+# Request to create a profiler task
 input AsyncProfilerTaskCreationRequest {
     # need to monitor service id
     serviceId: ID!
