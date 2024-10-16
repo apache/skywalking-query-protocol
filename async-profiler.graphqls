@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#  AsyncProfiler
+# use to create profiler task
 input AsyncProfilerTaskCreationRequest {
     # need to monitor service id
     serviceId: ID!
-    # serviceInstanceId to monitored under the special service.
-    serviceInstanceIds: [String!]
+    # serviceInstanceIds to monitored under the special service.
+    serviceInstanceIds: [String!]!
     # duration of this task (second)
     duration: Int!
     # when the segment starts to execute, how long must it take before the monitor can be enable
@@ -28,18 +28,18 @@ input AsyncProfilerTaskCreationRequest {
     execArgs: String
 }
 
-# Profile task create result
+# profiler task create result
 type AsyncProfilerTaskCreationResult {
     # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
 
-    # get data id when create success
+    # get task id when create success
     id: String
 }
 
-# query async profiler task
+# use to query profiler task
 input AsyncProfilerTaskListRequest {
-    # serviceInstanceId to monitored under the special service.
+    # serviceId to monitored under the special service.
     serviceId: ID!
     # start time
     startTime: Long
@@ -53,10 +53,10 @@ input AsyncProfilerTaskListRequest {
 input AsyncProfilerAnalyzationRequest {
     # task id
     taskId: ID!
-    # if null mean merge all
-    instanceIds: [String]
+    # merge all
+    instanceIds: [String]!
     # jfr event type
-    eventType: JfrEventType!
+    eventType: JFREventType!
 }
 
 # get profiler task result
@@ -70,25 +70,31 @@ type AsyncProfilerTaskListResult {
 
 # async profiler task data
 type AsyncProfilerTask {
-    id: String
-    serviceId: String
-    serviceInstanceIds: [String]
-    createTime: Long
+    id: String!
+    serviceId: String!
+    serviceInstanceIds: [String!]!
+    createTime: Long!
     events: [AsyncProfilerEventType!]!
-    duration: Int
+    duration: Int!
     execArgs: String
 }
 
+# flame graph result
 type AsyncProfilerStackTree {
-    type: JfrEventType!
+    type: JFREventType!
     elements: [AsyncProfilerStackElement!]!
 }
 
+# profiler thread stack analyze tree element
 type AsyncProfilerStackElement {
+    # work for tree building, id matches multiple parentId
     id: ID!
     parentId: ID!
+    # stack code signature
     codeSignature: String!
+    # current node and children sampling times
     total: Long!
+    # current node sampling times
     self: Long!
 }
 
@@ -96,9 +102,41 @@ type AsyncProfilerStackElement {
 type AsyncProfilerAnalyzation {
     # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
-
     # get frameTree with event
     tree: AsyncProfilerStackTree
+}
+
+type AsyncProfilerTaskProgress {
+    # query all task logs
+    log: [AsyncProfilerTaskLog]!
+    # instances of failed task execution
+    errorInstanceIds: [ID]
+    # instances of successful task execution
+    successInstanceIds: [ID]
+}
+
+# async profiler task execute log
+type AsyncProfilerTaskLog {
+    id: String!
+    # execute instance
+    instanceId: ID!
+    instanceName: String!
+    # operation type
+    operationType: AsyncProfilerTaskLogOperationType!
+    # operation time
+    operationTime: Long!
+}
+
+# Profile task log operation type
+enum AsyncProfilerTaskLogOperationType {
+    # when sniffer has notified
+    NOTIFIED,
+    # when sniffer has execution finished to report
+    EXECUTION_FINISHED
+    # when sniffer finished task but jfr file is to large that oap server can not receive
+    JFR_UPLOAD_FILE_TOO_LARGE_ERROR
+    # when sniffer fails to execute its task
+    EXECUTION_TASK_ERROR
 }
 
 # async profiler task event type
@@ -111,7 +149,8 @@ enum AsyncProfilerEventType {
     ITIMER
 }
 
-enum JfrEventType {
+# JFR event type
+enum JFREventType {
     UNKNOWN
     EXECUTION_SAMPLE
     JAVA_MONITOR_ENTER
@@ -122,12 +161,16 @@ enum JfrEventType {
 }
 
 extend type Mutation {
+    # create a new async profiler task
     createAsyncProfilerTask(asyncProfilerTaskCreationRequest: AsyncProfilerTaskCreationRequest!): AsyncProfilerTaskCreationResult!
 }
 
 extend type Query {
+    # query tasks under service
     queryAsyncProfilerTaskList(request: AsyncProfilerTaskListRequest!): AsyncProfilerTaskListResult!
-    queryAsyncProfilerTaskLogs(taskId: String): [ProfileTaskLog]!
+    # query task progress
+    queryAsyncProfilerTaskProgress(taskId: String): AsyncProfilerTaskProgress!
+    # Query performance profile flame graph results
     queryAsyncProfilerAnalyze(request: AsyncProfilerAnalyzationRequest!): AsyncProfilerAnalyzation!
 }
 
