@@ -24,7 +24,7 @@ input AsyncProfilerTaskCreationRequest {
     duration: Int!
     # when the segment starts to execute, how long must it take before the monitor can be enable
     events: [AsyncProfilerEventType!]!
-    # other async-profiler args example alloc=2k,lock=2s
+    # other async-profiler exec options, e.g. alloc=2k,lock=2s
     execArgs: String
 }
 
