@@ -28,16 +28,27 @@ input AsyncProfilerTaskCreationRequest {
     execArgs: String
 }
 
-# profiler task create result
+# AsyncProfiler task create result
 type AsyncProfilerTaskCreationResult {
-    # if null or empty means the task create success, otherwise get create error reason
-    errorReason: String
+    # if null means the task create success, otherwise get create error reason
+    errorReason: AsyncProfilerTaskCreationErrorType
 
     # get task id when create success
     id: String
 }
+# AsyncProfiler task creation error type
+enum AsyncProfilerTaskCreationErrorType {
+    # service cannot be null
+    SERVICE_ID_IS_NULL
+    # duration cannot be negative
+    DURATION_IS_NEGATIVE
+    # events cannot be empty
+    EVENT_IS_EMPTY
+    # current service already has monitor async profiler task execute at this time
+    ALREADY_PROFILING
+}
 
-# use to query profiler task
+# Request to query profiler task list
 input AsyncProfilerTaskListRequest {
     # serviceId to monitored under the special service.
     serviceId: ID!
@@ -49,7 +60,7 @@ input AsyncProfilerTaskListRequest {
     limit: Int
 }
 
-# query analyzation
+# Request to query flame graph analyzation
 input AsyncProfilerAnalyzationRequest {
     # task id
     taskId: ID!
@@ -59,7 +70,7 @@ input AsyncProfilerAnalyzationRequest {
     eventType: JFREventType!
 }
 
-# get profiler task result
+# AsyncProfiler task list result
 type AsyncProfilerTaskListResult {
     # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
@@ -68,7 +79,7 @@ type AsyncProfilerTaskListResult {
     tasks: [AsyncProfilerTask]
 }
 
-# async profiler task data
+# AsyncProfiler task data
 type AsyncProfilerTask {
     id: String!
     serviceId: String!
@@ -79,13 +90,13 @@ type AsyncProfilerTask {
     execArgs: String
 }
 
-# flame graph result
+# AsyncProfiler flame graph result
 type AsyncProfilerStackTree {
     type: JFREventType!
     elements: [AsyncProfilerStackElement!]!
 }
 
-# profiler thread stack analyze tree element
+# AsyncProfiler thread stack analyze tree element
 type AsyncProfilerStackElement {
     # work for tree building, id matches multiple parentId
     id: ID!
@@ -98,7 +109,7 @@ type AsyncProfilerStackElement {
     self: Long!
 }
 
-# Profile task create result
+# AsyncProfiler task create result
 type AsyncProfilerAnalyzation {
     # if null or empty means the task create success, otherwise get create error reason
     errorReason: String
@@ -106,16 +117,17 @@ type AsyncProfilerAnalyzation {
     tree: AsyncProfilerStackTree
 }
 
+# AsyncProfiler task progress result
 type AsyncProfilerTaskProgress {
     # query all task logs
-    log: [AsyncProfilerTaskLog]!
+    logs: [AsyncProfilerTaskLog]!
     # instances of failed task execution
     errorInstanceIds: [ID]
     # instances of successful task execution
     successInstanceIds: [ID]
 }
 
-# async profiler task execute log
+# AsyncProfiler task execution log
 type AsyncProfilerTaskLog {
     id: String!
     # execute instance
@@ -127,7 +139,7 @@ type AsyncProfilerTaskLog {
     operationTime: Long!
 }
 
-# Profile task log operation type
+# AsyncProfiler task log operation type
 enum AsyncProfilerTaskLogOperationType {
     # when sniffer has notified
     NOTIFIED,
@@ -139,7 +151,7 @@ enum AsyncProfilerTaskLogOperationType {
     EXECUTION_TASK_ERROR
 }
 
-# async profiler task event type
+# Profiler task event type
 enum AsyncProfilerEventType {
     CPU
     WALL
@@ -170,7 +182,7 @@ extend type Query {
     queryAsyncProfilerTaskList(request: AsyncProfilerTaskListRequest!): AsyncProfilerTaskListResult!
     # query task progress
     queryAsyncProfilerTaskProgress(taskId: String): AsyncProfilerTaskProgress!
-    # Query performance profile flame graph results
+    # query the flame graph produced by async-profiler
     queryAsyncProfilerAnalyze(request: AsyncProfilerAnalyzationRequest!): AsyncProfilerAnalyzation!
 }
 
