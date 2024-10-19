@@ -18,7 +18,7 @@
 input AsyncProfilerTaskCreationRequest {
     # need to monitor service id
     serviceId: ID!
-    # serviceInstanceIds to monitored under the special service.
+    # serviceInstanceIds to be monitored under the given service.
     serviceInstanceIds: [String!]!
     # duration of this task (second)
     duration: Int!
