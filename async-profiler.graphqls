@@ -14,47 +14,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Request to create a profiler task
+# Request to create a async-profiler task
 input AsyncProfilerTaskCreationRequest {
-    # need to monitor service id
+    # Define the service to execute the task
     serviceId: ID!
-    # serviceInstanceIds to be monitored under the given service.
+    # Define which instances need to execute tasks
     serviceInstanceIds: [String!]!
-    # duration of this task (second)
+    # Define the duration of this task (second)
     duration: Int!
-    # when the segment starts to execute, how long must it take before the monitor can be enable
+    # Define which event types this task needs to collect. You can choose cpu and alloc...
     events: [AsyncProfilerEventType!]!
-    # other async-profiler exec options, e.g. alloc=2k,lock=2s
+    # other async-profiler execute options, e.g. alloc=2k,lock=2s
     execArgs: String
 }
 
-# AsyncProfiler task create result
+# AsyncProfiler task creation result
 type AsyncProfilerTaskCreationResult {
-    # if null means the task create success, otherwise get create error reason
-    errorReason: AsyncProfilerTaskCreationErrorType
-
-    # get task id when create success
+    # Code represents success or failure. If successful, it returns the task id, otherwise it returns the error reason
+    code: AsyncProfilerTaskCreationType!
+    # ErrorCode means if code indicates an error, then the detailed reason for the exception is returned.
+    errorReason: String
+    # Task id
     id: String
 }
-# AsyncProfiler task creation error type
-enum AsyncProfilerTaskCreationErrorType {
-    # service cannot be null
-    SERVICE_ID_IS_NULL
-    # duration cannot be negative
-    DURATION_IS_NEGATIVE
-    # events cannot be empty
-    EVENT_IS_EMPTY
-    # current service already has monitor async profiler task execute at this time
-    ALREADY_PROFILING
+
+# AsyncProfiler task creation type
+enum AsyncProfilerTaskCreationType {
+    # Task created successfully
+    SUCCESS
+    # Task creation failed due to argument errors
+    ARGUMENT_ERROR
+    # The current service already has a async-profiler task executing
+    ALREADY_PROFILING_ERROR
 }
 
-# Request to query profiler task list
+# Request to query async-profiler task list
 input AsyncProfilerTaskListRequest {
-    # serviceId to monitored under the special service.
+    # Define the task list under which service is obtained
     serviceId: ID!
-    # start time
+    # Start time
     startTime: Long
-    # end time
+    # End time
     endTime: Long
     # The most recent limit number of tasks
     limit: Int
@@ -62,24 +62,25 @@ input AsyncProfilerTaskListRequest {
 
 # Request to query flame graph analyzation
 input AsyncProfilerAnalyzationRequest {
-    # task id
+    # Define which task to analyze
     taskId: ID!
-    # merge all
-    instanceIds: [String]!
-    # jfr event type
+    # Define which service instances generate data for analysis
+    instanceIds: [String!]!
+    # JFR event type
     eventType: JFREventType!
 }
 
-# AsyncProfiler task list result
+# Define async-profiler task list result
 type AsyncProfilerTaskListResult {
-    # if null or empty means the task create success, otherwise get create error reason
+    # If it is null or empty, it means the task is created successfully, otherwise it gets the creation error reason
     errorReason: String
 
-    # get data id when create success
-    tasks: [AsyncProfilerTask]
+    # Get the task array under the current service
+    tasks: [AsyncProfilerTask!]
 }
 
-# AsyncProfiler task data
+# Define async-profiler task data
+# The fields definition is the same as AsyncProfilerTaskCreationRequest
 type AsyncProfilerTask {
     id: String!
     serviceId: String!
@@ -90,68 +91,68 @@ type AsyncProfilerTask {
     execArgs: String
 }
 
-# AsyncProfiler flame graph result
+# Define the flame graph results produced by async-profiler
 type AsyncProfilerStackTree {
     type: JFREventType!
-    elements: [AsyncProfilerStackElement!]!
+    elements: [AsyncProfilerStackElement!]
 }
 
-# AsyncProfiler thread stack analyze tree element
+# Define the thread stack analyze tree element
 type AsyncProfilerStackElement {
-    # work for tree building, id matches multiple parentId
+    # Id and parentId are used in graphql protocol to display tree structure
     id: ID!
     parentId: ID!
-    # stack code signature
+    # Method signatures in tree nodes
     codeSignature: String!
-    # current node and children sampling times
+    # The total number of samples of the current tree node, including child nodes
     total: Long!
-    # current node sampling times
+    # The sampling number of the current tree node, only the current node
     self: Long!
 }
 
-# AsyncProfiler task create result
+# Define the analysis results of the task
 type AsyncProfilerAnalyzation {
-    # if null or empty means the task create success, otherwise get create error reason
+    # If it is null or empty, it means the task is created successfully, otherwise it gets the creation error reason
     errorReason: String
-    # get frameTree with event
+    # Displaying the tree structure data required for the flame graph
     tree: AsyncProfilerStackTree
 }
 
-# AsyncProfiler task progress result
+# Defines task progress, including task logs, success and failure instances
 type AsyncProfilerTaskProgress {
-    # query all task logs
-    logs: [AsyncProfilerTaskLog]!
-    # instances of failed task execution
+    # All task execution logs under the current task
+    logs: [AsyncProfilerTaskLog!]
+    # Instances where task execution failed
     errorInstanceIds: [ID]
-    # instances of successful task execution
+    # Instances where task execution failed
     successInstanceIds: [ID]
 }
 
-# AsyncProfiler task execution log
+# Define the log of a task executed by an instance
 type AsyncProfilerTaskLog {
+    # The task id
     id: String!
-    # execute instance
+    # Instance of executing task
     instanceId: ID!
     instanceName: String!
-    # operation type
+
     operationType: AsyncProfilerTaskLogOperationType!
-    # operation time
     operationTime: Long!
 }
 
-# AsyncProfiler task log operation type
+# Define the execution progress of the task
 enum AsyncProfilerTaskLogOperationType {
-    # when sniffer has notified
+    # When sniffer has notified
     NOTIFIED,
-    # when sniffer has execution finished to report
+    # When sniffer has execution finished to report
     EXECUTION_FINISHED
-    # when sniffer finished task but jfr file is to large that oap server can not receive
+    # When the sniffer completes the task but the jfr file is too large for the oap server to receive
     JFR_UPLOAD_FILE_TOO_LARGE_ERROR
-    # when sniffer fails to execute its task
+    # When the sniffer cannot execute its task
     EXECUTION_TASK_ERROR
 }
 
-# Profiler task event type
+# Defines which event types async-profiler needs to collect
 enum AsyncProfilerEventType {
     CPU
     WALL
@@ -163,7 +164,6 @@ enum AsyncProfilerEventType {
 
 # JFR event type
 enum JFREventType {
-    UNKNOWN
     EXECUTION_SAMPLE
     JAVA_MONITOR_ENTER
     THREAD_PARK
@@ -173,16 +173,16 @@ enum JFREventType {
 }
 
 extend type Mutation {
-    # create a new async profiler task
+    # Create a new async-profiler task
     createAsyncProfilerTask(asyncProfilerTaskCreationRequest: AsyncProfilerTaskCreationRequest!): AsyncProfilerTaskCreationResult!
 }
 
 extend type Query {
-    # query tasks under service
+    # Query all task lists and sort them in descending order by start time
     queryAsyncProfilerTaskList(request: AsyncProfilerTaskListRequest!): AsyncProfilerTaskListResult!
-    # query task progress
-    queryAsyncProfilerTaskProgress(taskId: String): AsyncProfilerTaskProgress!
-    # query the flame graph produced by async-profiler
+    # Query task progress, including task logs
+    queryAsyncProfilerTaskProgress(taskId: String!): AsyncProfilerTaskProgress!
+    # Query the flame graph produced by async-profiler
     queryAsyncProfilerAnalyze(request: AsyncProfilerAnalyzationRequest!): AsyncProfilerAnalyzation!
 }
 
