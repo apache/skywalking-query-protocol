@@ -22,19 +22,19 @@ input AsyncProfilerTaskCreationRequest {
     serviceInstanceIds: [String!]!
     # Define the duration of this task (second)
     duration: Int!
-    # Define which event types this task needs to collect. You can choose cpu and alloc...
+    # Define which event types this task needs to collect.
     events: [AsyncProfilerEventType!]!
-    # other async-profiler execute options, e.g. alloc=2k,lock=2s
+    # other async-profiler execution options, e.g. alloc=2k,lock=2s
     execArgs: String
 }
 
-# AsyncProfiler task creation result
+# AsyncProfilerTaskCreationResult is the result of the task creation request
 type AsyncProfilerTaskCreationResult {
-    # Code represents success or failure. If successful, it returns the task id, otherwise it returns the error reason
+    # Code defines the status of the response, i.e. success or failure.
     code: AsyncProfilerTaskCreationType!
-    # ErrorCode means if code indicates an error, then the detailed reason for the exception is returned.
+    # ErrorReason gives detailed reason for the exception, if the code returned represents a kind of failure.
     errorReason: String
-    # Task id
+    # Task id, if code is SUCCESS.
     id: String
 }
 
@@ -50,13 +50,13 @@ enum AsyncProfilerTaskCreationType {
 
 # Request to query async-profiler task list
 input AsyncProfilerTaskListRequest {
-    # Define the task list under which service is obtained
+    # ServiceId associated with the task
     serviceId: ID!
     # Start time
     startTime: Long
     # End time
     endTime: Long
-    # The most recent limit number of tasks
+    # Limit defines the number of the tasks to be returned.
     limit: Int
 }
 
@@ -64,9 +64,9 @@ input AsyncProfilerTaskListRequest {
 input AsyncProfilerAnalyzationRequest {
     # Define which task to analyze
     taskId: ID!
-    # Define which service instances generate data for analysis
+    # InstanceIds defines the instances to be included for analysis
     instanceIds: [String!]!
-    # JFR event type
+    # EventType is the specific JFR Event type to be selected for analysis even if multiple events are included in the JFR file.
     eventType: JFREventType!
 }
 
@@ -75,7 +75,7 @@ type AsyncProfilerTaskListResult {
     # If it is null or empty, it means the task is created successfully, otherwise it gets the creation error reason
     errorReason: String
 
-    # Get the task array under the current service
+    # Tasks is a list of async-profiler tasks belonging to the specific service
     tasks: [AsyncProfilerTask!]
 }
 
@@ -106,7 +106,7 @@ type AsyncProfilerStackElement {
     codeSignature: String!
     # The total number of samples of the current tree node, including child nodes
     total: Long!
-    # The sampling number of the current tree node, only the current node
+    # The sampling number of the current tree node, excluding samples of the children
     self: Long!
 }
 
@@ -120,11 +120,11 @@ type AsyncProfilerAnalyzation {
 
 # Defines task progress, including task logs, success and failure instances
 type AsyncProfilerTaskProgress {
-    # All task execution logs under the current task
+    # All task execution logs of the current task
     logs: [AsyncProfilerTaskLog!]
-    # Instances where task execution failed
+    # ErrorInstanceIds gives instances that failed to execute the task
     errorInstanceIds: [ID]
-    # Instances where task execution failed
+    # SuccessInstanceIds gives instances that have executed the task successfully
     successInstanceIds: [ID]
 }
 
@@ -132,7 +132,7 @@ type AsyncProfilerTaskProgress {
 type AsyncProfilerTaskLog {
     # The task id
     id: String!
-    # Instance of executing task
+    # InstanceId is the id of the instance which reported this task log
     instanceId: ID!
     instanceName: String!
 
@@ -142,13 +142,13 @@ type AsyncProfilerTaskLog {
 
 # Define the execution progress of the task
 enum AsyncProfilerTaskLogOperationType {
-    # When sniffer has notified
+    # NOTIFIED means the task has been issued to the Java Agent
     NOTIFIED,
-    # When sniffer has execution finished to report
+    # EXECUTION_FINISHED means the Java Agent has finished the execution
     EXECUTION_FINISHED
-    # When the sniffer completes the task but the jfr file is too large for the oap server to receive
+    # JFR_UPLOAD_FILE_TOO_LARGE_ERROR means the Java Agent has finished the task but the target file is too large to be received by the OAP server
     JFR_UPLOAD_FILE_TOO_LARGE_ERROR
-    # When the sniffer cannot execute its task
+    # EXECUTION_TASK_ERROR means potential execution error caused by the Java Agent
     EXECUTION_TASK_ERROR
 }
 
