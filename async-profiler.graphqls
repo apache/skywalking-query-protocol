@@ -101,6 +101,7 @@ type AsyncProfilerStackTree {
 type AsyncProfilerStackElement {
     # Id and parentId are used in graphql protocol to display tree structure
     id: ID!
+    # parentId is the identity of the parent stack element. Stack elements are organized as a tree.
     parentId: ID!
     # Method signatures in tree nodes
     codeSignature: String!
