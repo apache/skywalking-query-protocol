@@ -99,7 +99,7 @@ type AsyncProfilerStackTree {
 
 # Define the thread stack analyze tree element
 type AsyncProfilerStackElement {
-    # Id and parentId are used in graphql protocol to display tree structure
+    # id is the identity of the stack element
     id: ID!
     # parentId is the identity of the parent stack element. Stack elements are organized as a tree.
     parentId: ID!
