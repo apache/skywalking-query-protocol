@@ -1,0 +1,187 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Request to create a async-profiler task
+input AsyncProfilerTaskCreationRequest {
+    # Define the service to execute the task
+    serviceId: ID!
+    # Define which instances need to execute tasks
+    serviceInstanceIds: [String!]!
+    # Define the duration of this task (second)
+    duration: Int!
+    # Define which event types this task needs to collect.
+    events: [AsyncProfilerEventType!]!
+    # other async-profiler execution options, e.g. alloc=2k,lock=2s
+    execArgs: String
+}
+
+# AsyncProfilerTaskCreationResult is the result of the task creation request
+type AsyncProfilerTaskCreationResult {
+    # Code defines the status of the response, i.e. success or failure.
+    code: AsyncProfilerTaskCreationType!
+    # ErrorReason gives detailed reason for the exception, if the code returned represents a kind of failure.
+    errorReason: String
+    # Task id, if code is SUCCESS.
+    id: String
+}
+
+# AsyncProfiler task creation type
+enum AsyncProfilerTaskCreationType {
+    # Task created successfully
+    SUCCESS
+    # Task creation failed due to argument errors
+    ARGUMENT_ERROR
+    # The current service already has a async-profiler task executing
+    ALREADY_PROFILING_ERROR
+}
+
+# Request to query async-profiler task list
+input AsyncProfilerTaskListRequest {
+    # ServiceId associated with the task
+    serviceId: ID!
+    # Start time
+    startTime: Long
+    # End time
+    endTime: Long
+    # Limit defines the number of the tasks to be returned.
+    limit: Int
+}
+
+# Request to query flame graph analyzation
+input AsyncProfilerAnalyzationRequest {
+    # Define which task to analyze
+    taskId: ID!
+    # InstanceIds defines the instances to be included for analysis
+    instanceIds: [String!]!
+    # EventType is the specific JFR Event type to be selected for analysis even if multiple events are included in the JFR file.
+    eventType: JFREventType!
+}
+
+# Define async-profiler task list result
+type AsyncProfilerTaskListResult {
+    # If it is null or empty, it means the task is created successfully, otherwise it gets the creation error reason
+    errorReason: String
+
+    # Tasks is a list of async-profiler tasks belonging to the specific service
+    tasks: [AsyncProfilerTask!]
+}
+
+# Define async-profiler task data
+# The fields definition is the same as AsyncProfilerTaskCreationRequest
+type AsyncProfilerTask {
+    id: String!
+    serviceId: String!
+    serviceInstanceIds: [String!]!
+    createTime: Long!
+    events: [AsyncProfilerEventType!]!
+    duration: Int!
+    execArgs: String
+}
+
+# Define the flame graph results produced by async-profiler
+type AsyncProfilerStackTree {
+    type: JFREventType!
+    elements: [AsyncProfilerStackElement!]
+}
+
+# Define the thread stack analyze tree element
+type AsyncProfilerStackElement {
+    # Id is the identity of the stack element
+    id: ID!
+    # ParentId is the identity of the parent stack element. Stack elements are organized as a tree.
+    parentId: ID!
+    # Method signatures in tree nodes
+    codeSignature: String!
+    # The total number of samples of the current tree node, including child nodes
+    total: Long!
+    # The sampling number of the current tree node, excluding samples of the children
+    self: Long!
+}
+
+# Define the analysis results of the task
+type AsyncProfilerAnalyzation {
+    # Displaying the tree structure data required for the flame graph
+    tree: AsyncProfilerStackTree
+}
+
+# Defines task progress, including task logs, success and failure instances
+type AsyncProfilerTaskProgress {
+    # All task execution logs of the current task
+    logs: [AsyncProfilerTaskLog!]
+    # ErrorInstanceIds gives instances that failed to execute the task
+    errorInstanceIds: [ID]
+    # SuccessInstanceIds gives instances that have executed the task successfully
+    successInstanceIds: [ID]
+}
+
+# Define the log of a task executed by an instance
+type AsyncProfilerTaskLog {
+    # The task id
+    id: String!
+    # InstanceId is the id of the instance which reported this task log
+    instanceId: ID!
+    instanceName: String!
+
+    operationType: AsyncProfilerTaskLogOperationType!
+    operationTime: Long!
+}
+
+# Define the execution progress of the task
+enum AsyncProfilerTaskLogOperationType {
+    # NOTIFIED means the task has been issued to the Java Agent
+    NOTIFIED,
+    # EXECUTION_FINISHED means the Java Agent has finished the execution
+    EXECUTION_FINISHED
+    # JFR_UPLOAD_FILE_TOO_LARGE_ERROR means the Java Agent has finished the task but the target file is too large to be received by the OAP server
+    JFR_UPLOAD_FILE_TOO_LARGE_ERROR
+    # EXECUTION_TASK_ERROR means potential execution error caused by the Java Agent
+    EXECUTION_TASK_ERROR
+}
+
+# Defines which event types async-profiler needs to collect
+enum AsyncProfilerEventType {
+    CPU
+    WALL
+    LOCK
+    ALLOC
+    CTIMER
+    ITIMER
+}
+
+# JFR event type
+enum JFREventType {
+    EXECUTION_SAMPLE
+    JAVA_MONITOR_ENTER
+    THREAD_PARK
+    OBJECT_ALLOCATION_IN_NEW_TLAB
+    OBJECT_ALLOCATION_OUTSIDE_TLAB
+    PROFILER_LIVE_OBJECT
+}
+
+extend type Mutation {
+    # Create a new async-profiler task
+    createAsyncProfilerTask(asyncProfilerTaskCreationRequest: AsyncProfilerTaskCreationRequest!): AsyncProfilerTaskCreationResult!
+}
+
+extend type Query {
+    # Query all task lists and sort them in descending order by start time
+    queryAsyncProfilerTaskList(request: AsyncProfilerTaskListRequest!): AsyncProfilerTaskListResult!
+    # Query task progress, including task logs
+    queryAsyncProfilerTaskProgress(taskId: String!): AsyncProfilerTaskProgress!
+    # Query the flame graph produced by async-profiler
+    queryAsyncProfilerAnalyze(request: AsyncProfilerAnalyzationRequest!): AsyncProfilerAnalyzation!
+}
+
