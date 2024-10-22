@@ -99,9 +99,9 @@ type AsyncProfilerStackTree {
 
 # Define the thread stack analyze tree element
 type AsyncProfilerStackElement {
-    # id is the identity of the stack element
+    # Id is the identity of the stack element
     id: ID!
-    # parentId is the identity of the parent stack element. Stack elements are organized as a tree.
+    # ParentId is the identity of the parent stack element. Stack elements are organized as a tree.
     parentId: ID!
     # Method signatures in tree nodes
     codeSignature: String!
@@ -113,8 +113,6 @@ type AsyncProfilerStackElement {
 
 # Define the analysis results of the task
 type AsyncProfilerAnalyzation {
-    # If it is null or empty, it means the task is created successfully, otherwise it gets the creation error reason
-    errorReason: String
     # Displaying the tree structure data required for the flame graph
     tree: AsyncProfilerStackTree
 }
