@@ -76,6 +76,8 @@ type Owner {
 type MQEValue {
     # Timestamp or name of the entity or record. It could be NULL if it is the result of an aggregate calculation.
     id: ID
+    # The owner of this metric value.
+    # When make a topN query, the owner info will be returned.
     owner: Owner
     # Value is formatted double/int or NULL if the value is absent.
     value: String
