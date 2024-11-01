@@ -57,9 +57,29 @@ enum ExpressionResultType {
     RECORD_LIST
 }
 
+type Owner {
+    # Scope=Service, return serviceID, serviceName
+    # Scope=ServiceInstance, return serviceID, serviceName, serviceInstanceID, serviceInstanceName
+    # Scope=Endpoint, return serviceID, serviceName, endpointID, endpointName
+    scope: Scope
+    serviceID: ID
+    serviceName: String
+    # Normal service is the service having installed agent or metrics reported directly.
+    # Unnormal service is conjectural service, usually detected by the agent.
+    normal: Boolean
+    serviceInstanceID: ID
+    serviceInstanceName: String
+    endpointID: ID
+    endpointName: String
+}
+
 type MQEValue {
     # Timestamp or name of the entity or record. It could be NULL if it is the result of an aggregate calculation.
     id: ID
+    # The owner of this metric value.
+    # When make a topN query, the owner info will be returned.
+    # Since 10.2
+    owner: Owner
     # Value is formatted double/int or NULL if the value is absent.
     value: String
     # Sampled record could associate with a trace.
