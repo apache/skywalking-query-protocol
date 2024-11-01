@@ -78,6 +78,7 @@ type MQEValue {
     id: ID
     # The owner of this metric value.
     # When make a topN query, the owner info will be returned.
+    # Since 10.2
     owner: Owner
     # Value is formatted double/int or NULL if the value is absent.
     value: String
