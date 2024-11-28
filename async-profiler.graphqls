@@ -52,10 +52,8 @@ enum AsyncProfilerTaskCreationType {
 input AsyncProfilerTaskListRequest {
     # ServiceId associated with the task
     serviceId: ID!
-    # Start time
-    startTime: Long
-    # End time
-    endTime: Long
+    # Time Range
+    queryDuration: Duration
     # Limit defines the number of the tasks to be returned.
     limit: Int
 }
