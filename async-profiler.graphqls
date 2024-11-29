@@ -52,10 +52,8 @@ enum AsyncProfilerTaskCreationType {
 input AsyncProfilerTaskListRequest {
     # ServiceId associated with the task
     serviceId: ID!
-    # Start time
-    startTime: Long
-    # End time
-    endTime: Long
+    # Time Range
+    queryDuration: Duration
     # Limit defines the number of the tasks to be returned.
     limit: Int
 }
@@ -164,8 +162,8 @@ enum AsyncProfilerEventType {
 # JFR event type
 enum JFREventType {
     EXECUTION_SAMPLE
-    JAVA_MONITOR_ENTER
-    THREAD_PARK
+    # The LOCK event is a combination of JAVA_MONITOR_ENTER and THREAD_PARK events.
+    LOCK
     OBJECT_ALLOCATION_IN_NEW_TLAB
     OBJECT_ALLOCATION_OUTSIDE_TLAB
     PROFILER_LIVE_OBJECT
