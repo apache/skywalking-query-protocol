@@ -19,6 +19,13 @@ type MQEMetric {
     results: [MQEValues!]!
 }
 
+type AlarmSnapshot {
+    # The MQE expression of the alarm rule.
+    expression: String!
+    # The metrics snapshot
+    metrics: [MQEMetric!]!
+}
+
 type AlarmMessage {
     startTime: Long!
     scope: Scope
@@ -28,8 +35,8 @@ type AlarmMessage {
     message: String!
     events: [Event!]!
     tags: [KeyValue!]!
-    # The metrics snapshot for alarm rule calculation.
-    metricsSnapshot: [MQEMetric!]!
+    # The snapshot when the alarm triggered.
+    snapshot: AlarmSnapshot!
 }
 
 type Alarms {
