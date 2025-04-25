@@ -108,6 +108,24 @@ type TimeInfo {
   currentTimestamp: Long
 }
 
+type RecordsTTL {
+    value: Int!
+    superDataset: Int!
+    # -1 means no cold stage.
+    coldValue: Int!
+    coldSuperDataset: Int!
+}
+
+type MetricsTTL {
+    minute: Int!
+    hour: Int!
+    day: Int!
+    # -1 means no cold stage.
+    coldMinute: Int!
+    coldHour: Int!
+    coldDay: Int!
+}
+
 extend type Query {
     # Read all available layers
     # UI could use this list to determine available dashboards/panels
@@ -145,4 +163,8 @@ extend type Query {
     estimateProcessScale(serviceId: ID!, labels: [String!]!): Long!
     
     getTimeInfo: TimeInfo
+    # Get the TTL info of records
+    getRecordsTTL: RecordsTTL
+    # Get the TTL info of metrics
+    getMetricsTTL: MetricsTTL
 }
