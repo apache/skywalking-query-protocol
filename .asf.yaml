@@ -28,4 +28,4 @@ github:
     merge:   false
     rebase:  false
   protected_branches:
-    master:
+    master: {}
