@@ -64,6 +64,8 @@ input Duration {
     start: String!
     end: String!
     step: Step!
+    # Only for BanyanDB, the flag to query from cold stage, default is false.
+    coldStage: Boolean
 }
 
 enum Step {
