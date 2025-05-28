@@ -109,18 +109,26 @@ type TimeInfo {
 }
 
 type RecordsTTL {
-    value: Int!
-    superDataset: Int!
-    # -1 means no cold stage.
-    coldValue: Int!
-    coldSuperDataset: Int!
+    # Cover hot and warm data for BanyanDB.
+    normal: Int!
+    trace: Int!
+    zipkinTrace: Int!
+    log: Int!
+    browserErrorLog: Int!
+    # Cold data, '-1' represents no cold stage data.
+    coldNormal: Int!
+    coldTrace: Int!
+    coldZipkinTrace: Int!
+    coldLog: Int!
+    coldBrowserErrorLog: Int!
 }
 
 type MetricsTTL {
+    # Cover hot and warm data for BanyanDB.
     minute: Int!
     hour: Int!
     day: Int!
-    # -1 means no cold stage.
+    # Cold data, '-1' represents no cold stage data.
     coldMinute: Int!
     coldHour: Int!
     coldDay: Int!
