@@ -44,12 +44,6 @@ input LogQueryCondition {
     serviceId: ID
     serviceInstanceId: ID
     endpointId: ID
-    # Can instead of serviceId, if both are provided, the "serviceId" will be used.
-    service: ServiceCondition
-    # Can instead of serviceInstanceId, if both are provided, the "serviceInstanceId" will be used.
-    instance: InstanceCondition
-    # Can instead of endpointId, if both are provided, the "endpointId" will be used.
-    endpoint: EndpointCondition
     # Related trace condition.
     # When use related trace condition, duration is not required.
     relatedTrace: TraceScopeCondition
@@ -66,6 +60,7 @@ input LogQueryCondition {
     queryOrder: Order
 }
 
+# Use service, instance and endpoint name as the condition
 input LogQueryConditionByName {
     # The value of 0 means all services.
     service: ServiceCondition
@@ -131,6 +126,7 @@ extend type Query {
     # Return true if the current storage implementation supports fuzzy query for logs.
     supportQueryLogsByKeywords: Boolean!
     queryLogs(condition: LogQueryCondition, debug: Boolean): Logs
+    queryLogsByName(condition: LogQueryConditionByName, debug: Boolean): Logs
 
     # Test the logs and get the results of the LAL output.
     test(requests: LogTestRequest!): LogTestResponse!

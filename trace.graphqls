@@ -36,12 +36,28 @@ input TraceQueryCondition {
     # The value of 0 means all services.
     serviceId: ID
     serviceInstanceId: ID
-    # Can instead of serviceId, if both are provided, the "serviceId" will be used.
-    service: ServiceCondition
-    # Can instead of serviceInstanceId, if both are provided, the "serviceInstanceId" will be used.
-    instance: InstanceCondition
     traceId: String
     endpointId: ID
+    # The time range of traces started
+    queryDuration: Duration
+    # The min time of trace
+    minTraceDuration: Int
+    # The max time of trace
+    maxTraceDuration: Int
+    traceState: TraceState!
+    queryOrder: QueryOrder!
+    # Map to the tags included in the traces
+    tags: [SpanTag!]
+    paging: Pagination!
+}
+
+# Use service, instance and endpoint name as the condition
+input TraceQueryConditionByName {
+    # The value of 0 means all services.
+    service: ServiceCondition
+    instance: InstanceCondition
+    endpoint: EndpointCondition
+    traceId: String
     # The time range of traces started
     queryDuration: Duration
     # The min time of trace
@@ -179,6 +195,7 @@ type SpanAttachedEvent {
 extend type Query {
     # Search segment list with given conditions
     queryBasicTraces(condition: TraceQueryCondition, debug: Boolean): TraceBrief
+    queryBasicTracesByName(condition: TraceQueryConditionByName, debug: Boolean): TraceBrief
     # Read the specific trace ID with given trace ID
     queryTrace(traceId: ID!, debug: Boolean): Trace
     # Only for BanyanDB, can be used to query the trace in the cold stage.
