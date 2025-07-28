@@ -150,6 +150,35 @@ type DebuggingTrace {
     spans: [DebuggingSpan!]!
 }
 
+# The condition used for instead of serviceId in query.
+# If you have service name, you don't need to provide serviceId.
+input ServiceCondition {
+    serviceName: String!
+    # If the service is virtual then required, such the `layer` is `VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
+    # Otherwise, it is not required.
+    layer: String
+}
+
+# The condition used for instead of serviceInstanceId in query.
+# If you have service name and instance name, you don't need to provide serviceInstanceId.
+input InstanceCondition {
+    serviceName: String!
+    instanceName: String!
+    # If the service is virtual then required, such the `layer` is `VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
+    # Otherwise, it is not required.
+    layer: String
+}
+
+# The condition used for instead of endpointId in query.
+# If you have service name and endpoint name, you don't need to provide endpointId.
+input EndpointCondition {
+    serviceName: String!
+    endpointName: String!
+    # If the service is virtual then required, such the `layer` is `VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
+    # Otherwise, it is not required.
+    layer: String
+}
+
 extend type Query {
     # Query Health Checker module for the status of OAP server
     checkHealth: HealthStatus!
