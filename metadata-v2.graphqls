@@ -150,17 +150,22 @@ extend type Query {
     
     # Read service instance list.
     listInstances(duration: Duration!, serviceId: ID!): [ServiceInstance!]!
+    listInstancesByName(duration: Duration!, service: ServiceCondition!): [ServiceInstance!]!
     # Search and find service instance according to given ID. Return null if not existing.
     getInstance(instanceId: String!): ServiceInstance
-    
+    getInstanceByName(service: ServiceCondition!): ServiceInstance
+
     # Search and find matched endpoints according to given service and keyword(optional)
     # If no keyword, randomly choose endpoint based on `limit` value.
     # If duration is nil mean get all endpoints, otherwise, get the endpoint list in the given duration.
     findEndpoint(keyword: String, serviceId: ID!, limit: Int!, duration: Duration): [Endpoint!]!
+    findEndpointByName(keyword: String, service: ServiceCondition!, limit: Int!, duration: Duration): [Endpoint!]!
     getEndpointInfo(endpointId: ID!): EndpointInfo
+    getEndpointInfoByName(endpoint: EndpointCondition!): EndpointInfo
 
     # Read process list.
     listProcesses(duration: Duration!, instanceId: ID!): [Process!]!
+    listProcessesByName(duration: Duration!, instance: InstanceCondition!): [Process!]!
     # Find process according to given ID. Return null if not existing.
     getProcess(processId: ID!): Process
     # Get the number of matched processes through serviceId, labels

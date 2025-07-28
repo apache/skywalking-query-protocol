@@ -44,6 +44,33 @@ input LogQueryCondition {
     serviceId: ID
     serviceInstanceId: ID
     endpointId: ID
+    # Can instead of serviceId, if both are provided, the "serviceId" will be used.
+    service: ServiceCondition
+    # Can instead of serviceInstanceId, if both are provided, the "serviceInstanceId" will be used.
+    instance: InstanceCondition
+    # Can instead of endpointId, if both are provided, the "endpointId" will be used.
+    endpoint: EndpointCondition
+    # Related trace condition.
+    # When use related trace condition, duration is not required.
+    relatedTrace: TraceScopeCondition
+    # The time range of log happened
+    # [Required] duration is required in most query, only exception is when use relatedTrace.
+    queryDuration: Duration
+    paging: Pagination!
+    tags: [LogTag!]
+    # Fuzzy query conditions for the log content.
+    # Use these 2 keyword related condition, when supportQueryLogsByKeywords returns TRUE.
+    keywordsOfContent: [String!]
+    excludingKeywordsOfContent: [String!]
+    # Order by timestamp, default desc
+    queryOrder: Order
+}
+
+input LogQueryConditionByName {
+    # The value of 0 means all services.
+    service: ServiceCondition
+    instance: InstanceCondition
+    endpoint: EndpointCondition
     # Related trace condition.
     # When use related trace condition, duration is not required.
     relatedTrace: TraceScopeCondition

@@ -134,15 +134,20 @@ extend type Query {
     getGlobalTopology(duration: Duration!, layer: String, debug: Boolean): Topology
     # Query the topology, based on the given service
     getServiceTopology(serviceId: ID!, duration: Duration!, debug: Boolean): Topology
+    getServiceTopologyByName(service: ServiceCondition!, duration: Duration!, debug: Boolean): Topology
     # Query the topology, based on the given services.
     # `#getServiceTopology` could be replaced by this.
     getServicesTopology(serviceIds: [ID!]!, duration: Duration!, debug: Boolean): Topology
+    getServicesTopologyByNames(services: [ServiceCondition!]!, duration: Duration!, debug: Boolean): Topology
     # Query the instance topology, based on the given clientServiceId and serverServiceId
     getServiceInstanceTopology(clientServiceId: ID!, serverServiceId: ID!, duration: Duration!, debug: Boolean): ServiceInstanceTopology
+    getServiceInstanceTopologyByName(clientService: ServiceCondition!, serverService: ServiceCondition!, duration: Duration!, debug: Boolean): ServiceInstanceTopology
     # Query the topology, based on the given endpoint
     getEndpointTopology(endpointId: ID!, duration: Duration!): Topology
     # v2 of getEndpointTopology
     getEndpointDependencies(endpointId: ID!, duration: Duration!, debug: Boolean): EndpointTopology
+    getEndpointDependenciesByName(endpoint: EndpointCondition!, duration: Duration!, debug: Boolean): EndpointTopology
     # Query the topology, based on the given instance
     getProcessTopology(serviceInstanceId: ID!, duration: Duration!, debug: Boolean): ProcessTopology
+    getProcessTopologyByName(instance: InstanceCondition!, duration: Duration!, debug: Boolean): ProcessTopology
 }

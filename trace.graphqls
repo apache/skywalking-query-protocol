@@ -36,6 +36,10 @@ input TraceQueryCondition {
     # The value of 0 means all services.
     serviceId: ID
     serviceInstanceId: ID
+    # Can instead of serviceId, if both are provided, the "serviceId" will be used.
+    service: ServiceCondition
+    # Can instead of serviceInstanceId, if both are provided, the "serviceInstanceId" will be used.
+    instance: InstanceCondition
     traceId: String
     endpointId: ID
     # The time range of traces started
