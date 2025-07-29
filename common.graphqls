@@ -154,7 +154,7 @@ type DebuggingTrace {
 # If you have service name, you don't need to provide serviceId.
 input ServiceCondition {
     serviceName: String!
-    # If the service is virtual then required, such the `layer` is `VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
+    # If the service is virtual then required, such the `layer` is `UNDEFINED/VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
     # Otherwise, it is not required.
     layer: String
 }
@@ -164,7 +164,7 @@ input ServiceCondition {
 input InstanceCondition {
     serviceName: String!
     instanceName: String!
-    # If the service is virtual then required, such the `layer` is `VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
+    # If the service is virtual then required, such the `layer` is `UNDEFINED/VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
     # Otherwise, it is not required.
     layer: String
 }
@@ -174,7 +174,7 @@ input InstanceCondition {
 input EndpointCondition {
     serviceName: String!
     endpointName: String!
-    # If the service is virtual then required, such the `layer` is `VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
+    # If the service is virtual then required, such the `layer` is `UNDEFINED/VIRTUAL_DATABASE/VIRTUAL_MQ/VIRTUAL_GATEWAY`.
     # Otherwise, it is not required.
     layer: String
 }
