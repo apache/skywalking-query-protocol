@@ -37,5 +37,8 @@ type RetrievedTimeRange {
 # Param, if debug is true will enable the query tracing and return DebuggingTrace in the result.
 extend type Query {
     queryTraces(condition: TraceQueryCondition, debug: Boolean): TraceList
+    # Feature detection endpoint: returns true if the backend supports the Query Traces V2 API.
+    # Returns false if the backend does not support Query Traces V2.
+    # This field is intended to assist clients in migrating to the new API.
     hasQueryTracesV2Support: Boolean!
 }
