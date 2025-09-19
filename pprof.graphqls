@@ -21,12 +21,14 @@ input PprofTaskCreationRequest {
     serviceId: ID!
     # Define which instances need to execute tasks
     serviceInstanceIds: [String!]!
-    # Define the duration of this task
-    duration: Int!
+    # Define the duration of this task in minutes (required for CPU, BLOCK, MUTEX events)
+    duration: Int
     # Define which event types this task needs to collect.
     events: PprofEventType!
-    # Define the period of the pprof dump
-    dumpPeriod: Int!
+    # Define the period of the pprof dump (required for BLOCK, MUTEX events)
+    # For BLOCK event, it represents an average of one blocking event per rate nanoseconds spent blocked. The default value is 0, which means sampling is turned off. When the value is 1, all block events will be sampled.
+    # For MUTEX event, it represents sampling an average of one mutex contention event per rate occurrences. The default value is 0, which means sampling is turned off. When the value is 1, all mutex events will be sampled.
+    dumpPeriod: Int
 }
 
 # PprofTaskCreationResult is the result of the task creation request
