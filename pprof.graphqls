@@ -71,7 +71,7 @@ input PprofAnalyzationRequest {
 
 # Define pprof task list result
 type PprofTaskListResult {
-    # If null or empty, it means no error occurred while fetching the task list
+    # ErrorReason gives detailed reason for the exception, if the task list returned represents failure.
     errorReason: String
 
     # Tasks is a list of pprof tasks belonging to the specific service
