@@ -28,6 +28,7 @@ type AlarmSnapshot {
 
 type AlarmMessage {
     startTime: Long!
+    recoveryTime: Long
     scope: Scope
     id: ID!
     # The entity name of the alarm triggered.
