@@ -124,6 +124,7 @@ type RecordsTTL {
 }
 
 type MetricsTTL {
+    metadata: Int!
     # Cover hot and warm data for BanyanDB.
     minute: Int!
     hour: Int!
