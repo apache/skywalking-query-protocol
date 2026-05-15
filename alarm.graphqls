@@ -33,6 +33,13 @@ type AlarmMessage {
     id: ID!
     # The entity name of the alarm triggered.
     name: String!
+    # The layers the alarmed entity (service / instance / endpoint / process and their
+    # relations) belongs to at the time the alarm was raised. A service can be observed
+    # under multiple layers simultaneously (e.g., GENERAL + MESH); each entry here
+    # corresponds to one layer the underlying entity served at alarm time.
+    # See https://github.com/apache/skywalking/blob/master/oap-server/server-core/src/main/java/org/apache/skywalking/oap/server/core/analysis/Layer.java
+    # for the list of layer names.
+    layers: [String!]!
     message: String!
     events: [Event!]!
     tags: [KeyValue!]!
@@ -50,7 +57,11 @@ input AlarmTag {
 }
 
 extend type Query {
-    getAlarm(duration: Duration!, scope: Scope, keyword: String, paging: Pagination!, tags: [AlarmTag]): Alarms
+    # `layers` (optional) filters to alarms whose underlying entity belongs to ANY of the
+    # given layers (set union, OR semantics). Empty or omitted = no layer filter applied.
+    # Layer values are the free-form strings used elsewhere in the protocol; see
+    # `Service.layers` and metadata-v2.graphqls for the canonical layer list.
+    getAlarm(duration: Duration!, scope: Scope, layers: [String!], keyword: String, paging: Pagination!, tags: [AlarmTag]): Alarms
     # Read the list of searchable keys
     queryAlarmTagAutocompleteKeys(duration: Duration!):[String!]
     # Search the available value options of the given key.
