@@ -33,11 +33,10 @@ type AlarmMessage {
     id: ID!
     # The entity name of the alarm triggered.
     name: String!
-    # The layers the alarmed entity (service / instance / endpoint / process and their
+    # The layers of the alarmed entity (service / instance / endpoint / process and their
     # relations) belongs to at the time the alarm was raised. A service can be observed
     # under multiple layers simultaneously (e.g., GENERAL + MESH); each entry here
-    # corresponds to one layer the underlying entity served at alarm time.
-    # See https://github.com/apache/skywalking/blob/master/oap-server/server-core/src/main/java/org/apache/skywalking/oap/server/core/analysis/Layer.java
+    # corresponds to one layer of the underlying entity served at alarm time.
     # for the list of layer names.
     layers: [String!]!
     message: String!
