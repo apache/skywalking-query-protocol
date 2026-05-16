@@ -49,8 +49,60 @@ input AlarmTag {
     value: String
 }
 
+# Filter shape for `queryAlarms`. All fields outside `duration` and `paging`
+# are optional; within each list-typed field values are OR'd (set union),
+# across fields the predicates are AND'd.
+input AlarmQueryCondition {
+    duration: Duration!
+    paging: Pagination!
+
+    # Pin to specific entities. Each `Entity` (defined in metrics-v3.graphqls)
+    # resolves to its underlying serviceId / instanceId / endpointId /
+    # processId at query time; the alarm filter matches the alarm record's
+    # primary (id0) OR relation-destination (id1) column against the resolved
+    # IDs. For relation entities (set via `destServiceName` etc.) the source
+    # and dest IDs are both contributed, so the alarm is matched whether the
+    # entity appears as the source or the dest of the relation.
+    #
+    # Across the list values OR together. Entity's own `scope` field is
+    # auto-inferred from which name fields are populated, mirroring its MQE
+    # behavior.
+    entities: [Entity!]
+
+    # Filter on the underlying entity's layer. A service observed under
+    # multiple normal layers (e.g., GENERAL + K8S_SERVICE) matches when any
+    # one of them is in the list. See
+    # https://github.com/apache/skywalking/blob/master/oap-server/server-core/src/main/java/org/apache/skywalking/oap/server/core/analysis/Layer.java
+    # for the canonical layer list.
+    layers: [String!]
+
+    # Filter by the alarm rule(s) that fired the alarm.
+    ruleNames: [String!]
+
+    # Phrase match on the alarm message text. Same semantics as
+    # `getAlarm.keyword`.
+    keyword: String
+
+    # Searchable-tag filter. Tag keys must be in the OAP backend's
+    # `searchableAlarmTags` config; otherwise the query returns no rows.
+    tags: [AlarmTag]
+}
+
 extend type Query {
+    # DEPRECATED in favor of `queryAlarms(condition)`. Kept for backward
+    # compatibility; the OAP backend routes both queries to the same DAO.
+    # `queryAlarms` adds entity (Entity-typed) / rule-name / layer filters
+    # and bundles every filter under a single input type so future additions
+    # land without a method-signature change.
     getAlarm(duration: Duration!, scope: Scope, keyword: String, paging: Pagination!, tags: [AlarmTag]): Alarms
+        @deprecated(reason: "Use queryAlarms(condition) instead. getAlarm only exposes scope + keyword + tags filters; queryAlarms additionally supports entities (Entity-typed, multi-select) / ruleNames / layers and uses a single input type for future extensibility.")
+
+    # Query alarm records with the comprehensive filter set. Combine entity
+    # (Entity-typed, multi-select), layer, rule-name, keyword, and tag filters
+    # in one request. Replaces `getAlarm` for any client that needs more than
+    # scope + keyword + tags.
+    queryAlarms(condition: AlarmQueryCondition!): Alarms
+
     # Read the list of searchable keys
     queryAlarmTagAutocompleteKeys(duration: Duration!):[String!]
     # Search the available value options of the given key.
