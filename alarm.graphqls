@@ -58,20 +58,30 @@ input AlarmQueryCondition {
 
     # Pin to specific entities. Each `Entity` (defined in metrics-v3.graphqls)
     # resolves to its underlying serviceId / instanceId / endpointId /
-    # processId at query time; the alarm filter matches the alarm record's
-    # primary (id0) OR relation-destination (id1) column against the resolved
-    # IDs. For relation entities (set via `destServiceName` etc.) the source
-    # and dest IDs are both contributed, so the alarm is matched whether the
-    # entity appears as the source or the dest of the relation.
+    # processId at query time. Match shape depends on the entity scope:
     #
-    # Across the list values OR together. Entity's own `scope` field is
-    # auto-inferred from which name fields are populated, mirroring its MQE
-    # behavior.
+    # * Non-relation scopes (Service, ServiceInstance, Endpoint, Process):
+    #   match alarms whose `id0` OR `id1` equals the resolved entity ID.
+    #   Catches both alarms scoped exactly to the entity (id0=X) AND
+    #   relation alarms where the entity is the destination (id1=X).
+    #
+    # * Relation scopes (ServiceRelation, ServiceInstanceRelation,
+    #   EndpointRelation, ProcessRelation): EXACT match on the relation.
+    #   The constraint is `id0=resolvedSourceId AND id1=resolvedDestId`.
+    #   "Anything involving service A" queries should pass the non-relation
+    #   Entity {Service A} instead — the relation entity narrows to a
+    #   specific src→dest edge only.
+    #
+    # Across the list, per-entity constraints OR together. Entity's own
+    # `scope` field is auto-inferred from which name fields are populated,
+    # mirroring its MQE behavior.
     entities: [Entity!]
 
-    # Filter on the underlying entity's layer. A service observed under
-    # multiple normal layers (e.g., GENERAL + K8S_SERVICE) matches when any
-    # one of them is in the list. See
+    # Filter on the underlying entity's layer. An alarm record stores ONE
+    # layer per row (the alphabetically first layer of the alarmed entity at
+    # alarm-mint time), so a multi-layer service (e.g., [GENERAL,
+    # K8S_SERVICE]) is filed under its first layer and only that layer
+    # matches the filter. See
     # https://github.com/apache/skywalking/blob/master/oap-server/server-core/src/main/java/org/apache/skywalking/oap/server/core/analysis/Layer.java
     # for the canonical layer list.
     layers: [String!]
