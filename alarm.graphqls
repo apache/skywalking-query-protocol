@@ -57,16 +57,21 @@ input AlarmQueryCondition {
     paging: Pagination!
 
     # Pin to specific entities. Each `Entity` (defined in metrics-v3.graphqls)
-    # resolves to its underlying serviceId / instanceId / endpointId /
-    # processId at query time; the alarm filter matches the alarm record's
-    # primary (id0) OR relation-destination (id1) column against the resolved
-    # IDs. For relation entities (set via `destServiceName` etc.) the source
-    # and dest IDs are both contributed, so the alarm is matched whether the
-    # entity appears as the source or the dest of the relation.
+    # resolves to one EntityIdConstraint at query time:
+    #   * Non-relation scopes (Service / ServiceInstance / Endpoint / Process)
+    #     match the alarm record's id0 OR id1 column against the resolved id
+    #     — a service appears in either column depending on which side of the
+    #     alarm rule fired, so we accept both.
+    #   * Relation scopes (`destServiceName` etc.) match exactly
+    #     `id0 = sourceId AND id1 = destId` — ordered, NOT "any side". A
+    #     ServiceRelation entity `{serviceName: A, destServiceName: B}` only
+    #     matches alarms keyed `(A, B)`. To find anything involving A, pass a
+    #     non-relation `{serviceName: A}` entity instead, which expands to
+    #     `id0 = A OR id1 = A`.
     #
-    # Across the list values OR together. Entity's own `scope` field is
-    # auto-inferred from which name fields are populated, mirroring its MQE
-    # behavior.
+    # Across the list, the per-entity constraints are OR'd together. Entity's
+    # own `scope` field is auto-inferred from which name fields are
+    # populated, mirroring its MQE behavior.
     entities: [Entity!]
 
     # Filter on the underlying entity's layer. An alarm record is persisted
