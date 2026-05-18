@@ -69,12 +69,12 @@ input AlarmQueryCondition {
     # behavior.
     entities: [Entity!]
 
-    # Filter on the underlying entity's layer. A service observed under
-    # multiple normal layers (e.g., GENERAL + K8S_SERVICE) matches when any
-    # one of them is in the list. See
+    # Filter on the underlying entity's layer. An alarm record is persisted
+    # with a single layer (the first one in the entity's resolved layer
+    # list); this filter matches that single value exactly. See
     # https://github.com/apache/skywalking/blob/master/oap-server/server-core/src/main/java/org/apache/skywalking/oap/server/core/analysis/Layer.java
     # for the canonical layer list.
-    layers: [String!]
+    layer: String
 
     # Filter by the alarm rule(s) that fired the alarm.
     ruleNames: [String!]
@@ -95,7 +95,7 @@ extend type Query {
     # and bundles every filter under a single input type so future additions
     # land without a method-signature change.
     getAlarm(duration: Duration!, scope: Scope, keyword: String, paging: Pagination!, tags: [AlarmTag]): Alarms
-        @deprecated(reason: "Use queryAlarms(condition) instead. getAlarm only exposes scope + keyword + tags filters; queryAlarms additionally supports entities (Entity-typed, multi-select) / ruleNames / layers and uses a single input type for future extensibility.")
+        @deprecated(reason: "Use queryAlarms(condition) instead. getAlarm only exposes scope + keyword + tags filters; queryAlarms additionally supports entities (Entity-typed, multi-select) / ruleNames / layer and uses a single input type for future extensibility.")
 
     # Query alarm records with the comprehensive filter set. Combine entity
     # (Entity-typed, multi-select), layer, rule-name, keyword, and tag filters
