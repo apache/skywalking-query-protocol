@@ -23,33 +23,11 @@ type DashboardConfiguration {
     configuration: String!
 }
 
-type MenuItem {
-    # Title name
-    title: String!
-    # Showing icon name
-    icon: String
-    # Linked layer name
-    layer: String!
-    # Activated menu should be listed on the menu,
-    # otherwise, it should stay in marketplace.
-    activate: Boolean!
-    # Sub menu items
-    subItems: [MenuItem!]!
-    # Description of the item
-    description: String
-    # The document link for the latest version of this feature.
-    documentLink: String
-    # The i18n key for the title and description of this feature display in the UI.
-    i18nKey: String
-}
-
 extend type Query {
     # Read an existing UI template according to given id.
     getTemplate(id: String!): DashboardConfiguration
     # Read all configuration templates。
     getAllTemplates: [DashboardConfiguration!]!
-    # Read all menu items
-    getMenuItems: [MenuItem!]!
 }
 
 # Used for add new template
