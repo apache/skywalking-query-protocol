@@ -38,13 +38,18 @@ type GenAIEvaluationRecord {
     evaluationTime: Long
 }
 
+input GenAIEvaluationRecordTag {
+    key: String!
+    value: String
+}
+
 input GenAIEvaluationRecordQueryCondition {
     serviceId: ID
     serviceInstanceId: ID
     relatedTrace: TraceScopeCondition
     queryDuration: Duration
     paging: Pagination!
-    tags: [LogTag!]
+    tags: [GenAIEvaluationRecordTag!]
     queryOrder: Order
 }
 
