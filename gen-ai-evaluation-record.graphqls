@@ -24,8 +24,11 @@ type GenAIEvaluationRecords {
 
 type GenAIEvaluationRecord {
     traceId: String
-    serviceId: String
-    serviceInstanceId: String
+    serviceName: String
+    providerName: String
+    modelName: String
+    operationName: String
+    scoreValue: Float
     segmentId: String
     spanId: String
     spanType: String
@@ -44,8 +47,11 @@ input GenAIEvaluationRecordTag {
 }
 
 input GenAIEvaluationRecordQueryCondition {
-    serviceId: ID
-    serviceInstanceId: ID
+    providerName: String
+    modelName: String
+    minScore: Float
+    maxScore: Float
+    sortField: String
     relatedTrace: TraceScopeCondition
     queryDuration: Duration
     paging: Pagination!
@@ -54,6 +60,5 @@ input GenAIEvaluationRecordQueryCondition {
 }
 
 extend type Query {
-    supportGenAIEvaluationRecordQueryByKeywords: Boolean!
     queryGenAIEvaluationRecord(condition: GenAIEvaluationRecordQueryCondition, debug: Boolean): GenAIEvaluationRecords
 }
