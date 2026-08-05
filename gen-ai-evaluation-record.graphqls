@@ -24,8 +24,11 @@ type GenAIEvaluationRecords {
 
 type GenAIEvaluationRecord {
     traceId: String
+    serviceId: String
     serviceName: String
+    providerId: String
     providerName: String
+    modelId: String
     modelName: String
     operationName: String
     scoreValue: Float
@@ -52,6 +55,9 @@ input GenAIEvaluationRecordQueryCondition {
     minScore: Float
     maxScore: Float
     sortField: String
+    taskName: String
+    evaluationLevel: String
+    judgeModel: String
     relatedTrace: TraceScopeCondition
     queryDuration: Duration
     paging: Pagination!
