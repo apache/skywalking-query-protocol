@@ -50,6 +50,7 @@ input GenAIEvaluationRecordTag {
 }
 
 input GenAIEvaluationRecordQueryCondition {
+    serviceName: String
     providerName: String
     modelName: String
     minScore: Float
