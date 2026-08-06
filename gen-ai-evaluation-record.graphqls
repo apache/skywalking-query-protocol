@@ -18,7 +18,6 @@
 
 type GenAIEvaluationRecords {
     genAIEvaluationRecordList: [GenAIEvaluationRecord!]!
-    errorReason: String
     debuggingTrace: DebuggingTrace
 }
 
@@ -50,9 +49,9 @@ input GenAIEvaluationRecordTag {
 }
 
 input GenAIEvaluationRecordQueryCondition {
-    serviceName: String
-    providerName: String
-    modelName: String
+    serviceId: ID
+    providerId: ID
+    modelId: ID
     minScore: Float
     maxScore: Float
     sortField: String
