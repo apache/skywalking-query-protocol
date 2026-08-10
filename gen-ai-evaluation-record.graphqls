@@ -43,6 +43,11 @@ type GenAIEvaluationRecord {
     evaluationTime: Long
 }
 
+enum GenAIEvaluationRecordSortBy {
+    EVALUATION_TIME
+    SCORE_VALUE
+}
+
 input GenAIEvaluationRecordTag {
     key: String!
     value: String
@@ -54,7 +59,7 @@ input GenAIEvaluationRecordQueryCondition {
     modelId: ID
     minScore: Float
     maxScore: Float
-    sortField: String
+    sortBy: GenAIEvaluationRecordSortBy
     taskName: String
     evaluationLevel: String
     judgeModel: String
