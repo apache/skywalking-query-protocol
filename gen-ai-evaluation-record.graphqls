@@ -35,7 +35,7 @@ type GenAIEvaluationRecord {
     spanId: String
     spanType: String
     taskName: String
-    valueType: String
+    valueType: GenAIEvaluationValueType
     value: String
     evaluationLevel: String
     reason: String
@@ -48,6 +48,13 @@ enum GenAIEvaluationRecordSortBy {
     SCORE_VALUE
 }
 
+enum GenAIEvaluationValueType {
+    SCORE
+    BOOLEAN
+    STRING
+    JSON
+}
+
 input GenAIEvaluationRecordTag {
     key: String!
     value: String
@@ -57,6 +64,7 @@ input GenAIEvaluationRecordQueryCondition {
     serviceId: ID
     providerId: ID
     modelId: ID
+    valueType: GenAIEvaluationValueType
     minScore: Float
     maxScore: Float
     sortBy: GenAIEvaluationRecordSortBy
