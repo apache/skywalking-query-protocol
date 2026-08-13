@@ -33,8 +33,8 @@ type GenAIEvaluationRecord {
     # The value type determines which field contains the evaluation value.
     # SCORE and BOOLEAN use scoreValue; STRING and JSON use value.
     valueType: GenAIEvaluationValueType
-    # Numeric value stored in evaNumberValue. It is populated for SCORE and BOOLEAN.
-    scoreValue: Float
+    # Numeric value stored in evaNumberValue using the 1,000,000 scale. It is populated for SCORE and BOOLEAN.
+    scoreValue: Long
     # String or JSON value stored in evalStringValue. It is populated for STRING and JSON.
     value: String
     segmentId: String
@@ -70,9 +70,11 @@ input GenAIEvaluationRecordQueryCondition {
     modelId: ID
     # Filter value_type first when selecting a specific evaluation kind.
     valueType: GenAIEvaluationValueType
-    # Bounds for evaNumberValue, used with SCORE or BOOLEAN value types.
+    # Bounds for evaNumberValue, used only with the SCORE value type. Values use the 1,000,000 scale.
     minScore: Long
     maxScore: Long
+    # Boolean value to match. This is only used when valueType is BOOLEAN.
+    booleanValue: Boolean
     sortBy: GenAIEvaluationRecordSortBy
     taskName: String
     evaluationLevel: String
