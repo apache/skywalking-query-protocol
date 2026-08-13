@@ -1,0 +1,91 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+type GenAIEvaluationRecords {
+    genAIEvaluationRecordList: [GenAIEvaluationRecord!]!
+    debuggingTrace: DebuggingTrace
+}
+
+type GenAIEvaluationRecord {
+    traceId: String
+    serviceId: String
+    serviceName: String
+    providerId: String
+    providerName: String
+    modelId: String
+    modelName: String
+    operationName: String
+    # The value type determines which field contains the evaluation value.
+    # SCORE and BOOLEAN use scoreValue; STRING and JSON use value.
+    valueType: GenAIEvaluationValueType
+    # Numeric value stored in evaNumberValue using the 1,000,000 scale. It is populated for SCORE and BOOLEAN.
+    scoreValue: Long
+    # String or JSON value stored in evalStringValue. It is populated for STRING and JSON.
+    value: String
+    segmentId: String
+    spanId: String
+    spanType: String
+    taskName: String
+    evaluationLevel: String
+    reason: String
+    judgeModel: String
+    evaluationTime: Long
+}
+
+enum GenAIEvaluationRecordSortBy {
+    EVALUATION_TIME
+    SCORE_VALUE
+}
+
+enum GenAIEvaluationValueType {
+    SCORE
+    BOOLEAN
+    STRING
+    JSON
+}
+
+input GenAIEvaluationRecordTag {
+    key: String!
+    value: String
+}
+
+input GenAIEvaluationRecordQueryCondition {
+    serviceId: ID
+    providerId: ID
+    modelId: ID
+    # Filter value_type first when selecting a specific evaluation kind.
+    valueType: GenAIEvaluationValueType
+    # Bounds for evaNumberValue, used only with the SCORE value type. Values use the 1,000,000 scale.
+    minScore: Long
+    maxScore: Long
+    # Boolean value to match. This is only used when valueType is BOOLEAN.
+    booleanValue: Boolean
+    sortBy: GenAIEvaluationRecordSortBy
+    taskName: String
+    evaluationLevel: String
+    judgeModel: String
+    relatedTrace: TraceScopeCondition
+    queryDuration: Duration
+    paging: Pagination!
+    tags: [GenAIEvaluationRecordTag!]
+    queryOrder: Order
+}
+
+extend type Query {
+    queryGenAIEvaluationRecord(condition: GenAIEvaluationRecordQueryCondition, debug: Boolean): GenAIEvaluationRecords
+}
