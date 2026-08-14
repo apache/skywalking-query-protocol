@@ -21,28 +21,59 @@ type GenAIEvaluationRecords {
     debuggingTrace: DebuggingTrace
 }
 
+# The addressing scheme of the span an evaluation was produced from.
+enum GenAITraceRefType {
+    # SkyWalking native: trace + segment + segment-local span index.
+    SKYWALKING_NATIVE
+    # OTLP / Zipkin: trace + globally unique hex span id. No segment concept.
+    OTLP
+}
+
+# Points at the span an evaluation was produced from, in whichever addressing scheme
+# its source used. GenAI evaluation accepts SkyWalking native, OTLP and Zipkin traces,
+# and a single span-id type cannot describe all of them.
+type GenAITraceRef {
+    type: GenAITraceRefType!
+    traceId: String!
+    # SKYWALKING_NATIVE only. The segment carrying the span.
+    segmentId: String
+    # SKYWALKING_NATIVE only. Segment-local index (0, 1, 2 ...), NOT an identifier.
+    # Unique only in combination with segmentId.
+    spanIndex: Int
+    # OTLP / Zipkin only. 16 lowercase hex characters, globally unique within the trace.
+    spanId: String
+}
+
 type GenAIEvaluationRecord {
-    traceId: String
+    traceRef: GenAITraceRef!
+
+    # The application service that issued the GenAI call. SERVICE scope, a normal
+    # (agent-detected) service - its layer is whatever the agent reports.
     serviceId: String
     serviceName: String
+    # The GenAI provider. SERVICE scope, Layer.VIRTUAL_GENAI (conjectured).
+    # The same entity as GenAIProviderAccess.
     providerId: String
     providerName: String
+    # The model. SERVICE_INSTANCE scope under the provider service, Layer.VIRTUAL_GENAI.
+    # The same entity as GenAIModelAccess.
     modelId: String
     modelName: String
+
     operationName: String
-    # The value type determines which field contains the evaluation value.
-    # SCORE and BOOLEAN use scoreValue; STRING and JSON use value.
-    valueType: GenAIEvaluationValueType
-    # Numeric value stored in evaNumberValue using the 1,000,000 scale. It is populated for SCORE and BOOLEAN.
-    scoreValue: Long
-    # String or JSON value stored in evalStringValue. It is populated for STRING and JSON.
-    value: String
-    segmentId: String
-    spanId: String
-    spanType: String
     taskName: String
-    evaluationLevel: String
+    # Determines which of the three value fields below is populated.
+    valueType: GenAIEvaluationValueType!
+    # Populated when valueType = SCORE. Carried on the 1,000,000 ppm scale as stored;
+    # divide by 1,000,000 to display the original 0.0-1.0 score.
+    scoreValue: Long
+    # Populated when valueType = BOOLEAN.
+    booleanValue: Boolean
+    # Populated when valueType = STRING or JSON. Parse according to valueType.
+    stringValue: String
+    # The judge's explanation. Populated for every task, whatever the value type.
     reason: String
+    evaluationLevel: String
     judgeModel: String
     evaluationTime: Long
 }
@@ -59,30 +90,36 @@ enum GenAIEvaluationValueType {
     JSON
 }
 
-input GenAIEvaluationRecordTag {
-    key: String!
-    value: String
-}
-
 input GenAIEvaluationRecordQueryCondition {
-    serviceId: ID
+    # The GenAI provider, a VIRTUAL_GENAI service.
     providerId: ID
+    # The model, a VIRTUAL_GENAI service instance under the provider.
     modelId: ID
-    # Filter value_type first when selecting a specific evaluation kind.
+    # The application service that issued the GenAI call.
+    serviceId: ID
+
+    taskName: String
+    # Filter valueType first when selecting a specific evaluation kind.
     valueType: GenAIEvaluationValueType
-    # Bounds for evaNumberValue, used only with the SCORE value type. Values use the 1,000,000 scale.
+    # Bounds for scoreValue on the 1,000,000 ppm scale, as stored.
+    # Only meaningful when valueType = SCORE.
     minScore: Long
     maxScore: Long
-    # Boolean value to match. This is only used when valueType is BOOLEAN.
+    # Boolean value to match. Only meaningful when valueType = BOOLEAN.
     booleanValue: Boolean
-    sortBy: GenAIEvaluationRecordSortBy
-    taskName: String
     evaluationLevel: String
     judgeModel: String
-    relatedTrace: TraceScopeCondition
+
+    # [Required] queryDuration is required in most queries, the only exception
+    # is when relatedTrace is used.
     queryDuration: Duration
+    # Scopes to a SkyWalking native trace, segment and span. OTLP / Zipkin evaluations
+    # are scoped by traceId only - their span ids are not addressable through this
+    # native-oriented condition.
+    relatedTrace: TraceScopeCondition
+
     paging: Pagination!
-    tags: [GenAIEvaluationRecordTag!]
+    sortBy: GenAIEvaluationRecordSortBy
     queryOrder: Order
 }
 
