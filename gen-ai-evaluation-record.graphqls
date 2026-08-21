@@ -44,6 +44,16 @@ type GenAITraceRef {
     spanId: String
 }
 
+input GenAITraceScopeCondition {
+    type: GenAITraceRefType!
+    traceId: String!
+    # SKYWALKING_NATIVE only.
+    segmentId: String
+    spanIndex: Int
+    # OTLP only. 16 lowercase hex characters.
+    spanId: String
+}
+
 type GenAIEvaluationRecord {
     traceRef: GenAITraceRef!
 
@@ -113,10 +123,8 @@ input GenAIEvaluationRecordQueryCondition {
     # [Required] queryDuration is required in most queries, the only exception
     # is when relatedTrace is used.
     queryDuration: Duration
-    # Scopes to a SkyWalking native trace, segment and span. OTLP / Zipkin evaluations
-    # are scoped by traceId only - their span ids are not addressable through this
-    # native-oriented condition.
-    relatedTrace: TraceScopeCondition
+    # Scopes to either a SkyWalking native or OTLP span.
+    relatedTrace: GenAITraceScopeCondition
 
     paging: Pagination!
     sortBy: GenAIEvaluationRecordSortBy
