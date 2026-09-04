@@ -1,0 +1,143 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Since 11.1.0
+# AI agent conversations, as landed by the AI Sessionizer (apache/skywalking-ai-sessionizer).
+#
+# In the Sessionizer's model a conversation is the durable ownership boundary and the unit of storage,
+# analysis and export. A session is the source-runtime context a record came from, carried as provenance:
+# one conversation may contain several sessions, and a session belongs to exactly one conversation.
+# Everything here is keyed by the conversation; a session appears only as the owner of a raw file.
+#
+# A conversation reaches the OAP as two file formats, pushed over OTLP logs under the AI_AGENT layer:
+# Session Data (`.sd`, the records of one session as collected) and Session Flow (`.sf`, an append-only
+# chain of rounds the assembler derived from them). The OAP stores every file verbatim.
+#
+# A conversation is read once, whole. `getConversationView` folds the rounds, resolves every reference
+# into the landed records and returns one `asz.view` file: everything a viewer renders, evidence included.
+# The UI makes that one call per conversation and no other.
+
+# One row per conversation on the list page. Every value comes from the newest round's attributes;
+# nothing is decoded to build the list.
+type ConversationRow {
+    conversation: ID!
+    # The sender: one Sessionizer process on one machine.
+    serviceInstanceId: ID!
+    serviceInstanceName: String!
+    title: String
+    # The head round this row came from.
+    round: Int!
+    talks: Int!
+    steps: Int!
+    streams: Int!
+    segments: Int!
+    unresolved: Int!
+    # When the conversation began, in milliseconds.
+    from: Long!
+    # Its last activity so far, in milliseconds.
+    to: Long!
+}
+
+type ConversationList {
+    # When this field is not empty, frontend should display it in UI
+    errorReason: String
+    conversations: [ConversationRow!]!
+    # For OAP internal query debugging
+    debuggingTrace: DebuggingTrace
+}
+
+input ConversationListCondition {
+    service: ServiceCondition!
+    # Optional. Only the conversations pushed by this sender.
+    instance: InstanceCondition
+    # The rounds are read newest first, at most this many, then folded to one row per conversation.
+    # Default 1000. A page therefore holds at most this many rows.
+    limit: Int
+}
+
+# The whole conversation, once: one `asz.view` file, as `asz view` writes it locally.
+# The file is YAML. Its first two keys are `format` and `version`; the UI switches its renderer on them.
+# Verification is content, not an error: a missing round or a failed digest is written into the file's
+# `summary.state` and `summary.problems`, and the rest of the file holds whatever could still be folded.
+type ConversationView {
+    # When this field is not empty, frontend should display it in UI
+    errorReason: String
+    # `asz.view`
+    format: String!
+    # `1.0`
+    version: String!
+    conversation: ID!
+    # The `.view` file, verbatim.
+    yaml: String!
+    # For OAP internal query debugging
+    debuggingTrace: DebuggingTrace
+}
+
+input ConversationCondition {
+    service: ServiceCondition!
+    conversation: ID!
+    # Optional, from the list row. With it, every storage read is a full series lookup.
+    instance: InstanceCondition
+}
+
+enum ConversationFileFormat {
+    # Session Data: the records of one stream, an agent's meta file, a run journal, a workflow manifest or script.
+    SD
+    # Session Flow: one round of the conversation's chain.
+    SF
+}
+
+# One landed file or round, as stored. For tooling and export, never for the UI.
+type ConversationRawFile {
+    # The file's relative path in the Sessionizer's storage root, as it was on the wire.
+    id: ID!
+    format: ConversationFileFormat!
+    # SD only: the session the file belongs to.
+    session: ID
+    # SD only: the landed sequence, unique across every stream of the session.
+    seq: Int
+    # SF only: the round's position in the chain.
+    round: Int
+    # sha256 of the body.
+    digest: String!
+    bytes: Int!
+    timestamp: Long!
+    # The file verbatim. Read from storage only when this field is selected; selecting it on every file
+    # of a conversation is the export path, and writing each body to its `id` path gives a root that
+    # `asz verify` and `asz view` read like the original.
+    body: String
+}
+
+type ConversationRawFiles {
+    # When this field is not empty, frontend should display it in UI
+    errorReason: String
+    files: [ConversationRawFile!]!
+    # For OAP internal query debugging
+    debuggingTrace: DebuggingTrace
+}
+
+# Param, if debug is true will enable the query tracing and return DebuggingTrace in the result.
+extend type Query {
+    # The conversations of a service active in the duration, newest first.
+    listConversations(condition: ConversationListCondition!, duration: Duration!, debug: Boolean): ConversationList
+    # One conversation, whole. The conversation is enough: its rounds name its sessions and give the time
+    # range, and those give the files.
+    getConversationView(condition: ConversationCondition!, debug: Boolean): ConversationView
+    # Every file of a conversation, as stored. Select `body` to export them.
+    # `files`, optional: only these files, by id. A `.sd` id names its session and its seq, so the read is
+    # exact and indexed; a round id is matched among the conversation's rounds. Without it, every file.
+    getConversationRawFiles(condition: ConversationCondition!, files: [ID!], debug: Boolean): ConversationRawFiles
+}
