@@ -34,14 +34,16 @@
 #
 # `service` is the service name, or `serviceId` the id; `instance`, optional, is the sender's instance name.
 # `v1` is the document version: the body is one `asz.view` 1.0 document, everything a viewer renders,
-# evidence included, as `asz conversation` prints it. Its first two keys are `format` and `version`, and the
-# UI switches its renderer on them. The body is JSON, or YAML on `Accept: application/yaml`; `Content-Encoding`
-# follows `Accept-Encoding`. Verification is content, not an error: a missing round or a failed digest is
-# written into the document's `summary.state` and `summary.problems`, and the rest holds whatever could still
-# be folded. The route answers 400 when no service is named, 404 when the service stores no round of the
-# conversation, 500 on a storage failure, each with a JSON body `{"errorReason": "..."}`. It runs under its
-# own timeout, the OAP's `viewRequestTimeout`, in place of the server's default. The UI makes that one call
-# per conversation and no other.
+# evidence included, as `asz conversation` prints it. What the body is, the HTTP layer says: `Content-Type`
+# names the format and the version, `application/vnd.skywalking.asz.view+json; version=1.0`, or the `+yaml` twin when
+# `Accept` names YAML (`application/vnd.skywalking.asz.view+yaml`); the UI switches its renderer on it, and the document's
+# own first two keys, `format` and `version`, say the same. `Content-Encoding` follows `Accept-Encoding`.
+# Verification is content, not an error: a missing round or a failed digest is written into the document's
+# `summary.state` and `summary.problems`, and the rest holds whatever could still be folded. The route answers
+# 400 when no service is named, 404 when the service stores no round of the conversation, 500 on a storage
+# failure, each as `application/problem+json` (RFC 9457): `{"type": "about:blank", "title": "Not Found",
+# "status": 404, "detail": "..."}`. It runs under its own timeout, the OAP's `viewRequestTimeout`, in place of
+# the server's default. The UI makes that one call per conversation and no other.
 
 # One row per conversation on the list page. Every value comes from the newest round's attributes;
 # nothing is decoded to build the list.
