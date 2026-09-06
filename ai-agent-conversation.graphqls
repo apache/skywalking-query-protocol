@@ -78,6 +78,11 @@ input ConversationListCondition {
     service: ServiceCondition!
     # Optional. Only the conversations pushed by this sender.
     instance: InstanceCondition
+    # Optional. Only this conversation, by id: a storage lookup, so the round budget is spent on it alone.
+    conversation: ID
+    # Optional. Only the conversations whose title contains this text, case-insensitively. The title is the newest
+    # round's, so the match runs after folding and cannot widen the rounds read.
+    title: String
     # The rounds are read newest first, at most this many, then folded to one row per conversation.
     # Default 1000. A page therefore holds at most this many rows.
     limit: Int
