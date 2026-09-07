@@ -120,6 +120,10 @@ input GenAIEvaluationRecordQueryCondition {
     evaluationLevel: String
     judgeModel: String
 
+    # Optional source trace type filter. Unlike relatedTrace, this can be
+    # used without a trace ID and must be applied before pagination.
+    traceType: GenAITraceRefType
+
     # [Required] queryDuration is required in most queries, the only exception
     # is when relatedTrace is used.
     queryDuration: Duration
