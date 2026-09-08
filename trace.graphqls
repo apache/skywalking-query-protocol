@@ -32,6 +32,7 @@ type BasicTrace {
 }
 
 # Represent the conditions used for query TraceBrief
+# The condition must contain either queryDuration or traceId.
 input TraceQueryCondition {
     # The value of 0 means all services.
     serviceId: ID
