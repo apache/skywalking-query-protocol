@@ -17,7 +17,7 @@
 type TraceList {
     traces: [TraceV2!]!
     # The time range of the traces actually retrieved, in timestamp(ms): the queryDuration of the condition,
-    # which queryTraces requires.
+    # or 0 to now for a traceId lookup without queryDuration.
     retrievedTimeRange: RetrievedTimeRange!
     # For OAP internal query debugging
     debuggingTrace: DebuggingTrace
