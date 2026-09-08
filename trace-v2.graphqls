@@ -16,9 +16,8 @@
 
 type TraceList {
     traces: [TraceV2!]!
-    # The time range of the traces actually retrieved.
-    # If the queryDuration is not given, the time range is the timestamp(ms) from 0 to now,
-    # i.e. everything the hot/warm stages retain.
+    # The time range of the traces actually retrieved, in timestamp(ms): the queryDuration of the condition,
+    # which queryTraces requires.
     retrievedTimeRange: RetrievedTimeRange!
     # For OAP internal query debugging
     debuggingTrace: DebuggingTrace
