@@ -60,6 +60,18 @@ type ConversationRow {
     streams: Int!
     segments: Int!
     unresolved: Int!
+    # Distinct workspace change records the Sessionizer had captured for the conversation as of the head round: one
+    # per tool call a producer watched for file changes, whether or not the call changed any. Absent when the round
+    # did not carry the count, which a Sessionizer older than the count leaves out.
+    changes: Int
+    # What those records' diffs add and remove, summed. Absent with `changes`.
+    linesAdded: Int
+    linesRemoved: Int
+    # Provider calls, child agents started, and shell commands run through the runtime's Bash tool, as of the head
+    # round. Absent when the round did not carry them.
+    llmCalls: Int
+    subagents: Int
+    bashRuns: Int
     # When the conversation began, in milliseconds.
     from: Long!
     # Its last activity so far, in milliseconds.
