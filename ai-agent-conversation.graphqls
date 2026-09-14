@@ -30,9 +30,11 @@
 # conversation, tens of megabytes for a long one, so it is served by its own route on the same HTTP server
 # as `/graphql`, streamed as it is rendered and compressed when the client allows:
 #
-#   GET /ai-agent/conversations/{conversation}/v1/view?service={serviceName}[&instance={instanceName}]
+#   GET /ai-agent/conversations/{conversation}/v1/view?service={serviceName}[&instance={instanceName}][&coldStage=true]
 #
 # `service` is the service name, or `serviceId` the id; `instance`, optional, is the sender's instance name.
+# `coldStage`, optional and false by default, queries only BanyanDB's cold stage when true. The UI passes its
+# selected stage when opening a conversation. Otherwise the read uses the default hot/warm stages.
 # `v1` is the document version: the body is one `asz.view` 1.0 document, everything a viewer renders,
 # evidence included, as `asz conversation` prints it. What the body is, the HTTP layer says: `Content-Type`
 # names the format and the version, `application/vnd.skywalking.asz.view+json; version=1.0`, or the `+yaml` twin when
@@ -107,6 +109,8 @@ input ConversationCondition {
     conversation: ID!
     # Optional, from the list row. With it, every storage read is a full series lookup.
     instance: InstanceCondition
+    # Only for BanyanDB. Query the cold stage only when true; defaults to the hot/warm stages.
+    coldStage: Boolean
 }
 
 enum ConversationFileFormat {
