@@ -20,7 +20,7 @@
 # In the Sessionizer's model a conversation is the durable ownership boundary and the unit of storage,
 # analysis and export. A session is the source-runtime context a record came from, carried as provenance:
 # one conversation may contain several sessions, and a session belongs to exactly one conversation.
-# Everything here is keyed by the conversation; a session appears only as the owner of a raw file.
+# Everything here is keyed by the conversation; a session appears only as the owner of a file.
 #
 # A conversation reaches the OAP as two file formats, pushed over OTLP logs under the AI_AGENT layer:
 # Session Data (`.sd`, the records of one session as collected) and Session Flow (`.sf`, an append-only
@@ -30,10 +30,10 @@
 # conversation, tens of megabytes for a long one, so it is served by its own route on the same HTTP server
 # as `/graphql`, streamed as it is rendered and compressed when the client allows:
 #
-#   GET /ai-agent/conversations/{conversation}/v1/view?service={serviceName}[&instance={instanceName}][&coldStage=true]
+#   GET /ai-agent/conversations/{conversation}/v1/view?service={serviceName}&instance={instanceName}[&coldStage=true]
 #
-# `service` is the service name, or `serviceId` the id; `instance`, optional, is the sender's instance name.
-# `coldStage`, optional and false by default, queries only BanyanDB's cold stage when true. The UI passes its
+# `service` is the service name and `instance` the sender's instance name, both required, as a list row names
+# them. `coldStage`, optional and false by default, queries only BanyanDB's cold stage when true. The UI passes its
 # selected stage when opening a conversation. Otherwise the read uses the default hot/warm stages.
 # `v1` is the document version: the body is one `asz.view` 1.0 document, everything a viewer renders,
 # evidence included, as `asz conversation` prints it. What the body is, the HTTP layer says: `Content-Type`
@@ -42,10 +42,43 @@
 # own first two keys, `format` and `version`, say the same. `Content-Encoding` follows `Accept-Encoding`.
 # Verification is content, not an error: a missing round or a failed digest is written into the document's
 # `summary.state` and `summary.problems`, and the rest holds whatever could still be folded. The route answers
-# 400 when no service is named, 404 when the service stores no round of the conversation, 500 on a storage
-# failure, each as `application/problem+json` (RFC 9457): `{"type": "about:blank", "title": "Not Found",
-# "status": 404, "detail": "..."}`. It runs under its own timeout, the OAP's `viewRequestTimeout`, in place of
-# the server's default. The UI makes that one call per conversation and no other.
+# 400 when the service or the instance is not named, 404 when the sender stores no round of the conversation, 500
+# on a storage failure, each as `application/problem+json` (RFC 9457): `{"type": "about:blank", "title": "Not
+# Found", "status": 404, "detail": "..."}`. It runs under its own timeout, the OAP's `viewRequestTimeout`, in place
+# of the server's default.
+#
+# A conversation's stored Session Data files are read by a second route, not through GraphQL either, so a page loads
+# what a step points at, such as an `llm.call`'s provider bodies, only when a reader opens it. There is no read of
+# every file: a reader chooses each one.
+#
+#   GET /ai-agent/conversations/{conversation}/v1/files?service={serviceName}&instance={instanceName}
+#       &session={session}&seq={seq}[&seq={seq}...][&coldStage=true]
+#
+# `service`, `instance` and `coldStage` are as for the view. `session` is required, and so is `seq`, one to 32 times:
+# a file's landed seq, which the Sessionizer assigns once per file within a session, shared by every stream and kind,
+# and by which with the session the storage reads the file. The Sessionizer cuts a file at 2 MiB, so a response holds
+# about 64 MiB at most, and a reader wanting more asks again. The view document's `files` gives every file's seq and
+# its name, whose first segment is its session. The session is the caller's choice within the named sender and need
+# not be one the conversation names. The files are read over the time range of the conversation's newest intact round,
+# from its session's first activity to its last or the round's own stored time, whichever is later, even when the view
+# cannot fold that round; up to the head round's own time when no round is intact. A file stamped outside that range is
+# left out, as is a seq no stored file answers.
+#
+# The body is `application/vnd.skywalking.asz.files+ndjson`, which any `Accept` gets, compressed with gzip when
+# `Accept-Encoding` allows it. For each stored file there is a naming line, then the file:
+#
+#   {"file":"<name>","seq":4,"lines":16,"bytes":27874,"digest":"<sha256>"}
+#   <exactly `bytes` bytes: the file, whose sha256 is `digest`>
+#
+# `file` is the file's name as the view document lists it and `lines` the file's own newline count. A non-empty file
+# that does not end with a newline is followed by one, which is not part of it, so the next naming line starts a line;
+# an empty file is followed by nothing. A file the Sessionizer wrote ends with a newline, so a reader may equally take
+# `lines` lines. The files come in seq order, which is the order provider bodies must be read in. The route answers
+# 400 when the service, the instance or the session is not named, when no seq is, when more than 32 are, when one is
+# not a positive whole number, or when `coldStage` is neither true nor false; 404 when the sender stores no round of the
+# conversation; 500 on a storage failure before the first file, each as `application/problem+json`. A failure after
+# the first file ends the response early: a reader sees a file shorter than its naming line says, or a response that
+# does not complete.
 
 # One row per conversation on the list page. Every value comes from the newest round's attributes;
 # nothing is decoded to build the list.
@@ -102,59 +135,8 @@ input ConversationListCondition {
     limit: Int
 }
 
-# One conversation. The conversation is enough: its rounds name its sessions and give the time range, and
-# those give the files.
-input ConversationCondition {
-    service: ServiceCondition!
-    conversation: ID!
-    # Optional, from the list row. With it, every storage read is a full series lookup.
-    instance: InstanceCondition
-    # Only for BanyanDB. Query the cold stage only when true; defaults to the hot/warm stages.
-    coldStage: Boolean
-}
-
-enum ConversationFileFormat {
-    # Session Data: the records of one stream, an agent's meta file, a run journal, a workflow manifest or script.
-    SD
-    # Session Flow: one round of the conversation's chain.
-    SF
-}
-
-# One landed file or round, as stored. For tooling and export, never for the UI.
-type ConversationRawFile {
-    # The file's relative path in the Sessionizer's storage root, as it was on the wire.
-    id: ID!
-    format: ConversationFileFormat!
-    # SD only: the session the file belongs to.
-    session: ID
-    # SD only: the landed sequence, unique across every stream of the session.
-    seq: Int
-    # SF only: the round's position in the chain.
-    round: Int
-    # sha256 of the body.
-    digest: String!
-    bytes: Int!
-    timestamp: Long!
-    # The file verbatim. Read from storage only when this field is selected; selecting it on every file
-    # of a conversation is the export path, and writing each body to its `id` path gives a root that
-    # `asz verify` and `asz view` read like the original.
-    body: String
-}
-
-type ConversationRawFiles {
-    # When this field is not empty, frontend should display it in UI
-    errorReason: String
-    files: [ConversationRawFile!]!
-    # For OAP internal query debugging
-    debuggingTrace: DebuggingTrace
-}
-
 # Param, if debug is true will enable the query tracing and return DebuggingTrace in the result.
 extend type Query {
     # The conversations of a service active in the duration, newest first.
     listConversations(condition: ConversationListCondition!, duration: Duration!, debug: Boolean): ConversationList
-    # Every file of a conversation, as stored. Select `body` to export them.
-    # `files`, optional: only these files, by id. A `.sd` id names its session and its seq, so the read is
-    # exact and indexed; a round id is matched among the conversation's rounds. Without it, every file.
-    getConversationRawFiles(condition: ConversationCondition!, files: [ID!], debug: Boolean): ConversationRawFiles
 }
