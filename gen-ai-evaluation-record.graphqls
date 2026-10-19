@@ -21,24 +21,17 @@ type GenAIEvaluationRecords {
     debuggingTrace: DebuggingTrace
 }
 
-# The addressing scheme of the span an evaluation was produced from.
+# The store holding the span an evaluation was produced from, which also sets how the span
+# is addressed. Decided per span when it is received, so records of one OAP can name
+# different stores.
 enum GenAITraceRefType {
-    # SkyWalking native: trace + segment + segment-local span index.
+    # SkyWalking native segments: trace + segment + segment-local span index.
     SKYWALKING_NATIVE
-    # OTLP / Zipkin: trace + globally unique hex span id. No segment concept.
+    # OTLP spans stored as received, with receiver-otel `otlpTraceStorage: otlp`. Served by
+    # the TraceQL OTLP datasource. Trace + globally unique hex span id, no segment concept.
     OTLP
-}
-
-# The store holding the span an evaluation was produced from. OTLP and Zipkin spans are
-# addressed the same way, so GenAITraceRefType alone cannot say where to read the trace.
-enum GenAITraceStorage {
-    # SkyWalking native segments.
-    SKYWALKING_NATIVE
-    # OTLP spans stored as received, with receiver-otel `otlpTraceStorage: otlp`.
-    # Served by the TraceQL OTLP datasource.
-    OTLP
-    # Zipkin spans: received by receiver-zipkin, or OTLP spans converted with
-    # receiver-otel `otlpTraceStorage: zipkin`. Served by the Zipkin query API.
+    # Zipkin spans: received by receiver-zipkin, or OTLP spans converted with receiver-otel
+    # `otlpTraceStorage: zipkin`. Served by the Zipkin query API. Addressed like OTLP.
     ZIPKIN
 }
 
@@ -47,16 +40,13 @@ enum GenAITraceStorage {
 # and a single span-id type cannot describe all of them.
 type GenAITraceRef {
     type: GenAITraceRefType!
-    # Decided per span when it is received, so records of one OAP can name different stores.
-    # Null only for an OTLP-addressed record written before the store was recorded.
-    storage: GenAITraceStorage
     traceId: String!
     # SKYWALKING_NATIVE only. The segment carrying the span.
     segmentId: String
     # SKYWALKING_NATIVE only. Segment-local index (0, 1, 2 ...), NOT an identifier.
     # Unique only in combination with segmentId.
     spanIndex: Int
-    # OTLP / Zipkin only. 16 lowercase hex characters, globally unique within the trace.
+    # OTLP and ZIPKIN only. 16 lowercase hex characters, globally unique within the trace.
     spanId: String
 }
 
@@ -66,7 +56,7 @@ input GenAITraceScopeCondition {
     # SKYWALKING_NATIVE only.
     segmentId: String
     spanIndex: Int
-    # OTLP only. 16 lowercase hex characters.
+    # OTLP and ZIPKIN only. 16 lowercase hex characters.
     spanId: String
 }
 
