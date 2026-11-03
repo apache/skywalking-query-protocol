@@ -17,6 +17,7 @@
 #
 
 github:
+  dependabot_updates: false
   description: Query Protocol for Apache SkyWalking in GraphQL format
   homepage: https://skywalking.apache.org/docs/main/latest/en/api/query-protocol/
   labels:
