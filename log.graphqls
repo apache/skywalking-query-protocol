@@ -85,8 +85,11 @@ input LogQueryConditionByName {
 # Trace related condition
 input TraceScopeCondition {
     traceId: String!
+    # SkyWalking native span: segmentId, and spanId within that segment.
     segmentId: String
     spanId: Int
+    # OTLP or Zipkin span: 16 lowercase hex characters. Logs that recorded no OTLP span id never match.
+    otlpSpanId: String
 }
 
 input LogTag {
