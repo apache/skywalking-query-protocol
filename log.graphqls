@@ -125,6 +125,14 @@ type LogTestMetrics {
     timestamp: Long!
 }
 
+# The source of the logs a tag autocomplete query reads the tags of.
+enum TagType {
+    # The logs of every source but OTLP: the SkyWalking native protocols, Envoy access logs, etc.
+    LOG
+    # The logs received through OTLP.
+    OTLP_LOG
+}
+
 extend type Query {
     # Return true if the current storage implementation supports fuzzy query for logs.
     supportQueryLogsByKeywords: Boolean!
@@ -134,6 +142,7 @@ extend type Query {
     # Test the logs and get the results of the LAL output.
     test(requests: LogTestRequest!): LogTestResponse!
 
-    queryLogTagAutocompleteKeys(duration: Duration!):[String!]
-    queryLogTagAutocompleteValues(tagKey: String! , duration: Duration!):[String!]
+    # The tag keys and values of the logs, for autocomplete. Without a type, those of every source.
+    queryLogTagAutocompleteKeys(duration: Duration!, type: TagType):[String!]
+    queryLogTagAutocompleteValues(tagKey: String! , duration: Duration!, type: TagType):[String!]
 }
